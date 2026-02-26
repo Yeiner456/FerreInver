@@ -1,0 +1,44 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+     
+}
+
+body,html{
+    font-family: "Oswald", sans-serif;
+    
+}
+
+.navegacion{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+
+}
+
+.logo{
+    width: 20rem;
+    height: 15rem;
+    border-radius: 50%;
+}
+
+.links{
+    display: flex;
+   
+    text-decoration: none;
+    font-family: "Oswald", sans-serif;
+}
+
+
+.busqueda{
+    display: flex;
+    gap: 20px;
+}
+
+
+.lupa{
+    width: 20px;
+    height: 20px;
+}
