@@ -3,7 +3,7 @@
 require_once 'conexion.php';
 
 // Obtener los tipos de usuario desde la base de datos
-$tipos = mysqli_query($conn, "SELECT id_tipo_de_usuario, nombre_tipo FROM tipos_usuarios ORDER BY nombre_tipo");
+$tipos = mysqli_query($conn, "SELECT id_tipo_de_usuario, nombre FROM tipos_usuarios ORDER BY nombre");
 
 ?>
 
@@ -29,7 +29,7 @@ $tipos = mysqli_query($conn, "SELECT id_tipo_de_usuario, nombre_tipo FROM tipos_
         <select name="id_tipo_de_usuario" required>
             <?php while($tipo = mysqli_fetch_assoc($tipos)): ?>
                 <option value="<?= $tipo['id_tipo_de_usuario'] ?>">
-                    <?= htmlspecialchars($tipo['nombre_tipo']) ?>
+                    <?= htmlspecialchars($tipo['nombre']) ?>
                 </option>
             <?php endwhile; ?>
         </select><br><br>
