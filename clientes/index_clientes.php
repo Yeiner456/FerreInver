@@ -3,7 +3,7 @@
 require_once 'conexion.php';
 $resultado = mysqli_query($conn, "
     SELECT c.documento, c.nombre, c.correo, c.fecha_registro, c.estado_inicio_sesion,
-        t.nombre_tipo AS tipo_usuario
+        t.nombre AS tipo_usuario
     FROM clientes c
     LEFT JOIN tipos_usuarios t ON c.id_tipo_de_usuario = t.id_tipo_de_usuario
     ORDER BY c.fecha_registro DESC
