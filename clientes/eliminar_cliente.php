@@ -12,7 +12,7 @@ if(!isset($_GET['documento']) || !is_numeric($_GET['documento'])){
 $documento = $_GET['documento'];
 
 // Verificar que el cliente exista antes de eliminar
-$stmt_check = mysqli_prepare($conn, "SELECT Documento FROM clientes WHERE Documento = ?");
+$stmt_check = mysqli_prepare($conn, "SELECT documento FROM clientes WHERE documento = ?");
 mysqli_stmt_bind_param($stmt_check, 'i', $documento);
 mysqli_stmt_execute($stmt_check);
 $result_check = mysqli_stmt_get_result($stmt_check);
@@ -26,7 +26,7 @@ if(mysqli_num_rows($result_check) == 0){
 mysqli_stmt_close($stmt_check);
 
 // Eliminar el cliente usando prepared statement
-$stmt = mysqli_prepare($conn, "DELETE FROM clientes WHERE Documento = ?");
+$stmt = mysqli_prepare($conn, "DELETE FROM clientes WHERE documento = ?");
 mysqli_stmt_bind_param($stmt, 'i', $documento);
 
 if(mysqli_stmt_execute($stmt)){
@@ -39,5 +39,3 @@ if(mysqli_stmt_execute($stmt)){
 
 mysqli_stmt_close($stmt);
 mysqli_close($conn);
-
-?>
