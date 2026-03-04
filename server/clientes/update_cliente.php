@@ -7,15 +7,21 @@ if(!isset($_GET['documento']) || !is_numeric($_GET['documento'])){
 }
 
 $documento = $_GET['documento'];
-$stmt = mysqli_prepare($conn, "SELECT * FROM clientes WHERE Documento = ?");
+
+// Obtener datos del cliente
+$stmt = mysqli_prepare($conn, "SELECT * FROM clientes WHERE documento = ?");
 mysqli_stmt_bind_param($stmt, "i", $documento);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $cliente = mysqli_fetch_assoc($result);
+mysqli_stmt_close($stmt);
 
 if(!$cliente){
     die('Cliente no encontrado');
 }
+
+// Obtener los tipos de usuario desde la base de datos
+$tipos = mysqli_query($conn, "SELECT id_tipo_de_usuario, nombre_tipo FROM tipos_usuarios ORDER BY nombre_tipo");
 
 ?>
 
@@ -33,28 +39,31 @@ if(!$cliente){
         <p style="color: red;"><?= htmlspecialchars($_GET['error']) ?></p>
     <?php endif; ?>
     
-    <form action="validar_update_cliente.php?documento=<?= $cliente['Documento'] ?>" method="POST">
+    <form action="validar_update_cliente.php?documento=<?= $cliente['documento'] ?>" method="POST">
         
         <label>Documento (No editable): </label><br>
-        <input type="text" value="<?= htmlspecialchars($cliente['Documento']) ?>" disabled><br><br>
+        <input type="text" value="<?= htmlspecialchars($cliente['documento']) ?>" disabled><br><br>
 
         <label>Tipo de Usuario: </label><br>
-        <select name="tipo_usuario" required>
-            <option value="Cliente" <?= $cliente['TipoUsuario'] == 'Cliente' ? 'selected' : '' ?>>Cliente</option>
-            <option value="Admin" <?= $cliente['TipoUsuario'] == 'Admin' ? 'selected' : '' ?>>Admin</option>
+        <select name="id_tipo_de_usuario" required>
+            <?php while($tipo = mysqli_fetch_assoc($tipos)): ?>
+                <option value="<?= $tipo['id_tipo_de_usuario'] ?>"
+                    <?= $cliente['id_tipo_de_usuario'] == $tipo['id_tipo_de_usuario'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($tipo['nombre_tipo']) ?>
+                </option>
+            <?php endwhile; ?>
         </select><br><br>
 
         <label>Nombre Completo: </label><br>
-        <input type="text" name="nombre" value="<?= htmlspecialchars($cliente['Nombre']) ?>" required maxlength="30"><br><br>
+        <input type="text" name="nombre" value="<?= htmlspecialchars($cliente['nombre']) ?>" required maxlength="30"><br><br>
 
         <label>Correo Electrónico: </label><br>
-        <input type="email" name="correo" value="<?= htmlspecialchars($cliente['Correo']) ?>" required maxlength="50"><br><br>
+        <input type="email" name="correo" value="<?= htmlspecialchars($cliente['correo']) ?>" required maxlength="50"><br><br>
 
         <label>Estado Inicio Sesión: </label><br>
         <select name="estado" required>
-            <option value="Activo" <?= $cliente['EstadoInicioSesion'] == 'Activo' ? 'selected' : '' ?>>Activo</option>
-            <option value="Inactivo" <?= $cliente['EstadoInicioSesion'] == 'Inactivo' ? 'selected' : '' ?>>Inactivo</option>
-            <option value="Bloqueado" <?= $cliente['EstadoInicioSesion'] == 'Bloqueado' ? 'selected' : '' ?>>Bloqueado</option>
+            <option value="activo" <?= $cliente['estado_inicio_sesion'] == 'activo' ? 'selected' : '' ?>>Activo</option>
+            <option value="inactivo" <?= $cliente['estado_inicio_sesion'] == 'inactivo' ? 'selected' : '' ?>>Inactivo</option>
         </select><br><br>
 
         <hr>

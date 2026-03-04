@@ -2,6 +2,9 @@
 
 require_once 'conexion.php';
 
+// Obtener los tipos de usuario desde la base de datos
+$tipos = mysqli_query($conn, "SELECT id_tipo_de_usuario, nombre FROM tipos_usuarios ORDER BY nombre");
+
 ?>
 
 <!DOCTYPE html>
@@ -23,9 +26,12 @@ require_once 'conexion.php';
         <input type="number" name="documento" required min="1" maxlength="11"><br><br>
 
         <label>Tipo de Usuario: </label><br>
-        <select name="tipo_usuario" required>
-            <option value="Cliente">Cliente</option>
-            <option value="Admin">Admin</option>
+        <select name="id_tipo_de_usuario" required>
+            <?php while($tipo = mysqli_fetch_assoc($tipos)): ?>
+                <option value="<?= $tipo['id_tipo_de_usuario'] ?>">
+                    <?= htmlspecialchars($tipo['nombre']) ?>
+                </option>
+            <?php endwhile; ?>
         </select><br><br>
 
         <label>Nombre Completo: </label><br>
@@ -42,9 +48,8 @@ require_once 'conexion.php';
 
         <label>Estado Inicio Sesión: </label><br>
         <select name="estado" required>
-            <option value="Activo" selected>Activo</option>
-            <option value="Inactivo">Inactivo</option>
-            <option value="Bloqueado">Bloqueado</option>
+            <option value="activo" selected>Activo</option>
+            <option value="inactivo">Inactivo</option>
         </select><br><br>
 
         <button type="submit">Registrar Cliente</button><br>

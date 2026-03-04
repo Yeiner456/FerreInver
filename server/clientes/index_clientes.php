@@ -1,7 +1,13 @@
 <?php
 
 require_once 'conexion.php';
-$resultado = mysqli_query($conn, "SELECT * FROM clientes ORDER BY FechaRegistro DESC");
+$resultado = mysqli_query($conn, "
+    SELECT c.documento, c.nombre, c.correo, c.fecha_registro, c.estado_inicio_sesion,
+        t.nombre AS tipo_usuario
+    FROM clientes c
+    LEFT JOIN tipos_usuarios t ON c.id_tipo_de_usuario = t.id_tipo_de_usuario
+    ORDER BY c.fecha_registro DESC
+");
 
 ?>
 
@@ -39,15 +45,15 @@ $resultado = mysqli_query($conn, "SELECT * FROM clientes ORDER BY FechaRegistro 
         </tr>
         <?php while ($fila = mysqli_fetch_assoc($resultado)) : ?>
         <tr>
-            <td><?= htmlspecialchars($fila['Documento']) ?></td>
-            <td><?= htmlspecialchars($fila['TipoUsuario']) ?></td>
-            <td><?= htmlspecialchars($fila['Nombre']) ?></td>
-            <td><?= htmlspecialchars($fila['Correo']) ?></td>
-            <td><?= htmlspecialchars($fila['FechaRegistro']) ?></td>
-            <td><?= htmlspecialchars($fila['EstadoInicioSesion']) ?></td>
+            <td><?= htmlspecialchars($fila['documento']) ?></td>
+            <td><?= htmlspecialchars($fila['tipo_usuario']) ?></td>
+            <td><?= htmlspecialchars($fila['nombre']) ?></td>
+            <td><?= htmlspecialchars($fila['correo']) ?></td>
+            <td><?= htmlspecialchars($fila['fecha_registro']) ?></td>
+            <td><?= htmlspecialchars($fila['estado_inicio_sesion']) ?></td>
             <td>
-                <a href="update_cliente.php?documento=<?= $fila['Documento'] ?>">Editar</a>
-                <a href="eliminar_cliente.php?documento=<?= $fila['Documento'] ?>" onclick="return confirm('¿Está seguro de eliminar este cliente?')">Eliminar</a>
+                <a href="update_cliente.php?documento=<?= $fila['documento'] ?>">Editar</a>
+                <a href="eliminar_cliente.php?documento=<?= $fila['documento'] ?>" onclick="return confirm('¿Está seguro de eliminar este cliente?')">Eliminar</a>
             </td>
         </tr>
         <?php endwhile; ?>

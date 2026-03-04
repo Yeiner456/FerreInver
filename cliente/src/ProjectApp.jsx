@@ -1,5 +1,8 @@
 import React from 'react'
-import { AdminPanel } from './components/AdminPanel'
+import AdminPanel from './Components/AdminPanel'
+
+
+
 export const ProjectApp = () => {
     return (
         <div>
