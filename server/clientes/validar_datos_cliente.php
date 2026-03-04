@@ -12,7 +12,7 @@ if($_SERVER['REQUEST_METHOD'] != 'POST'){
 // Validar que todos los campos estén presentes
 if(
     empty($_POST['documento']) ||
-    empty($_POST['tipo_usuario']) ||
+    empty($_POST['id_tipo_de_usuario']) ||
     empty($_POST['nombre']) ||
     empty($_POST['correo']) ||
     empty($_POST['password']) ||
@@ -25,13 +25,13 @@ if(
 }
 
 // Obtener y limpiar datos
-$documento = trim($_POST['documento']);
-$tipo_usuario = trim($_POST['tipo_usuario']);
-$nombre = trim($_POST['nombre']);
-$correo = trim($_POST['correo']);
-$password = trim($_POST['password']);
+$documento          = trim($_POST['documento']);
+$id_tipo_de_usuario = trim($_POST['id_tipo_de_usuario']);
+$nombre             = trim($_POST['nombre']);
+$correo             = trim($_POST['correo']);
+$password           = trim($_POST['password']);
 $confirmar_password = trim($_POST['confirmar_password']);
-$estado = trim($_POST['estado']);
+$estado             = trim($_POST['estado']);
 
 // Validar que el documento sea numérico
 if(!is_numeric($documento) || $documento <= 0){
@@ -47,12 +47,25 @@ if(strlen($documento) > 11){
     exit;
 }
 
-// Validar tipo de usuario
-if($tipo_usuario != 'Cliente' && $tipo_usuario != 'Admin'){
+// Validar que el id_tipo_de_usuario sea numérico
+if(!is_numeric($id_tipo_de_usuario) || $id_tipo_de_usuario <= 0){
     $error = 'El tipo de usuario no es válido.';
     header("Location: registrar_cliente.php?error=" . urlencode($error));
     exit;
 }
+
+// Verificar que el id_tipo_de_usuario exista en la tabla tipos_usuarios
+$stmt_tipo = mysqli_prepare($conn, "SELECT id_tipo_de_usuario FROM tipos_usuarios WHERE id_tipo_de_usuario = ?");
+mysqli_stmt_bind_param($stmt_tipo, 'i', $id_tipo_de_usuario);
+mysqli_stmt_execute($stmt_tipo);
+$result_tipo = mysqli_stmt_get_result($stmt_tipo);
+if(mysqli_num_rows($result_tipo) == 0){
+    $error = 'El tipo de usuario seleccionado no existe.';
+    mysqli_stmt_close($stmt_tipo);
+    header("Location: registrar_cliente.php?error=" . urlencode($error));
+    exit;
+}
+mysqli_stmt_close($stmt_tipo);
 
 // Validar nombre (solo letras y espacios)
 if(!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/", $nombre)){
@@ -103,19 +116,18 @@ if(!preg_match("/[a-zA-Z]/", $password) || !preg_match("/[0-9]/", $password)){
     exit;
 }
 
-// Validar estado
-if($estado != 'Activo' && $estado != 'Inactivo' && $estado != 'Bloqueado'){
+// Validar estado (solo los valores del ENUM)
+if($estado != 'activo' && $estado != 'inactivo'){
     $error = 'El estado de inicio de sesión no es válido.';
     header("Location: registrar_cliente.php?error=" . urlencode($error));
     exit;
 }
 
 // Verificar si el documento ya existe
-$stmt_check = mysqli_prepare($conn, "SELECT Documento FROM clientes WHERE Documento = ?");
+$stmt_check = mysqli_prepare($conn, "SELECT documento FROM clientes WHERE documento = ?");
 mysqli_stmt_bind_param($stmt_check, 'i', $documento);
 mysqli_stmt_execute($stmt_check);
 $result_check = mysqli_stmt_get_result($stmt_check);
-
 if(mysqli_num_rows($result_check) > 0){
     $error = 'El documento ya está registrado.';
     mysqli_stmt_close($stmt_check);
@@ -125,11 +137,10 @@ if(mysqli_num_rows($result_check) > 0){
 mysqli_stmt_close($stmt_check);
 
 // Verificar si el correo ya existe
-$stmt_check_correo = mysqli_prepare($conn, "SELECT Correo FROM clientes WHERE Correo = ?");
+$stmt_check_correo = mysqli_prepare($conn, "SELECT correo FROM clientes WHERE correo = ?");
 mysqli_stmt_bind_param($stmt_check_correo, 's', $correo);
 mysqli_stmt_execute($stmt_check_correo);
 $result_check_correo = mysqli_stmt_get_result($stmt_check_correo);
-
 if(mysqli_num_rows($result_check_correo) > 0){
     $error = 'El correo electrónico ya está registrado.';
     mysqli_stmt_close($stmt_check_correo);
@@ -142,8 +153,8 @@ mysqli_stmt_close($stmt_check_correo);
 $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
 // Insertar en la base de datos
-$stmt = mysqli_prepare($conn, "INSERT INTO clientes (Documento, TipoUsuario, Password_hash, Nombre, Correo, EstadoInicioSesion) VALUES (?, ?, ?, ?, ?, ?)");
-mysqli_stmt_bind_param($stmt, 'isssss', $documento, $tipo_usuario, $password_hash, $nombre, $correo, $estado);
+$stmt = mysqli_prepare($conn, "INSERT INTO clientes (documento, id_tipo_de_usuario, password_hash, nombre, correo, estado_inicio_sesion) VALUES (?, ?, ?, ?, ?, ?)");
+mysqli_stmt_bind_param($stmt, 'iissss', $documento, $id_tipo_de_usuario, $password_hash, $nombre, $correo, $estado);
 
 if(mysqli_stmt_execute($stmt)){
     $success = 'Cliente registrado exitosamente.';
@@ -155,5 +166,3 @@ if(mysqli_stmt_execute($stmt)){
 
 mysqli_stmt_close($stmt);
 mysqli_close($conn);
-
-?>
