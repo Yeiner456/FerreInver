@@ -1,0 +1,187 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Raleway", sans-serif;
+    }
+
+.login-container {
+    width: 450px;
+    max-width: 450px;
+    padding: 20px;
+}
+
+.login-card {
+    background: #ffffff;
+    padding: 40px 35px;
+    border-radius: 20px;
+    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+/* Icono Usuario */
+.icon-user {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.icon-user svg {
+    width: 60px;
+    height: 60px;
+}
+
+/* Títulos */
+.login-card h1 {
+    font-size: 32px;
+    font-weight: 600;
+    color: #00185a;
+    margin-bottom: 8px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.subtitle {
+    color: #333333;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+/* Formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1b1b;
+    margin-bottom: 8px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+    color: #666666;
+    background: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.login-input::placeholder {
+    color: #999999;
+}
+
+.login-input:focus {
+    border-color: #00185a;
+    box-shadow: 0 0 8px rgba(29, 38, 113, 0.2);
+    background: #f9f9f9;
+}
+
+/* Recuperar contraseña */
+.forgot-password {
+    text-align: right;
+    margin-top: -5px;
+}
+
+.forgot-password a {
+    font-size: 12px;
+    color: #00185a;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+}
+
+.forgot-password a:hover {
+    opacity: 0.8;
+}
+
+/* Botón Iniciar Sesión */
+.login-button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    background: #22bb48;
+    color: #f4f4f4;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+/* Divisor */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 25px 0;
+    gap: 10px;
+}
+
+.divider span:first-child,
+.divider span:last-child {
+    flex: 1;
+    height: 1px;
+    background: #999999;
+}
+
+.divider .dot {
+    color: #1d2671;
+    font-size: 12px;
+    flex: 0;
+}
+
+/* Botón Crear Cuenta */
+.register-button {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border: 2px solid #22bb48;
+    border-radius: 10px;
+    background: white;
+    color: #22bb48;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.register-button:hover {
+    background: #f0fdf4;
+    transform: translateY(-2px);
+}
+
+
+
+
+
