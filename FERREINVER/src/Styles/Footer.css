@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
+
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    background-color: #1E12A4;
+    color: white;
+    padding: 2rem 3rem;
+    width: 100%;
+    height: auto;
+}
+
+
+.footer-izquierda {
+    flex: 1;
+}
+
+.footer-centro {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-derecha {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+.footer-icons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.instagram {
+    width: 30px;
+    height: 30px;
+}
+
+.facebook {
+    width: 30px;
+    height: 30px;
+}
+
+
+.logo-sena {
+    width: 75px;
+    height: 75px;
+}
+
+.footer-text {
+    font-family: "Oswald", sans-serif;
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
