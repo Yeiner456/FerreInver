@@ -6,7 +6,6 @@ const api = {
     getCotizaciones: () =>
         fetch(`${API_BASE}/apiCotizaciones.php`).then((r) => r.json()),
 
-    // Clientes e invernaderos activos para los selects
     getSelects: () =>
         fetch(`${API_BASE}/apiCotizaciones.php?selects=1`).then((r) => r.json()),
 
@@ -24,7 +23,7 @@ const api = {
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
-    deleteCotizacion: (id) =>
+    rechazarCotizacion: (id) =>
         fetch(`${API_BASE}/apiCotizaciones.php?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
@@ -66,7 +65,6 @@ function CotizacionModal({ cotizacion, onClose, onSave }) {
         });
     }, []);
 
-    // Recalcular automáticamente al cambiar largo, ancho o invernadero
     const recalcular = (updatedForm) => {
         const largo = parseFloat(updatedForm.largo) || 0;
         const ancho = parseFloat(updatedForm.ancho) || 0;
@@ -88,8 +86,7 @@ function CotizacionModal({ cotizacion, onClose, onSave }) {
 
     const handle = (e) => {
         const updated = { ...form, [e.target.name]: e.target.value };
-        const recalculated = recalcular(updated);
-        setForm(recalculated);
+        setForm(recalcular(updated));
     };
 
     const submit = async () => {
@@ -196,7 +193,7 @@ export default function CotizacionesCRUD() {
     const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState(null);
     const [mensaje, setMensaje] = useState(null);
-    const [confirmDelete, setConfirmDelete] = useState(null);
+    const [confirmRechazar, setConfirmRechazar] = useState(null);
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -218,15 +215,15 @@ export default function CotizacionesCRUD() {
         load();
     };
 
-    const handleDelete = async (id) => {
+    const handleRechazar = async (id) => {
         try {
-            const res = await api.deleteCotizacion(id);
+            const res = await api.rechazarCotizacion(id);
             if (res.success) { setMensaje({ texto: res.message, tipo: "success" }); load(); }
             else setMensaje({ texto: res.message, tipo: "error" });
         } catch {
             setMensaje({ texto: "No se pudo conectar con la API.", tipo: "error" });
         } finally {
-            setConfirmDelete(null);
+            setConfirmRechazar(null);
         }
     };
 
@@ -277,7 +274,12 @@ export default function CotizacionesCRUD() {
                                 <td>{c.estado}</td>
                                 <td>
                                     <button onClick={() => setModal(c)}>Editar</button>{" "}
-                                    <button onClick={() => setConfirmDelete(c)}>Eliminar</button>
+                                    <button
+                                        onClick={() => setConfirmRechazar(c)}
+                                        disabled={c.estado === "rechazada"}
+                                    >
+                                        Rechazar
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -293,14 +295,16 @@ export default function CotizacionesCRUD() {
                 />
             )}
 
-            {confirmDelete && (
+            {confirmRechazar && (
                 <div>
                     <p>
-                        ¿Eliminar cotización ID <strong>{confirmDelete.id_cotizacion}</strong> de{" "}
-                        <strong>{confirmDelete.cliente_nombre}</strong>?
+                        ¿Rechazar cotización ID <strong>{confirmRechazar.id_cotizacion}</strong> de{" "}
+                        <strong>{confirmRechazar.cliente_nombre}</strong>?
+                        <br />
+                        <small>El estado cambiará a "rechazada" y no podrá revertirse desde aquí.</small>
                     </p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id_cotizacion)}>Sí, eliminar</button>
+                    <button onClick={() => setConfirmRechazar(null)}>Cancelar</button>{" "}
+                    <button onClick={() => handleRechazar(confirmRechazar.id_cotizacion)}>Sí, rechazar</button>
                 </div>
             )}
         </div>

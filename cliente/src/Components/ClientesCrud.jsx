@@ -23,7 +23,7 @@ const api = {
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
-    deleteCliente: (documento) =>
+    deactivateCliente: (documento) =>
         fetch(`${API_BASE}/apiClientes.php?documento=${documento}`, {
             method: "DELETE",
         }).then((r) => r.json()),
@@ -183,7 +183,7 @@ export default function ClientesCRUD() {
     const [modal, setModal] = useState(null);
     const [mensaje, setMensaje] = useState(null);
     const [search, setSearch] = useState("");
-    const [confirmDelete, setConfirmDelete] = useState(null);
+    const [confirmDeactivate, setConfirmDeactivate] = useState(null);
 
     const loadClientes = useCallback(async () => {
         setLoading(true);
@@ -208,15 +208,15 @@ export default function ClientesCRUD() {
         loadClientes();
     };
 
-    const handleDelete = async (documento) => {
+    const handleDeactivate = async (documento) => {
         try {
-            const res = await api.deleteCliente(documento);
+            const res = await api.deactivateCliente(documento);
             if (res.success) { setMensaje({ texto: res.message, tipo: "success" }); loadClientes(); }
-            else setMensaje({ texto: res.message || "Error al eliminar.", tipo: "error" });
+            else setMensaje({ texto: res.message || "Error al desactivar.", tipo: "error" });
         } catch {
             setMensaje({ texto: "No se pudo conectar con la API PHP.", tipo: "error" });
         } finally {
-            setConfirmDelete(null);
+            setConfirmDeactivate(null);
         }
     };
 
@@ -273,7 +273,7 @@ export default function ClientesCRUD() {
                                 <td>{c.estado_inicio_sesion}</td>
                                 <td>
                                     <button onClick={() => setModal(c)}>Editar</button>{" "}
-                                    <button onClick={() => setConfirmDelete(c)}>Eliminar</button>
+                                    <button onClick={() => setConfirmDeactivate(c)}>Desactivar</button>
                                 </td>
                             </tr>
                         ))}
@@ -290,13 +290,15 @@ export default function ClientesCRUD() {
                 />
             )}
 
-            {confirmDelete && (
+            {confirmDeactivate && (
                 <div>
                     <p>
-                        ¿Eliminar a <strong>{confirmDelete.nombre}</strong> (doc: {confirmDelete.documento})?
+                        ¿Desactivar a <strong>{confirmDeactivate.nombre}</strong> (doc: {confirmDeactivate.documento})?
+                        <br />
+                        <small>El cliente no podrá iniciar sesión.</small>
                     </p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.documento)}>Sí, eliminar</button>
+                    <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>{" "}
+                    <button onClick={() => handleDeactivate(confirmDeactivate.documento)}>Sí, desactivar</button>
                 </div>
             )}
         </div>
