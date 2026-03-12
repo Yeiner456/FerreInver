@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { data } from "./componets/data.js";
+import { data } from "../../FERREINVER/src/componets/data.js";
 import "./Styles/HeroSection.css";
 
 export const HeroSection = () => {
