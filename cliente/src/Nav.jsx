@@ -30,7 +30,7 @@ export const Nav = () => {
 
             <li className='links'>
 
-                <Link className='quienes-somos' to="/">¿Quienes somos?</Link>
+                <Link className='quienes-somos' to="/quienes-somos">¿Quienes somos?</Link>
             </li >
 
                 <li className='links'>    
