@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
+
+.hero-cta li {
+  display: none;
+  position: relative;
+}
+
+.hero-cta li.active {
+  display: block;
+}
+
+.hero-cta,
+.hero-cta ul,
+.hero-cta li.active {
+  height: 100%;
+}
+
+.main-container {
+  width: 100%;
+  height: 90vh;
+  margin: 0;
+}
+
+.slider-container {
+  position: relative;
+  height: 100%;
+}
+
+.dots-container {
+  display: flex;
+  justify-content: center;
+}
+
+.dot-container-item {
+  margin: 8px 3px;
+  cursor: pointer;
+  font-size: 12px;
+  text-align: center;
+}
+
+.leftArrow {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 32px;
+  font-size: 50px;
+  font-weight: 700;
+  color: #fff;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.rightArrow {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: 32px;
+  font-size: 50px;
+  font-weight: 700;
+  color: #fff;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.container-images {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  overflow: hidden;
+}
+
+div.active {
+  background: #ccc;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.hero-cta li::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 25%;
+  left: 3rem;
+  transform: none;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 50%;
+  padding: 0 2rem;
+  z-index: 2;
+}
+
+.hero-title {
+  font-family: "DM Sans", sans-serif;
+  font-size: 3rem;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  text-transform: uppercase;
+}
+
+.hero-subtitle {
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.2rem;
+  color: white;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.7);
+}
+
+.btn-cotizar{
+    background-color: #1E12A4;
+    font-family: "DM Sans", sans-serif;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 1rem;
+    border-radius: 2rem;
+}
+
+.btn-cotizar:hover{
+    background-color: #22bb48;
+}
