@@ -209,7 +209,7 @@ switch ($method) {
         mysqli_stmt_close($stmt);
         break;
 
-    // ─── ELIMINAR CLIENTE ──────────────────────────────────────────────────
+    // ─── DESACTIVAR CLIENTE ────────────────────────────────────────────────
     case 'DELETE':
         if (!isset($_GET['documento']) || !is_numeric($_GET['documento'])) {
             echo json_encode(["success" => false, "message" => "Documento inválido."]);
@@ -218,22 +218,31 @@ switch ($method) {
 
         $documento = $_GET['documento'];
 
-        $stmt_ck = mysqli_prepare($conn, "SELECT documento FROM clientes WHERE documento = ?");
+        $stmt_ck = mysqli_prepare($conn, "SELECT documento, estado_inicio_sesion FROM clientes WHERE documento = ?");
         mysqli_stmt_bind_param($stmt_ck, 'i', $documento);
         mysqli_stmt_execute($stmt_ck);
-        if (mysqli_num_rows(mysqli_stmt_get_result($stmt_ck)) === 0) {
+        $result_ck = mysqli_stmt_get_result($stmt_ck);
+
+        if (mysqli_num_rows($result_ck) === 0) {
             echo json_encode(["success" => false, "message" => "El cliente no existe."]);
             exit;
         }
+
+        $cliente_actual = mysqli_fetch_assoc($result_ck);
         mysqli_stmt_close($stmt_ck);
 
-        $stmt = mysqli_prepare($conn, "DELETE FROM clientes WHERE documento = ?");
+        if ($cliente_actual['estado_inicio_sesion'] === 'inactivo') {
+            echo json_encode(["success" => false, "message" => "El cliente ya está desactivado."]);
+            exit;
+        }
+
+        $stmt = mysqli_prepare($conn, "UPDATE clientes SET estado_inicio_sesion = 'inactivo' WHERE documento = ?");
         mysqli_stmt_bind_param($stmt, 'i', $documento);
 
         if (mysqli_stmt_execute($stmt)) {
-            echo json_encode(["success" => true, "message" => "Cliente eliminado exitosamente."]);
+            echo json_encode(["success" => true, "message" => "Cliente desactivado exitosamente."]);
         } else {
-            echo json_encode(["success" => false, "message" => "Error al eliminar: " . mysqli_error($conn)]);
+            echo json_encode(["success" => false, "message" => "Error al desactivar: " . mysqli_error($conn)]);
         }
         mysqli_stmt_close($stmt);
         break;

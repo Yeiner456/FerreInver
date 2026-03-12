@@ -134,36 +134,35 @@ switch ($method) {
         mysqli_stmt_close($st);
         break;
 
-    // ─── ELIMINAR ──────────────────────────────────────────────────────────
+    // ─── DESACTIVAR INVERNADERO ────────────────────────────────────────────
     case 'DELETE':
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
             echo json_encode(["success" => false, "message" => "ID inválido."]); exit;
         }
         $id = $_GET['id'];
 
-        $st = mysqli_prepare($conn, "SELECT id_invernadero FROM invernaderos WHERE id_invernadero = ?");
+        // Verificar que existe y obtener estado actual
+        $st = mysqli_prepare($conn, "SELECT id_invernadero, estado FROM invernaderos WHERE id_invernadero = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         mysqli_stmt_execute($st);
-        if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
+        $res = mysqli_stmt_get_result($st);
+        if (mysqli_num_rows($res) === 0) {
             echo json_encode(["success" => false, "message" => "El invernadero no existe."]);
             exit;
         }
+        $inv_actual = mysqli_fetch_assoc($res);
         mysqli_stmt_close($st);
 
-        // Integridad con cotizaciones
-        $st = mysqli_prepare($conn, "SELECT id_cotizacion FROM cotizaciones WHERE invernadero_id = ? LIMIT 1");
-        mysqli_stmt_bind_param($st, 'i', $id);
-        mysqli_stmt_execute($st);
-        if (mysqli_num_rows(mysqli_stmt_get_result($st)) > 0) {
-            echo json_encode(["success" => false, "message" => "No se puede eliminar: hay cotizaciones asociadas a este invernadero."]);
+        // Verificar que no esté ya desactivado
+        if ($inv_actual['estado'] === 'inactivo') {
+            echo json_encode(["success" => false, "message" => "El invernadero ya está desactivado."]);
             exit;
         }
-        mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "DELETE FROM invernaderos WHERE id_invernadero = ?");
+        $st = mysqli_prepare($conn, "UPDATE invernaderos SET estado = 'inactivo' WHERE id_invernadero = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         if (mysqli_stmt_execute($st))
-            echo json_encode(["success" => true, "message" => "Invernadero eliminado exitosamente."]);
+            echo json_encode(["success" => true, "message" => "Invernadero desactivado exitosamente."]);
         else
             echo json_encode(["success" => false, "message" => "Error: " . mysqli_error($conn)]);
         mysqli_stmt_close($st);

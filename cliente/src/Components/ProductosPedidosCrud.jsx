@@ -118,7 +118,7 @@ function ProductoPedidoModal({ registro, onClose, onSave }) {
                         <select name="id_producto" value={form.id_producto} onChange={handle}>
                             <option value="">-- Selecciona un producto --</option>
                             {selects.productos.map((p) => (
-                                <option key={p.ID_producto} value={p.ID_producto}>{p.nombre}</option>
+                                <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
                             ))}
                         </select><br />
                         {errors.id_producto && <span>{errors.id_producto}</span>}
@@ -252,10 +252,11 @@ export default function ProductosPedidosCRUD() {
             {confirmDelete && (
                 <div>
                     <p>
-                        ¿Eliminar registro ID <strong>{confirmDelete.id}</strong> ({confirmDelete.nombre_producto} en Pedido #{confirmDelete.id_pedido})?
+                        ¿Quitar <strong>{confirmDelete.nombre_producto}</strong> del Pedido{" "}
+                        <strong>#{confirmDelete.id_pedido}</strong>?
                     </p>
                     <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id)}>Sí, eliminar</button>
+                    <button onClick={() => handleDelete(confirmDelete.id)}>Sí, quitar</button>
                 </div>
             )}
         </div>

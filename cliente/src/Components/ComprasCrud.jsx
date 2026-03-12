@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 
-// Nota: proveedor e ID_producto NO son editables en el update (según lógica original del PHP)
-// Solo se pueden cambiar Cantidad y Descripcion al editar
+// Nota: proveedor e id_producto NO son editables en el update
+// Solo se pueden cambiar cantidad y descripcion al editar
 
 const API_BASE = "http://localhost/ferreinver/server/compras/api";
 
@@ -9,7 +9,6 @@ const api = {
     getCompras: () =>
         fetch(`${API_BASE}/apiCompras.php`).then((r) => r.json()),
 
-    // Carga productos y proveedores activos para los selects del formulario de creación
     getSelects: () =>
         fetch(`${API_BASE}/apiCompras.php?selects=1`, { method: "POST" }).then((r) => r.json()),
 
@@ -63,7 +62,7 @@ function CompraModal({ compra, onClose, onSave }) {
     const isEdit = !!compra;
     const [form, setForm] = useState(
         isEdit
-            ? { cantidad: compra.Cantidad, descripcion: compra.Descripcion }
+            ? { cantidad: compra.cantidad, descripcion: compra.descripcion }
             : emptyForm
     );
     const [selects, setSelects] = useState({ productos: [], proveedores: [] });
@@ -86,7 +85,7 @@ function CompraModal({ compra, onClose, onSave }) {
         setLoading(true);
         try {
             const res = isEdit
-                ? await api.updateCompra(compra.ID_compra, form)
+                ? await api.updateCompra(compra.id_compra, form)
                 : await api.createCompra(form);
             if (res.success) onSave(res.message);
             else setErrors({ general: res.message });
@@ -105,7 +104,7 @@ function CompraModal({ compra, onClose, onSave }) {
             {isEdit && (
                 <div>
                     <label>ID Compra (No editable)</label><br />
-                    <input type="text" value={compra.ID_compra} disabled /><br /><br />
+                    <input type="text" value={compra.id_compra} disabled /><br /><br />
                     <label>Producto (No editable)</label><br />
                     <input type="text" value={compra.nombre_producto} disabled /><br /><br />
                     <label>Proveedor (No editable)</label><br />
@@ -132,7 +131,7 @@ function CompraModal({ compra, onClose, onSave }) {
                         <select name="id_producto" value={form.id_producto} onChange={handle}>
                             <option value="">-- Seleccione un producto --</option>
                             {selects.productos.map((p) => (
-                                <option key={p.ID_producto} value={p.ID_producto}>{p.nombre}</option>
+                                <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
                             ))}
                         </select><br />
                         {errors.id_producto && <span>{errors.id_producto}</span>}
@@ -227,10 +226,10 @@ export default function ComprasCRUD() {
                     </thead>
                     <tbody>
                         {compras.map((c) => (
-                            <tr key={c.ID_compra}>
-                                <td>{c.ID_compra}</td>
-                                <td>{c.Cantidad}</td>
-                                <td>{c.Descripcion}</td>
+                            <tr key={c.id_compra}>
+                                <td>{c.id_compra}</td>
+                                <td>{c.cantidad}</td>
+                                <td>{c.descripcion}</td>
                                 <td>{c.nombre_producto}</td>
                                 <td>{c.correo_proveedor}</td>
                                 <td>
@@ -253,9 +252,9 @@ export default function ComprasCRUD() {
 
             {confirmDelete && (
                 <div>
-                    <p>¿Eliminar compra ID <strong>{confirmDelete.ID_compra}</strong>?</p>
+                    <p>¿Eliminar compra ID <strong>{confirmDelete.id_compra}</strong>?</p>
                     <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.ID_compra)}>Sí, eliminar</button>
+                    <button onClick={() => handleDelete(confirmDelete.id_compra)}>Sí, eliminar</button>
                 </div>
             )}
         </div>

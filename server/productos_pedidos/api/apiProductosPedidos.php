@@ -14,7 +14,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // GET ?selects=1 → productos y pedidos para los selects
 if ($method === 'GET' && isset($_GET['selects'])) {
-    $prods = mysqli_query($conn, "SELECT ID_producto, nombre FROM productos ORDER BY nombre ASC");
+    $prods = mysqli_query($conn, "SELECT id_producto, nombre FROM productos ORDER BY nombre ASC");
     $peds  = mysqli_query($conn, "SELECT id_pedido FROM pedidos ORDER BY id_pedido ASC");
     $ps = []; while ($r = mysqli_fetch_assoc($prods)) $ps[] = $r;
     $pe = []; while ($r = mysqli_fetch_assoc($peds))  $pe[] = $r;
@@ -28,11 +28,11 @@ switch ($method) {
     case 'GET':
         $resultado = mysqli_query($conn, "
             SELECT pp.id, pp.descripcion, pp.cantidad,
-                    p.nombre  AS nombre_producto,
-                    pe.id_pedido
-            FROM Productos_Pedidos pp
-            INNER JOIN Productos p  ON pp.id_producto = p.ID_producto
-            INNER JOIN Pedidos   pe ON pp.id_pedido   = pe.id_pedido
+                   p.nombre  AS nombre_producto,
+                   pe.id_pedido
+            FROM productos_pedidos pp
+            INNER JOIN productos p  ON pp.id_producto = p.id_producto
+            INNER JOIN pedidos   pe ON pp.id_pedido   = pe.id_pedido
             ORDER BY pp.id DESC
         ");
         $rows = [];
@@ -67,7 +67,7 @@ switch ($method) {
         }
 
         // Verificar producto
-        $st = mysqli_prepare($conn, "SELECT ID_producto FROM Productos WHERE ID_producto = ?");
+        $st = mysqli_prepare($conn, "SELECT id_producto FROM productos WHERE id_producto = ?");
         mysqli_stmt_bind_param($st, 'i', $id_producto);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -77,7 +77,7 @@ switch ($method) {
         mysqli_stmt_close($st);
 
         // Verificar pedido
-        $st = mysqli_prepare($conn, "SELECT id_pedido FROM Pedidos WHERE id_pedido = ?");
+        $st = mysqli_prepare($conn, "SELECT id_pedido FROM pedidos WHERE id_pedido = ?");
         mysqli_stmt_bind_param($st, 'i', $id_pedido);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -86,7 +86,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "INSERT INTO Productos_Pedidos (id_producto, id_pedido, descripcion, cantidad) VALUES (?, ?, ?, ?)");
+        $st = mysqli_prepare($conn, "INSERT INTO productos_pedidos (id_producto, id_pedido, descripcion, cantidad) VALUES (?, ?, ?, ?)");
         mysqli_stmt_bind_param($st, 'iisi', $id_producto, $id_pedido, $descripcion, $cantidad);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Producto-Pedido registrado exitosamente."]);
@@ -124,7 +124,7 @@ switch ($method) {
         }
 
         // Verificar que existe
-        $st = mysqli_prepare($conn, "SELECT id FROM Productos_Pedidos WHERE id = ?");
+        $st = mysqli_prepare($conn, "SELECT id FROM productos_pedidos WHERE id = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -133,7 +133,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "UPDATE Productos_Pedidos SET descripcion=?, cantidad=? WHERE id=?");
+        $st = mysqli_prepare($conn, "UPDATE productos_pedidos SET descripcion=?, cantidad=? WHERE id=?");
         mysqli_stmt_bind_param($st, 'sii', $descripcion, $cantidad, $id);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Registro actualizado exitosamente."]);
@@ -142,14 +142,14 @@ switch ($method) {
         mysqli_stmt_close($st);
         break;
 
-    // ─── ELIMINAR ──────────────────────────────────────────────────────────
+    // ─── ELIMINAR (eliminación física — tabla intermedia, no aplica desactivar) ──
     case 'DELETE':
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
             echo json_encode(["success" => false, "message" => "ID inválido."]); exit;
         }
         $id = $_GET['id'];
 
-        $st = mysqli_prepare($conn, "SELECT id FROM Productos_Pedidos WHERE id = ?");
+        $st = mysqli_prepare($conn, "SELECT id FROM productos_pedidos WHERE id = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -158,10 +158,10 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "DELETE FROM Productos_Pedidos WHERE id = ?");
+        $st = mysqli_prepare($conn, "DELETE FROM productos_pedidos WHERE id = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         if (mysqli_stmt_execute($st))
-            echo json_encode(["success" => true, "message" => "Registro eliminado exitosamente."]);
+            echo json_encode(["success" => true, "message" => "Producto eliminado del pedido exitosamente."]);
         else
             echo json_encode(["success" => false, "message" => "Error: " . mysqli_error($conn)]);
         mysqli_stmt_close($st);
