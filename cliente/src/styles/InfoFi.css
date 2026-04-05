@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap');
+
+
+p {
+  font-family: "Raleway", sans-serif;
+}
+
+.infofi{
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 5s ease, transform 5s ease;
+  color: white;
+  padding:  5rem 1rem;
+  text-align: center;
+  width: 100%;
+  height: auto;
+  display: flex;
+}
+
+.infofi.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.corto-proceso{
+width: auto;
+height: 20rem;
+border-radius: 1rem;
+}
+
+.infofi-container{
+    text-align: left;
+    padding:1rem;
+    
+}
+
+
+.infofi-title{
+      font-family: "DM Sans", sans-serif;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+}
+
+.infofi-text{
+    font-size: 0.9rem;
+    line-height: 1.8;  
+}

@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
+
+.tipoinvernadero {
+    padding: 3rem 2rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.tipoinvernadero.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tipoinvernadero h2 {
+    font-family: "DM Sans", sans-serif;
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+}
+
+.tipoinvernadero-img {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.invernadero-metalico,
+.invernadero-tipocapilla {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    gap: 1rem;
+}
+
+.invernadero-metalico img,
+.invernadero-tipocapilla img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.invernadero-metalico p,
+.invernadero-tipocapilla p {
+    font-family: "Raleway", sans-serif;
+    font-size: 1rem;
+    color: #ccc;
+    line-height: 1.7;
+    text-align: justify;
+}
