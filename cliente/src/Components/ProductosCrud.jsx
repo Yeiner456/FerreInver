@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 const API_BASE = "http://localhost/ferreinver/server/productos/api";
 const IMG_BASE = "http://localhost/ferreinver/";
 
-// ─── API (ahora usa FormData) ────────────────────────────────────────────────
 const api = {
     getProductos: () =>
         fetch(`${API_BASE}/apiProductos.php`).then((r) => r.json()),
@@ -11,17 +10,16 @@ const api = {
     createProducto: (formData) =>
         fetch(`${API_BASE}/apiProductos.php`, {
             method: "POST",
-            body: formData, // Sin Content-Type header, el browser lo pone automáticamente
+            body: formData,
         }).then((r) => r.json()),
 
     updateProducto: (id, formData) =>
-        // PHP no procesa multipart en PUT, así que usamos POST con ?_method=PUT
         fetch(`${API_BASE}/apiProductos.php?id=${id}&_method=PUT`, {
             method: "POST",
             body: formData,
         }).then((r) => r.json()),
 
-    deleteProducto: (id) =>
+    deactivateProducto: (id) =>
         fetch(`${API_BASE}/apiProductos.php?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
@@ -49,12 +47,10 @@ function ProductoModal({ producto, onClose, onSave }) {
             ? { nombre: producto.nombre, precio: producto.precio, descripcion: producto.descripcion }
             : emptyForm
     );
-    const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false);
-
-    // ── Estado de imagen ──
-    const [imagenFile, setImagenFile] = useState(null);   // archivo nuevo seleccionado
-    const [preview, setPreview]       = useState(         // preview a mostrar
+    const [errors, setErrors]     = useState({});
+    const [loading, setLoading]   = useState(false);
+    const [imagenFile, setImagenFile] = useState(null);
+    const [preview, setPreview]   = useState(
         isEdit && producto.imagen ? IMG_BASE + producto.imagen : null
     );
     const fileInputRef = useRef();
@@ -65,7 +61,7 @@ function ProductoModal({ producto, onClose, onSave }) {
         const file = e.target.files[0];
         if (!file) return;
         setImagenFile(file);
-        setPreview(URL.createObjectURL(file)); // preview local inmediato
+        setPreview(URL.createObjectURL(file));
     };
 
     const quitarImagen = () => {
@@ -79,7 +75,6 @@ function ProductoModal({ producto, onClose, onSave }) {
         if (Object.keys(errs).length) { setErrors(errs); return; }
         setLoading(true);
         try {
-            // Construir FormData
             const fd = new FormData();
             fd.append("nombre",      form.nombre);
             fd.append("precio",      form.precio);
@@ -129,7 +124,6 @@ function ProductoModal({ producto, onClose, onSave }) {
                 {errors.descripcion && <span style={{ color: "red" }}>{errors.descripcion}</span>}
             </div><br />
 
-            {/* ── INPUT IMAGEN ── */}
             <div>
                 <label>Imagen del Producto (opcional)</label><br />
                 <input
@@ -140,7 +134,6 @@ function ProductoModal({ producto, onClose, onSave }) {
                 /><br />
                 {isEdit && <small style={{ color: "#888" }}>Deja vacío para conservar la imagen actual.</small>}
 
-                {/* Preview */}
                 {preview && (
                     <div style={{ marginTop: 8 }}>
                         <img
@@ -167,11 +160,11 @@ function ProductoModal({ producto, onClose, onSave }) {
 }
 
 export default function ProductosCRUD() {
-    const [productos, setProductos] = useState([]);
-    const [loading, setLoading]     = useState(true);
-    const [modal, setModal]         = useState(null);
-    const [mensaje, setMensaje]     = useState(null);
-    const [confirmDelete, setConfirmDelete] = useState(null);
+    const [productos, setProductos]         = useState([]);
+    const [loading, setLoading]             = useState(true);
+    const [modal, setModal]                 = useState(null);
+    const [mensaje, setMensaje]             = useState(null);
+    const [confirmDeactivate, setConfirmDeactivate] = useState(null);
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -193,15 +186,15 @@ export default function ProductosCRUD() {
         load();
     };
 
-    const handleDelete = async (id) => {
+    const handleDeactivate = async (id) => {
         try {
-            const res = await api.deleteProducto(id);
+            const res = await api.deactivateProducto(id);
             if (res.success) { setMensaje({ texto: res.message, tipo: "success" }); load(); }
             else setMensaje({ texto: res.message, tipo: "error" });
         } catch {
             setMensaje({ texto: "No se pudo conectar con la API.", tipo: "error" });
         } finally {
-            setConfirmDelete(null);
+            setConfirmDeactivate(null);
         }
     };
 
@@ -250,7 +243,12 @@ export default function ProductosCRUD() {
                                 <td>{p.estado_producto}</td>
                                 <td>
                                     <button onClick={() => setModal(p)}>Editar</button>{" "}
-                                    <button onClick={() => setConfirmDelete(p)}>Eliminar</button>
+                                    <button
+                                        onClick={() => setConfirmDeactivate(p)}
+                                        disabled={p.estado_producto === "inactivo"}
+                                    >
+                                        Desactivar
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -266,11 +264,15 @@ export default function ProductosCRUD() {
                 />
             )}
 
-            {confirmDelete && (
+            {confirmDeactivate && (
                 <div style={{ marginTop: 12, border: "1px solid #f99", padding: 12 }}>
-                    <p>¿Eliminar <strong>{confirmDelete.nombre}</strong> (ID: {confirmDelete.id_producto})?</p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id_producto)}>Sí, eliminar</button>
+                    <p>
+                        ¿Desactivar <strong>{confirmDeactivate.nombre}</strong> (ID: {confirmDeactivate.id_producto})?
+                        <br />
+                        <small>El producto no aparecerá disponible para nuevos pedidos.</small>
+                    </p>
+                    <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>{" "}
+                    <button onClick={() => handleDeactivate(confirmDeactivate.id_producto)}>Sí, desactivar</button>
                 </div>
             )}
         </div>

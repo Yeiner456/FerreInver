@@ -14,7 +14,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // GET ?selects=1 → clientes activos para el select
 if ($method === 'GET' && isset($_GET['selects'])) {
-    $res = mysqli_query($conn, "SELECT Documento, nombre, correo FROM clientes WHERE estado_inicio_sesion = 'Activo' ORDER BY Nombre ASC");
+    $res = mysqli_query($conn, "SELECT documento, nombre, correo FROM clientes WHERE estado_inicio_sesion = 'activo' ORDER BY nombre ASC");
     $rows = [];
     while ($f = mysqli_fetch_assoc($res)) $rows[] = $f;
     echo json_encode(["success" => true, "clientes" => $rows]);
@@ -22,16 +22,17 @@ if ($method === 'GET' && isset($_GET['selects'])) {
 }
 
 $medios_validos  = ['Efectivo', 'Tarjeta Débito', 'Tarjeta Crédito', 'Transferencia', 'PSE', 'Nequi', 'Daviplata'];
-$estados_validos = ['Pendiente', 'Recibido', 'Listo para recibir', 'Cancelado'];
+$estados_validos = ['pendiente', 'recibido', 'listo para recibir', 'cancelado'];
 
 switch ($method) {
 
     // ─── LISTAR ────────────────────────────────────────────────────────────
     case 'GET':
         $resultado = mysqli_query($conn, "
-            SELECT p.*, c.nombre AS nombre_cliente, c.correo
+            SELECT p.id_pedido, p.fecha_hora, p.medio_pago, p.estado_pedido,
+                   p.id_cliente, c.nombre AS nombre_cliente, c.correo
             FROM pedidos p
-            INNER JOIN clientes c ON p.id_cliente = c.Documento
+            INNER JOIN clientes c ON p.id_cliente = c.documento
             ORDER BY p.fecha_hora DESC
         ");
         $rows = [];
@@ -65,7 +66,7 @@ switch ($method) {
         }
 
         // Verificar cliente
-        $st = mysqli_prepare($conn, "SELECT Documento FROM clientes WHERE Documento = ?");
+        $st = mysqli_prepare($conn, "SELECT documento FROM clientes WHERE documento = ?");
         mysqli_stmt_bind_param($st, 'i', $id_cliente);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -74,7 +75,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "INSERT INTO pedidos (id_cliente, Medio_pago, Estado_pedido) VALUES (?, ?, ?)");
+        $st = mysqli_prepare($conn, "INSERT INTO pedidos (id_cliente, medio_pago, estado_pedido) VALUES (?, ?, ?)");
         mysqli_stmt_bind_param($st, 'iss', $id_cliente, $medio_pago, $estado_pedido);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Pedido registrado exitosamente."]);
@@ -123,7 +124,7 @@ switch ($method) {
         mysqli_stmt_close($st);
 
         // Verificar cliente
-        $st = mysqli_prepare($conn, "SELECT Documento FROM clientes WHERE Documento = ?");
+        $st = mysqli_prepare($conn, "SELECT documento FROM clientes WHERE documento = ?");
         mysqli_stmt_bind_param($st, 'i', $id_cliente);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -132,7 +133,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "UPDATE pedidos SET id_cliente=?, Medio_pago=?, Estado_pedido=? WHERE id_pedido=?");
+        $st = mysqli_prepare($conn, "UPDATE pedidos SET id_cliente=?, medio_pago=?, estado_pedido=? WHERE id_pedido=?");
         mysqli_stmt_bind_param($st, 'issi', $id_cliente, $medio_pago, $estado_pedido, $id);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Pedido actualizado exitosamente."]);
@@ -141,26 +142,35 @@ switch ($method) {
         mysqli_stmt_close($st);
         break;
 
-    // ─── ELIMINAR ──────────────────────────────────────────────────────────
+    // ─── CANCELAR PEDIDO ───────────────────────────────────────────────────
     case 'DELETE':
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
             echo json_encode(["success" => false, "message" => "ID inválido."]); exit;
         }
         $id = $_GET['id'];
 
-        $st = mysqli_prepare($conn, "SELECT id_pedido FROM pedidos WHERE id_pedido = ?");
+        // Verificar que existe y obtener estado actual
+        $st = mysqli_prepare($conn, "SELECT id_pedido, estado_pedido FROM pedidos WHERE id_pedido = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         mysqli_stmt_execute($st);
-        if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
+        $res = mysqli_stmt_get_result($st);
+        if (mysqli_num_rows($res) === 0) {
             echo json_encode(["success" => false, "message" => "El pedido no existe."]);
             exit;
         }
+        $pedido_actual = mysqli_fetch_assoc($res);
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "DELETE FROM pedidos WHERE id_pedido = ?");
+        // Verificar que no esté ya cancelado
+        if ($pedido_actual['estado_pedido'] === 'cancelado') {
+            echo json_encode(["success" => false, "message" => "El pedido ya está cancelado."]);
+            exit;
+        }
+
+        $st = mysqli_prepare($conn, "UPDATE pedidos SET estado_pedido = 'cancelado' WHERE id_pedido = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         if (mysqli_stmt_execute($st))
-            echo json_encode(["success" => true, "message" => "Pedido eliminado exitosamente."]);
+            echo json_encode(["success" => true, "message" => "Pedido cancelado exitosamente."]);
         else
             echo json_encode(["success" => false, "message" => "Error: " . mysqli_error($conn)]);
         mysqli_stmt_close($st);

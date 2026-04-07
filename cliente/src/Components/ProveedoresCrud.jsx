@@ -22,7 +22,7 @@ const api = {
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
-    deleteProveedor: (nit) =>
+    deactivateProveedor: (nit) =>
         fetch(`${API_BASE}/apiProveedores.php?nit=${nit}`, {
             method: "DELETE",
         }).then((r) => r.json()),
@@ -33,7 +33,7 @@ const emptyForm = {
     correo: "",
     direccion: "",
     telefono: "",
-    estado: "Activo",
+    estado: "activo",
 };
 
 function validateCreate(form) {
@@ -156,8 +156,8 @@ function ProveedorModal({ proveedor, onClose, onSave }) {
             <div>
                 <label>Estado</label><br />
                 <select name="estado" value={form.estado} onChange={handle}>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
                 </select>
             </div><br />
 
@@ -174,7 +174,7 @@ export default function ProveedoresCRUD() {
     const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState(null);
     const [mensaje, setMensaje] = useState(null);
-    const [confirmDelete, setConfirmDelete] = useState(null);
+    const [confirmDeactivate, setConfirmDeactivate] = useState(null);
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -196,15 +196,15 @@ export default function ProveedoresCRUD() {
         load();
     };
 
-    const handleDelete = async (nit) => {
+    const handleDeactivate = async (nit) => {
         try {
-            const res = await api.deleteProveedor(nit);
+            const res = await api.deactivateProveedor(nit);
             if (res.success) { setMensaje({ texto: res.message, tipo: "success" }); load(); }
             else setMensaje({ texto: res.message, tipo: "error" });
         } catch {
             setMensaje({ texto: "No se pudo conectar con la API.", tipo: "error" });
         } finally {
-            setConfirmDelete(null);
+            setConfirmDeactivate(null);
         }
     };
 
@@ -245,7 +245,12 @@ export default function ProveedoresCRUD() {
                                 <td>{p.estado}</td>
                                 <td>
                                     <button onClick={() => setModal(p)}>Editar</button>{" "}
-                                    <button onClick={() => setConfirmDelete(p)}>Eliminar</button>
+                                    <button
+                                        onClick={() => setConfirmDeactivate(p)}
+                                        disabled={p.estado === "inactivo"}
+                                    >
+                                        Desactivar
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -261,13 +266,15 @@ export default function ProveedoresCRUD() {
                 />
             )}
 
-            {confirmDelete && (
+            {confirmDeactivate && (
                 <div>
                     <p>
-                        ¿Eliminar proveedor NIT <strong>{confirmDelete.nit_proveedor}</strong> ({confirmDelete.correo})?
+                        ¿Desactivar proveedor NIT <strong>{confirmDeactivate.nit_proveedor}</strong> ({confirmDeactivate.correo})?
+                        <br />
+                        <small>El proveedor no aparecerá disponible para nuevas compras.</small>
                     </p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.nit_proveedor)}>Sí, eliminar</button>
+                    <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>{" "}
+                    <button onClick={() => handleDeactivate(confirmDeactivate.nit_proveedor)}>Sí, desactivar</button>
                 </div>
             )}
         </div>

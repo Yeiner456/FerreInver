@@ -14,10 +14,10 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Endpoint especial: GET ?selects=1 → clientes e invernaderos activos
 if ($method === 'GET' && isset($_GET['selects'])) {
-    $clientes = mysqli_query($conn, "SELECT documento, nombre FROM clientes WHERE estado_inicio_sesion = 'activo' ORDER BY nombre");
+    $clientes     = mysqli_query($conn, "SELECT documento, nombre FROM clientes WHERE estado_inicio_sesion = 'activo' ORDER BY nombre");
     $invernaderos = mysqli_query($conn, "SELECT id_invernadero, nombre, precio_m2 FROM invernaderos WHERE estado = 'activo' ORDER BY nombre");
-    $cl = []; while($r = mysqli_fetch_assoc($clientes))     $cl[] = $r;
-    $inv = []; while($r = mysqli_fetch_assoc($invernaderos)) $inv[] = $r;
+    $cl  = []; while ($r = mysqli_fetch_assoc($clientes))     $cl[]  = $r;
+    $inv = []; while ($r = mysqli_fetch_assoc($invernaderos)) $inv[] = $r;
     echo json_encode(["success" => true, "clientes" => $cl, "invernaderos" => $inv]);
     exit;
 }
@@ -28,13 +28,13 @@ switch ($method) {
     case 'GET':
         $resultado = mysqli_query($conn, "
             SELECT co.id_cotizacion, co.largo, co.ancho, co.metros_cuadrados,
-                    co.valor_m2, co.total, co.fecha, co.estado,
-                    cl.nombre  AS cliente_nombre,
-                    inv.nombre AS invernadero_nombre,
-                    co.cliente_id, co.invernadero_id
+                   co.valor_m2, co.total, co.fecha, co.estado,
+                   cl.nombre  AS cliente_nombre,
+                   inv.nombre AS invernadero_nombre,
+                   co.cliente_id, co.invernadero_id
             FROM cotizaciones co
-            INNER JOIN clientes    cl  ON co.cliente_id     = cl.documento
-            INNER JOIN invernaderos inv ON co.invernadero_id = inv.id_invernadero
+            INNER JOIN clientes     cl  ON co.cliente_id     = cl.documento
+            INNER JOIN invernaderos inv ON co.invernadero_id  = inv.id_invernadero
             ORDER BY co.fecha DESC
         ");
         $rows = [];
@@ -46,38 +46,34 @@ switch ($method) {
     case 'POST':
         $b = json_decode(file_get_contents("php://input"), true);
 
-        $cliente_id       = $b['cliente_id'] ?? '';
-        $invernadero_id   = $b['invernadero_id'] ?? '';
-        $largo            = $b['largo'] ?? '';
-        $ancho            = $b['ancho'] ?? '';
+        $cliente_id       = $b['cliente_id']       ?? '';
+        $invernadero_id   = $b['invernadero_id']   ?? '';
+        $largo            = $b['largo']            ?? '';
+        $ancho            = $b['ancho']            ?? '';
         $metros_cuadrados = $b['metros_cuadrados'] ?? '';
-        $valor_m2         = $b['valor_m2'] ?? '';
-        $total            = $b['total'] ?? '';
-        $estado           = trim($b['estado'] ?? '');
+        $valor_m2         = $b['valor_m2']         ?? '';
+        $total            = $b['total']            ?? '';
+        $estado           = trim($b['estado']      ?? '');
 
-        // Campos obligatorios
         if (empty($cliente_id) || empty($invernadero_id) || empty($largo) || empty($ancho) ||
             empty($metros_cuadrados) || empty($valor_m2) || empty($total) || empty($estado)) {
             echo json_encode(["success" => false, "message" => "Todos los campos son obligatorios."]);
             exit;
         }
 
-        // Validar numéricos positivos
         foreach (['largo' => $largo, 'ancho' => $ancho, 'metros_cuadrados' => $metros_cuadrados,
-                'valor_m2' => $valor_m2, 'total' => $total] as $campo => $val) {
+                  'valor_m2' => $valor_m2, 'total' => $total] as $campo => $val) {
             if (!is_numeric($val) || $val <= 0) {
                 echo json_encode(["success" => false, "message" => "El campo $campo debe ser un número mayor a 0."]);
                 exit;
             }
         }
 
-        // Validar consistencia m2 = largo * ancho
         if (abs(round($largo * $ancho, 2) - round($metros_cuadrados, 2)) > 0.01) {
             echo json_encode(["success" => false, "message" => "Los metros cuadrados no coinciden con largo × ancho."]);
             exit;
         }
 
-        // Validar estado
         if (!in_array($estado, ['pendiente', 'aprobada', 'rechazada'])) {
             echo json_encode(["success" => false, "message" => "Estado inválido."]);
             exit;
@@ -110,15 +106,11 @@ switch ($method) {
             exit;
         }
 
-        // Validar total
         if (abs(round($metros_cuadrados * $valor_m2, 2) - round($total, 2)) > 0.01) {
             echo json_encode(["success" => false, "message" => "El total no coincide con metros cuadrados × valor m²."]);
             exit;
         }
 
-        $st = mysqli_prepare($conn, "INSERT INTO cotizaciones (cliente_id, invernadero_id, largo, ancho, metros_cuadrados, valor_m2, total, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($st, 'iiddddd s', $cliente_id, $invernadero_id, $largo, $ancho, $metros_cuadrados, $valor_m2, $total, $estado);
-        // corregir espacio accidental en type string
         $st = mysqli_prepare($conn, "INSERT INTO cotizaciones (cliente_id, invernadero_id, largo, ancho, metros_cuadrados, valor_m2, total, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         mysqli_stmt_bind_param($st, 'iiddddds', $cliente_id, $invernadero_id, $largo, $ancho, $metros_cuadrados, $valor_m2, $total, $estado);
         if (mysqli_stmt_execute($st))
@@ -136,14 +128,14 @@ switch ($method) {
         $id = $_GET['id'];
         $b  = json_decode(file_get_contents("php://input"), true);
 
-        $cliente_id       = $b['cliente_id'] ?? '';
-        $invernadero_id   = $b['invernadero_id'] ?? '';
-        $largo            = $b['largo'] ?? '';
-        $ancho            = $b['ancho'] ?? '';
+        $cliente_id       = $b['cliente_id']       ?? '';
+        $invernadero_id   = $b['invernadero_id']   ?? '';
+        $largo            = $b['largo']            ?? '';
+        $ancho            = $b['ancho']            ?? '';
         $metros_cuadrados = $b['metros_cuadrados'] ?? '';
-        $valor_m2         = $b['valor_m2'] ?? '';
-        $total            = $b['total'] ?? '';
-        $estado           = trim($b['estado'] ?? '');
+        $valor_m2         = $b['valor_m2']         ?? '';
+        $total            = $b['total']            ?? '';
+        $estado           = trim($b['estado']      ?? '');
 
         if (empty($cliente_id) || empty($invernadero_id) || empty($largo) || empty($ancho) ||
             empty($metros_cuadrados) || empty($valor_m2) || empty($total) || empty($estado)) {
@@ -152,7 +144,7 @@ switch ($method) {
         }
 
         foreach (['largo' => $largo, 'ancho' => $ancho, 'metros_cuadrados' => $metros_cuadrados,
-                'valor_m2' => $valor_m2, 'total' => $total] as $campo => $val) {
+                  'valor_m2' => $valor_m2, 'total' => $total] as $campo => $val) {
             if (!is_numeric($val) || $val <= 0) {
                 echo json_encode(["success" => false, "message" => "El campo $campo debe ser un número mayor a 0."]);
                 exit;
@@ -220,26 +212,35 @@ switch ($method) {
         mysqli_stmt_close($st);
         break;
 
-    // ─── ELIMINAR ──────────────────────────────────────────────────────────
+    // ─── RECHAZAR COTIZACIÓN ───────────────────────────────────────────────
     case 'DELETE':
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
             echo json_encode(["success" => false, "message" => "ID inválido."]); exit;
         }
         $id = $_GET['id'];
 
-        $st = mysqli_prepare($conn, "SELECT id_cotizacion FROM cotizaciones WHERE id_cotizacion = ?");
+        // Verificar que existe
+        $st = mysqli_prepare($conn, "SELECT id_cotizacion, estado FROM cotizaciones WHERE id_cotizacion = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         mysqli_stmt_execute($st);
-        if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
+        $res = mysqli_stmt_get_result($st);
+        if (mysqli_num_rows($res) === 0) {
             echo json_encode(["success" => false, "message" => "La cotización no existe."]);
             exit;
         }
+        $cot_actual = mysqli_fetch_assoc($res);
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "DELETE FROM cotizaciones WHERE id_cotizacion = ?");
+        // Verificar que no esté ya rechazada
+        if ($cot_actual['estado'] === 'rechazada') {
+            echo json_encode(["success" => false, "message" => "La cotización ya está rechazada."]);
+            exit;
+        }
+
+        $st = mysqli_prepare($conn, "UPDATE cotizaciones SET estado = 'rechazada' WHERE id_cotizacion = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         if (mysqli_stmt_execute($st))
-            echo json_encode(["success" => true, "message" => "Cotización eliminada exitosamente."]);
+            echo json_encode(["success" => true, "message" => "Cotización rechazada exitosamente."]);
         else
             echo json_encode(["success" => false, "message" => "Error: " . mysqli_error($conn)]);
         mysqli_stmt_close($st);

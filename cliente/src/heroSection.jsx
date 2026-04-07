@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { data } from "./Components/data.js";
 import "./styles/HeroSection.css";
 
+
 export const HeroSection = () => {
   const listRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);

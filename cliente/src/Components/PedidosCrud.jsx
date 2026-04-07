@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 const API_BASE = "http://localhost/ferreinver/server/pedidos/api";
 
 const MEDIOS_PAGO = ["Efectivo", "Tarjeta Débito", "Tarjeta Crédito", "Transferencia", "PSE", "Nequi", "Daviplata"];
-const ESTADOS_PEDIDO = ["Pendiente", "Recibido", "Listo para recibir", "Cancelado"];
+const ESTADOS_PEDIDO = ["pendiente", "recibido", "listo para recibir", "cancelado"];
 
 const api = {
     getPedidos: () =>
@@ -26,7 +26,7 @@ const api = {
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
-    deletePedido: (id) =>
+    cancelarPedido: (id) =>
         fetch(`${API_BASE}/apiPedidos.php?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
@@ -35,7 +35,7 @@ const api = {
 const emptyForm = {
     id_cliente: "",
     medio_pago: "",
-    estado_pedido: "Pendiente",
+    estado_pedido: "pendiente",
 };
 
 function validate(form) {
@@ -50,7 +50,7 @@ function PedidoModal({ pedido, onClose, onSave }) {
     const isEdit = !!pedido;
     const [form, setForm] = useState(
         isEdit
-            ? { id_cliente: pedido.id_cliente, medio_pago: pedido.Medio_pago, estado_pedido: pedido.Estado_pedido }
+            ? { id_cliente: pedido.id_cliente, medio_pago: pedido.medio_pago, estado_pedido: pedido.estado_pedido }
             : emptyForm
     );
     const [clientes, setClientes] = useState([]);
@@ -101,7 +101,7 @@ function PedidoModal({ pedido, onClose, onSave }) {
                 <select name="id_cliente" value={form.id_cliente} onChange={handle}>
                     <option value="">-- Seleccione un cliente --</option>
                     {clientes.map((c) => (
-                        <option key={c.Documento} value={c.Documento}>
+                        <option key={c.documento} value={c.documento}>
                             {c.nombre} - {c.correo}
                         </option>
                     ))}
@@ -143,7 +143,7 @@ export default function PedidosCRUD() {
     const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState(null);
     const [mensaje, setMensaje] = useState(null);
-    const [confirmDelete, setConfirmDelete] = useState(null);
+    const [confirmCancelar, setConfirmCancelar] = useState(null);
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -165,15 +165,15 @@ export default function PedidosCRUD() {
         load();
     };
 
-    const handleDelete = async (id) => {
+    const handleCancelar = async (id) => {
         try {
-            const res = await api.deletePedido(id);
+            const res = await api.cancelarPedido(id);
             if (res.success) { setMensaje({ texto: res.message, tipo: "success" }); load(); }
             else setMensaje({ texto: res.message, tipo: "error" });
         } catch {
             setMensaje({ texto: "No se pudo conectar con la API.", tipo: "error" });
         } finally {
-            setConfirmDelete(null);
+            setConfirmCancelar(null);
         }
     };
 
@@ -216,7 +216,12 @@ export default function PedidosCRUD() {
                                 <td>{p.estado_pedido}</td>
                                 <td>
                                     <button onClick={() => setModal(p)}>Editar</button>{" "}
-                                    <button onClick={() => setConfirmDelete(p)}>Eliminar</button>
+                                    <button
+                                        onClick={() => setConfirmCancelar(p)}
+                                        disabled={p.estado_pedido === "cancelado"}
+                                    >
+                                        Cancelar
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -232,11 +237,16 @@ export default function PedidosCRUD() {
                 />
             )}
 
-            {confirmDelete && (
+            {confirmCancelar && (
                 <div>
-                    <p>¿Eliminar pedido <strong>#{confirmDelete.id_pedido}</strong> de <strong>{confirmDelete.nombre_cliente}</strong>?</p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id_pedido)}>Sí, eliminar</button>
+                    <p>
+                        ¿Cancelar pedido <strong>#{confirmCancelar.id_pedido}</strong> de{" "}
+                        <strong>{confirmCancelar.nombre_cliente}</strong>?
+                        <br />
+                        <small>El estado cambiará a "cancelado" y no podrá revertirse desde aquí.</small>
+                    </p>
+                    <button onClick={() => setConfirmCancelar(null)}>Cerrar</button>{" "}
+                    <button onClick={() => handleCancelar(confirmCancelar.id_pedido)}>Sí, cancelar</button>
                 </div>
             )}
         </div>

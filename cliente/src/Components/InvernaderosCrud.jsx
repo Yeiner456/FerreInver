@@ -20,7 +20,7 @@ const api = {
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
-    deleteInvernadero: (id) =>
+    deactivateInvernadero: (id) =>
         fetch(`${API_BASE}/apiInvernaderos.php?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
@@ -115,7 +115,7 @@ export default function InvernaderoCRUD() {
     const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState(null);
     const [mensaje, setMensaje] = useState(null);
-    const [confirmDelete, setConfirmDelete] = useState(null);
+    const [confirmDeactivate, setConfirmDeactivate] = useState(null);
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -137,15 +137,15 @@ export default function InvernaderoCRUD() {
         load();
     };
 
-    const handleDelete = async (id) => {
+    const handleDeactivate = async (id) => {
         try {
-            const res = await api.deleteInvernadero(id);
+            const res = await api.deactivateInvernadero(id);
             if (res.success) { setMensaje({ texto: res.message, tipo: "success" }); load(); }
             else setMensaje({ texto: res.message, tipo: "error" });
         } catch {
             setMensaje({ texto: "No se pudo conectar con la API.", tipo: "error" });
         } finally {
-            setConfirmDelete(null);
+            setConfirmDeactivate(null);
         }
     };
 
@@ -186,7 +186,12 @@ export default function InvernaderoCRUD() {
                                 <td>{inv.estado}</td>
                                 <td>
                                     <button onClick={() => setModal(inv)}>Editar</button>{" "}
-                                    <button onClick={() => setConfirmDelete(inv)}>Eliminar</button>
+                                    <button
+                                        onClick={() => setConfirmDeactivate(inv)}
+                                        disabled={inv.estado === "inactivo"}
+                                    >
+                                        Desactivar
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -202,11 +207,15 @@ export default function InvernaderoCRUD() {
                 />
             )}
 
-            {confirmDelete && (
+            {confirmDeactivate && (
                 <div>
-                    <p>¿Eliminar invernadero <strong>{confirmDelete.nombre}</strong> (ID: {confirmDelete.id_invernadero})?</p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id_invernadero)}>Sí, eliminar</button>
+                    <p>
+                        ¿Desactivar invernadero <strong>{confirmDeactivate.nombre}</strong> (ID: {confirmDeactivate.id_invernadero})?
+                        <br />
+                        <small>El invernadero no aparecerá disponible para nuevas cotizaciones.</small>
+                    </p>
+                    <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>{" "}
+                    <button onClick={() => handleDeactivate(confirmDeactivate.id_invernadero)}>Sí, desactivar</button>
                 </div>
             )}
         </div>
