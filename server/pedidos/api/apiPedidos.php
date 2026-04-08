@@ -160,8 +160,7 @@ switch ($method) {
         }
         $pedido_actual = mysqli_fetch_assoc($res);
         mysqli_stmt_close($st);
-
-        // Verificar que no esté ya cancelado
+        
         if ($pedido_actual['estado_pedido'] === 'cancelado') {
             echo json_encode(["success" => false, "message" => "El pedido ya está cancelado."]);
             exit;
