@@ -1,6 +1,7 @@
 import React from 'react'
 import './Styles/Nav.css'
 import { Link } from 'react-router-dom'
+// Nav actualizado: link Productos apunta a /tienda-productos, duplicado eliminado
 
 
 
@@ -21,7 +22,7 @@ export const Nav = () => {
                 </li>
 
                 <li className='links'> 
-                <a className='productos' href="">Productos</a>
+                <Link className='productos' to="/tienda-productos">Productos</Link>
             </li>
 
             <li className='links'>
@@ -32,10 +33,6 @@ export const Nav = () => {
 
                 <Link className='quienes-somos' to="/quienes-somos">¿Quienes somos?</Link>
             </li >
-
-                <li className='links'>    
-                    <a  className='productos' href="">Productos</a>
-                </li>
 
                 <li className='links'>
                     <a  className='registro' href="">Registro</a>
