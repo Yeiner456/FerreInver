@@ -57,7 +57,7 @@ switch ($method) {
             echo json_encode(["success" => false, "message" => "El teléfono debe tener al menos 7 dígitos."]);
             exit;
         }
-        if ($estado !== 'Activo' && $estado !== 'Inactivo') {
+        if ($estado !== 'activo' && $estado !== 'inactivo') {
             echo json_encode(["success" => false, "message" => "Estado inválido."]);
             exit;
         }
@@ -125,7 +125,7 @@ switch ($method) {
             echo json_encode(["success" => false, "message" => "El teléfono debe tener al menos 7 dígitos."]);
             exit;
         }
-        if ($estado !== 'Activo' && $estado !== 'Inactivo') {
+        if ($estado !== 'activo' && $estado !== 'inactivo') {
             echo json_encode(["success" => false, "message" => "Estado inválido."]);
             exit;
         }
@@ -159,36 +159,35 @@ switch ($method) {
         mysqli_stmt_close($st);
         break;
 
-    // ─── ELIMINAR ──────────────────────────────────────────────────────────
+    // ─── DESACTIVAR PROVEEDOR ──────────────────────────────────────────────
     case 'DELETE':
         if (!isset($_GET['nit']) || !is_numeric($_GET['nit'])) {
             echo json_encode(["success" => false, "message" => "NIT inválido."]); exit;
         }
         $nit = $_GET['nit'];
 
-        $st = mysqli_prepare($conn, "SELECT nit_proveedor FROM proveedores WHERE nit_proveedor = ?");
+        // Verificar que existe y obtener estado actual
+        $st = mysqli_prepare($conn, "SELECT nit_proveedor, estado FROM proveedores WHERE nit_proveedor = ?");
         mysqli_stmt_bind_param($st, 'i', $nit);
         mysqli_stmt_execute($st);
-        if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
+        $res = mysqli_stmt_get_result($st);
+        if (mysqli_num_rows($res) === 0) {
             echo json_encode(["success" => false, "message" => "El proveedor no existe."]);
             exit;
         }
+        $prov_actual = mysqli_fetch_assoc($res);
         mysqli_stmt_close($st);
 
-        // Integridad con compras
-        $st = mysqli_prepare($conn, "SELECT ID_compra FROM Compras WHERE ID_proveedor = ? LIMIT 1");
-        mysqli_stmt_bind_param($st, 'i', $nit);
-        mysqli_stmt_execute($st);
-        if (mysqli_num_rows(mysqli_stmt_get_result($st)) > 0) {
-            echo json_encode(["success" => false, "message" => "No se puede eliminar: hay compras asociadas a este proveedor."]);
+        // Verificar que no esté ya desactivado
+        if ($prov_actual['estado'] === 'inactivo') {
+            echo json_encode(["success" => false, "message" => "El proveedor ya está desactivado."]);
             exit;
         }
-        mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "DELETE FROM proveedores WHERE nit_proveedor = ?");
+        $st = mysqli_prepare($conn, "UPDATE proveedores SET estado = 'inactivo' WHERE nit_proveedor = ?");
         mysqli_stmt_bind_param($st, 'i', $nit);
         if (mysqli_stmt_execute($st))
-            echo json_encode(["success" => true, "message" => "Proveedor eliminado exitosamente."]);
+            echo json_encode(["success" => true, "message" => "Proveedor desactivado exitosamente."]);
         else
             echo json_encode(["success" => false, "message" => "Error: " . mysqli_error($conn)]);
         mysqli_stmt_close($st);

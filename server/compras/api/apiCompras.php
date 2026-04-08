@@ -17,29 +17,25 @@ switch ($method) {
     // ─── LISTAR ────────────────────────────────────────────────────────────
     case 'GET':
         $resultado = mysqli_query($conn, "
-            SELECT c.ID_compra, c.Cantidad, c.Descripcion,
-                p.ID_producto, p.nombre AS nombre_producto,
+            SELECT c.id_compra, c.cantidad, c.descripcion,
+                p.id_producto, p.nombre AS nombre_producto,
                 pr.nit_proveedor, pr.correo AS correo_proveedor
-            FROM Compras c
-            INNER JOIN Productos p  ON c.ID_producto  = p.ID_producto
-            INNER JOIN Proveedores pr ON c.ID_proveedor = pr.nit_proveedor
-            ORDER BY c.ID_compra DESC
+            FROM compras c
+            INNER JOIN productos p  ON c.id_producto  = p.id_producto
+            INNER JOIN proveedores pr ON c.id_proveedor = pr.nit_proveedor
+            ORDER BY c.id_compra DESC
         ");
         $rows = [];
         while ($f = mysqli_fetch_assoc($resultado)) $rows[] = $f;
         echo json_encode(["success" => true, "data" => $rows]);
         break;
 
-    // ─── LISTAR SELECTS ────────────────────────────────────────────────────
-    // GET ?selects=1  →  devuelve productos y proveedores activos para los <select>
-    case 'GET_SELECTS': break; // manejado abajo
-
     // ─── CREAR ─────────────────────────────────────────────────────────────
     case 'POST':
         // ¿piden los datos de selects?
         if (isset($_GET['selects'])) {
-            $productos   = mysqli_query($conn, "SELECT ID_producto, nombre FROM Productos WHERE estado_producto = 'activo' ORDER BY nombre");
-            $proveedores = mysqli_query($conn, "SELECT nit_proveedor, correo FROM Proveedores WHERE estado = 'activo' ORDER BY correo");
+            $productos   = mysqli_query($conn, "SELECT id_producto, nombre FROM productos WHERE estado_producto = 'activo' ORDER BY nombre");
+            $proveedores = mysqli_query($conn, "SELECT nit_proveedor, correo FROM proveedores WHERE estado = 'activo' ORDER BY correo");
             $ps = []; while($r = mysqli_fetch_assoc($productos))   $ps[] = $r;
             $pv = []; while($r = mysqli_fetch_assoc($proveedores)) $pv[] = $r;
             echo json_encode(["success" => true, "productos" => $ps, "proveedores" => $pv]);
@@ -71,7 +67,7 @@ switch ($method) {
         }
 
         // Verificar producto
-        $st = mysqli_prepare($conn, "SELECT ID_producto FROM Productos WHERE ID_producto = ?");
+        $st = mysqli_prepare($conn, "SELECT id_producto FROM productos WHERE id_producto = ?");
         mysqli_stmt_bind_param($st, 'i', $id_producto);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -81,7 +77,7 @@ switch ($method) {
         mysqli_stmt_close($st);
 
         // Verificar proveedor
-        $st = mysqli_prepare($conn, "SELECT nit_proveedor FROM Proveedores WHERE nit_proveedor = ?");
+        $st = mysqli_prepare($conn, "SELECT nit_proveedor FROM proveedores WHERE nit_proveedor = ?");
         mysqli_stmt_bind_param($st, 'i', $id_proveedor);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -90,7 +86,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "INSERT INTO Compras (Cantidad, Descripcion, ID_proveedor, ID_producto) VALUES (?, ?, ?, ?)");
+        $st = mysqli_prepare($conn, "INSERT INTO compras (cantidad, descripcion, id_proveedor, id_producto) VALUES (?, ?, ?, ?)");
         mysqli_stmt_bind_param($st, 'isii', $cantidad, $descripcion, $id_proveedor, $id_producto);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Compra registrada exitosamente."]);
@@ -128,7 +124,7 @@ switch ($method) {
         }
 
         // Existe
-        $st = mysqli_prepare($conn, "SELECT ID_compra FROM Compras WHERE ID_compra = ?");
+        $st = mysqli_prepare($conn, "SELECT id_compra FROM compras WHERE id_compra = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -137,7 +133,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "UPDATE Compras SET Cantidad=?, Descripcion=? WHERE ID_compra=?");
+        $st = mysqli_prepare($conn, "UPDATE compras SET cantidad=?, descripcion=? WHERE id_compra=?");
         mysqli_stmt_bind_param($st, 'isi', $cantidad, $descripcion, $id);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Compra actualizada exitosamente."]);
@@ -153,7 +149,7 @@ switch ($method) {
         }
         $id = $_GET['id'];
 
-        $st = mysqli_prepare($conn, "SELECT ID_compra FROM Compras WHERE ID_compra = ?");
+        $st = mysqli_prepare($conn, "SELECT id_compra FROM compras WHERE id_compra = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -162,7 +158,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "DELETE FROM Compras WHERE ID_compra = ?");
+        $st = mysqli_prepare($conn, "DELETE FROM compras WHERE id_compra = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Compra eliminada exitosamente."]);

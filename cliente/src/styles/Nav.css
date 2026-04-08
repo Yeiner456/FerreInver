@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
+
+
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1E12A4;
+    height: 5rem;
+    width: 100%;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+
+.nav-links{
+    display: flex;
+    gap: 2rem;
+    text-decoration: none;
+    font-family: "DM Sans", sans-serif;
+    margin-left: auto; 
+}
+
+
+.perfil{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.logo{
+    width: 20rem;  
+    height: 6rem;
+    object-fit: contain;
+
+}
+
+
+.links{
+    list-style: none;
+}
+
+
+.registro,.productos,.inicio,.contactanos,.quienes-somos{
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.registro:hover,.productos:hover,.inicio:hover,.contactanos:hover,.quienes-somos:hover{
+    color: #22bb48;
+    border-bottom: 2px solid #22bb48;
+}
+
+.iniciar-sesion{
+    color: #1E12A4;
+    text-decoration: none;
+    font-size: 18px;
+    background-color: white;
+    padding: 5px 20px;
+    border-radius: 20px;
+}
+
+.iniciar-sesion:hover{
+    background-color: #22bb48;
+    color: white;
+}

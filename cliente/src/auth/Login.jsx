@@ -23,9 +23,14 @@ export const Login = () => {
       const data = await response.json();
 
       if (data.success === true) {
-        // Guardar usuario en sessionStorage para proteger rutas
+        //  Guardar usuario en sessionStorage para proteger rutas
         sessionStorage.setItem("usuario", JSON.stringify(data.usuario));
-        navigate("/admin");
+        //  Redirigir según el rol
+        if (data.usuario.tipo_usuario === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/inicio");
+        }
       } else {
         alert(data.mensaje);
       }
@@ -78,7 +83,7 @@ export const Login = () => {
             </div>
 
             <div className="forgot-password">
-              <a href="/recuperar">¿olvidaste tu contraseña?</a>
+              <a href="/RecuperarPassword.jsx">¿olvidaste tu contraseña?</a>
             </div>
 
             <button className="login-button" type="submit">
