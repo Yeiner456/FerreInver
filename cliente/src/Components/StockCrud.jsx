@@ -45,11 +45,7 @@ function StockModal({ stock, onClose, onSave }) {
     const isEdit = !!stock;
     const [form, setForm] = useState(
         isEdit
-<<<<<<< HEAD
             ? { id_producto: stock.id_producto, cantidad: stock.cantidad }
-=======
-            ? { id_producto: stock.ID_producto, cantidad: stock.Cantidad }
->>>>>>> frontend-algarin
             : emptyForm
     );
     const [productos, setProductos] = useState([]);
@@ -98,11 +94,7 @@ function StockModal({ stock, onClose, onSave }) {
                 <select name="id_producto" value={form.id_producto} onChange={handle}>
                     <option value="">-- Seleccione un producto --</option>
                     {productos.map((p) => (
-<<<<<<< HEAD
                         <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
-=======
-                        <option key={p.ID_producto} value={p.ID_producto}>{p.nombre}</option>
->>>>>>> frontend-algarin
                     ))}
                 </select><br />
                 {errors.id_producto && <span>{errors.id_producto}</span>}
@@ -193,15 +185,9 @@ export default function StocksCRUD() {
                             <tr key={s.id_stock}>
                                 <td>{s.id_stock}</td>
                                 <td>{s.nombre_producto}</td>
-<<<<<<< HEAD
                                 <td>$ {Number(s.precio).toLocaleString("es-CO")}</td>
                                 <td>{s.cantidad}</td>
                                 <td>$ {(Number(s.precio) * Number(s.cantidad)).toLocaleString("es-CO")}</td>
-=======
-                                <td>$ {Number(s.Precio).toLocaleString("es-CO")}</td>
-                                <td>{s.Cantidad}</td>
-                                <td>$ {(Number(s.Precio) * Number(s.Cantidad)).toLocaleString("es-CO")}</td>
->>>>>>> frontend-algarin
                                 <td>
                                     <button onClick={() => setModal(s)}>Editar</button>{" "}
                                     <button onClick={() => setConfirmDelete(s)}>Eliminar</button>
