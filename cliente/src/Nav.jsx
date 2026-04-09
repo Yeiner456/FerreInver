@@ -1,5 +1,5 @@
 import React from 'react'
-import './Styles/Nav.css'
+import './styles/Nav.css'
 import { Link, useNavigate } from 'react-router-dom'
 
 export const Nav = () => {
@@ -18,8 +18,8 @@ export const Nav = () => {
 
   return (
     <nav>
-      <img className='perfil' src="/assets/perfil.webp" alt="perfil" />
-      <img className='logo' src="/assets/logo.webp" alt="logo" />
+      <img className='perfil' src="/img/perfil.webp" alt="perfil" />
+      <img className='logo' src="/img/logo.webp" alt="logo" />
 
       <ul className='nav-links'>
 

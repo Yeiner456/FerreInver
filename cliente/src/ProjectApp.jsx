@@ -11,6 +11,8 @@ import { HeroSection } from './heroSection'
 import { Producto } from './Producto'
 import { Footer } from './Footer'
 import { QuienesSomos } from './QuienesSomos'
+import { InfoFi } from './InfoFi'
+import { TipoInvernadero } from './TipoInvernadero' 
 
 const RutaPorRol = ({ children, rolRequerido }) => {
   const usuarioStr = sessionStorage.getItem("usuario")
@@ -41,7 +43,10 @@ export const ProjectApp = () => {
       <Route path="/inicio" element={
         <ClienteLayout>
           <HeroSection />
+          <InfoFi />
+          <TipoInvernadero />
           <Producto />
+          
         </ClienteLayout>
       } />
 

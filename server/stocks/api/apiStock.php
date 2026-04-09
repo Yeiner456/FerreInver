@@ -14,7 +14,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // GET ?selects=1 → productos para el select
 if ($method === 'GET' && isset($_GET['selects'])) {
-    $res = mysqli_query($conn, "SELECT ID_producto, nombre FROM productos ORDER BY nombre ASC");
+    $res = mysqli_query($conn, "SELECT id_producto, nombre FROM productos ORDER BY nombre ASC");
     $rows = [];
     while ($f = mysqli_fetch_assoc($res)) $rows[] = $f;
     echo json_encode(["success" => true, "productos" => $rows]);
@@ -26,10 +26,10 @@ switch ($method) {
     // ─── LISTAR ────────────────────────────────────────────────────────────
     case 'GET':
         $resultado = mysqli_query($conn, "
-            SELECT s.id_stock, s.Cantidad, s.ID_producto,
-                p.nombre AS nombre_producto, p.Precio
+            SELECT s.id_stock, s.cantidad, s.id_producto,
+                   p.nombre AS nombre_producto, p.precio
             FROM stocks s
-            INNER JOIN productos p ON s.ID_producto = p.ID_producto
+            INNER JOIN productos p ON s.id_producto = p.id_producto
             ORDER BY s.id_stock DESC
         ");
         $rows = [];
@@ -58,7 +58,7 @@ switch ($method) {
         }
 
         // Verificar producto
-        $st = mysqli_prepare($conn, "SELECT ID_producto FROM productos WHERE ID_producto = ?");
+        $st = mysqli_prepare($conn, "SELECT id_producto FROM productos WHERE id_producto = ?");
         mysqli_stmt_bind_param($st, 'i', $id_producto);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -68,7 +68,7 @@ switch ($method) {
         mysqli_stmt_close($st);
 
         // Verificar que no exista ya un stock para este producto
-        $st = mysqli_prepare($conn, "SELECT id_stock FROM stocks WHERE ID_producto = ?");
+        $st = mysqli_prepare($conn, "SELECT id_stock FROM stocks WHERE id_producto = ?");
         mysqli_stmt_bind_param($st, 'i', $id_producto);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) > 0) {
@@ -77,7 +77,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "INSERT INTO stocks (ID_producto, Cantidad) VALUES (?, ?)");
+        $st = mysqli_prepare($conn, "INSERT INTO stocks (id_producto, cantidad) VALUES (?, ?)");
         mysqli_stmt_bind_param($st, 'ii', $id_producto, $cantidad);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Stock registrado exitosamente."]);
@@ -121,7 +121,7 @@ switch ($method) {
         mysqli_stmt_close($st);
 
         // Verificar producto
-        $st = mysqli_prepare($conn, "SELECT ID_producto FROM productos WHERE ID_producto = ?");
+        $st = mysqli_prepare($conn, "SELECT id_producto FROM productos WHERE id_producto = ?");
         mysqli_stmt_bind_param($st, 'i', $id_producto);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) === 0) {
@@ -131,7 +131,7 @@ switch ($method) {
         mysqli_stmt_close($st);
 
         // Stock duplicado en otro registro
-        $st = mysqli_prepare($conn, "SELECT id_stock FROM stocks WHERE ID_producto = ? AND id_stock != ?");
+        $st = mysqli_prepare($conn, "SELECT id_stock FROM stocks WHERE id_producto = ? AND id_stock != ?");
         mysqli_stmt_bind_param($st, 'ii', $id_producto, $id);
         mysqli_stmt_execute($st);
         if (mysqli_num_rows(mysqli_stmt_get_result($st)) > 0) {
@@ -140,7 +140,7 @@ switch ($method) {
         }
         mysqli_stmt_close($st);
 
-        $st = mysqli_prepare($conn, "UPDATE stocks SET ID_producto=?, Cantidad=? WHERE id_stock=?");
+        $st = mysqli_prepare($conn, "UPDATE stocks SET id_producto=?, cantidad=? WHERE id_stock=?");
         mysqli_stmt_bind_param($st, 'iii', $id_producto, $cantidad, $id);
         if (mysqli_stmt_execute($st))
             echo json_encode(["success" => true, "message" => "Stock actualizado exitosamente."]);
@@ -149,7 +149,7 @@ switch ($method) {
         mysqli_stmt_close($st);
         break;
 
-    // ─── ELIMINAR ──────────────────────────────────────────────────────────
+    // ─── ELIMINAR (eliminación física — tabla de inventario, no aplica desactivar) ──
     case 'DELETE':
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
             echo json_encode(["success" => false, "message" => "ID inválido."]); exit;
