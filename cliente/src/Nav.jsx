@@ -1,51 +1,73 @@
 import React from 'react'
 import './Styles/Nav.css'
-import { Link } from 'react-router-dom'
-
-
-
+import { Link, useNavigate } from 'react-router-dom'
 
 export const Nav = () => {
+
+  const navigate = useNavigate()
+
+  //  DEFINIR USUARIO
+  const usuarioStr = sessionStorage.getItem("usuario")
+  const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
+
+  //  FUNCIÓN CERRAR SESIÓN
+  const cerrarSesion = () => {
+    sessionStorage.removeItem("usuario")
+    navigate("/")
+  }
+
   return (
     <nav>
+      <img className='perfil' src="/assets/perfil.webp" alt="perfil" />
+      <img className='logo' src="/assets/logo.webp" alt="logo" />
 
-        <img className='perfil' src="./public/assets/perfil.webp" alt="" />
+      <ul className='nav-links'>
 
-        <img  className='logo' src="./public/assets/logo.webp" alt="" />
-            
-            <ul className='nav-links'>
+        <li className='links'>
+          <Link className="inicio" to="/inicio">Inicio</Link>
+        </li>
 
-                <li className='links'>
-                    <Link className='inicio' to="/admin">Inicio</Link>
+        <li className='links'>
+          <Link className="productos" to="/producto">Productos</Link>
+        </li>
 
-                </li>
+        <li className='links'>
+          <Link className="contactanos" to="/contactanos">Contáctanos</Link>
+        </li>
 
-                <li className='links'> 
-                <a className='productos' href="/Producto.jsx">Productos</a>
+        <li className='links'>
+          <Link className="quienes-somos" to="/quienes-somos">¿Quiénes somos?</Link>
+        </li>
+
+        {/*  SI NO HAY USUARIO */}
+        {!usuario && (
+          <>
+            <li className='links'>
+              <Link className="registro" to="/register">Registrarte</Link>
             </li>
 
             <li className='links'>
-                <a  className='contactanos' href="/contactanos.jsx">Contactanos</a>
+              <Link className="iniciar-sesion" to="/login">Iniciar sesión</Link>
+            </li>
+          </>
+        )}
+
+        {/*  SI HAY USUARIO */}
+        {usuario && (
+          <>
+            <li className='links bienvenida'>
+              Bienvenido, {usuario.nombre}
             </li>
 
             <li className='links'>
+              <button className='cerrar-sesion' onClick={cerrarSesion}>
+                Cerrar sesión
+              </button>
+            </li>
+          </>
+        )}
 
-                <Link className='quienes-somos' to="/quienes-somos">¿Quienes somos?</Link>
-            </li >
-
-                <li className='links'>    
-                    <a  className='productos' href="">Productos</a>
-                </li>
-
-                <li className='links'>
-                    <a  className='registro' href="/register.jsx">Registrarte</a>
-                </li>
-                <li className='links' src="/login" alt="" >
-                    <a  className='iniciar-sesion' href="/login.jsx">Iniciar Sesión</a>
-                </li>
-            </ul>
-
-        </nav>  
+      </ul>
+    </nav>
   )
 }
-

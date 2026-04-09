@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -39,6 +41,21 @@ export const Login = () => {
       alert("Error del servidor");
     }
   };
+
+
+useEffect(() => {
+  const usuario = sessionStorage.getItem("usuario");
+
+  if (usuario) {
+    const user = JSON.parse(usuario);
+
+    if (user.tipo_usuario === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/inicio");
+    }
+  }
+}, []);
 
   return (
     <div className="body">
@@ -83,7 +100,7 @@ export const Login = () => {
             </div>
 
             <div className="forgot-password">
-              <a href="/RecuperarPassword.jsx">¿olvidaste tu contraseña?</a>
+              <Link to="/recuperar">¿olvidaste tu contraseña?</Link>
             </div>
 
             <button className="login-button" type="submit">
