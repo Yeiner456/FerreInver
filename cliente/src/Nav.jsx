@@ -28,7 +28,7 @@ export const Nav = () => {
         </li>
 
         <li className='links'>
-          <Link className="productos" to="/producto">Productos</Link>
+          <Link className="productos" to="/tienda-productos">Productos</Link>
         </li>
 
         <li className='links'>
