@@ -1,0 +1,337 @@
+/* ================================================
+   PERFIL MENU — Estilos con paleta de marca
+   Colores: Azul Navy + Amarillo + Verde
+   Tipografía: DM Sans (títulos) / Raleway (textos)
+   ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@400;500;600&display=swap');
+
+/* Variables de marca */
+:root {
+  --pm-navy:      #00185A;
+  --pm-klein:     #002FB1;
+  --pm-sapphire:  #2F51AD;
+  --pm-royal:     #1E12A4;
+  --pm-yellow:    #DDCE00;
+  --pm-lemon:     #FDEE18;
+  --pm-green:     #22BB48;
+  --pm-emerald:   #45CC67;
+  --pm-grey:      #E4E4E4;
+  --pm-black:     #1A1B1B;
+  --pm-white:     #ffffff;
+
+  --pm-font-title: 'DM Sans', sans-serif;
+  --pm-font-body:  'Raleway', sans-serif;
+}
+
+/* ---- Contenedor ---- */
+.perfil-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ---- Botón disparador ---- */
+.perfil-trigger {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(253, 238, 24, 0.4);   /* amarillo marca, semitransparente */
+  background: rgba(0, 47, 177, 0.25);           /* klein semitransparente */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.22s ease;
+  color: var(--pm-white);
+  padding: 0;
+  outline: none;
+}
+
+.perfil-trigger:hover,
+.perfil-trigger.activo {
+  background: var(--pm-klein);
+  border-color: var(--pm-yellow);
+  transform: scale(1.06);
+  box-shadow: 0 0 0 4px rgba(221, 206, 0, 0.18);
+}
+
+/* Iniciales */
+.perfil-iniciales {
+  font-family: var(--pm-font-title);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--pm-white);
+  line-height: 1;
+}
+
+/* Ícono SVG genérico */
+.perfil-icono-svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Punto de estado */
+.perfil-estado-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--pm-white);
+}
+
+.perfil-estado-dot.activo   { background: var(--pm-green); }
+.perfil-estado-dot.inactivo { background: #aaa; }
+
+/* ---- Dropdown ---- */
+.perfil-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 0;
+  min-width: 252px;
+  background: var(--pm-white);
+  border-radius: 14px;
+  border-top: 3px solid var(--pm-yellow);        /* acento amarillo arriba */
+  box-shadow:
+    0 10px 36px rgba(0, 24, 90, 0.14),
+    0 2px 8px rgba(0, 24, 90, 0.08);
+  overflow: hidden;
+  z-index: 999;
+  animation: pmFadeIn 0.18s ease;
+}
+
+@keyframes pmFadeIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ---- Cabecera (logueado) ---- */
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 16px 12px;
+  background: linear-gradient(135deg, var(--pm-navy) 0%, var(--pm-klein) 100%);
+}
+
+.perfil-avatar-grande {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--pm-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--pm-font-title);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pm-navy);
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.perfil-nombre {
+  margin: 0;
+  font-family: var(--pm-font-title);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pm-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.perfil-correo {
+  margin: 0;
+  font-family: var(--pm-font-body);
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.65);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge estado */
+.perfil-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-family: var(--pm-font-body);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.perfil-badge.activo   { background: var(--pm-green);   color: #fff; }
+.perfil-badge.inactivo { background: #888;               color: #fff; }
+
+/* ---- Dato rápido (documento) ---- */
+.perfil-dato {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: #f5f7ff;
+  border-bottom: 1px solid #eef0f8;
+}
+
+.perfil-dato-label {
+  font-family: var(--pm-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pm-sapphire);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.perfil-dato-valor {
+  font-family: var(--pm-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pm-navy);
+}
+
+/* ---- Divisor ---- */
+.perfil-divider {
+  margin: 0;
+  border: none;
+  border-top: 1px solid #f0f0f4;
+}
+
+/* ---- Opciones ---- */
+.perfil-opciones {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+
+.perfil-opcion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--pm-font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--pm-black);
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.perfil-opcion svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  opacity: 0.65;
+}
+
+.perfil-opcion:hover {
+  background: #f0f4ff;
+  color: var(--pm-klein);
+}
+
+/* Opción cerrar sesión */
+.perfil-opcion--cerrar         { color: #c0392b; }
+.perfil-opcion--cerrar:hover   { background: #fff0f0; color: #a93226; }
+
+/* ---- Sin sesión ---- */
+.perfil-no-sesion {
+  padding: 26px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.perfil-icono-grande {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pm-navy) 0%, var(--pm-sapphire) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.perfil-icono-grande svg {
+  width: 28px;
+  height: 28px;
+  color: var(--pm-yellow);
+}
+
+.perfil-no-sesion-texto {
+  margin: 0;
+  font-family: var(--pm-font-title);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pm-navy);
+}
+
+.perfil-no-sesion-sub {
+  margin: 0 0 12px;
+  font-family: var(--pm-font-body);
+  font-size: 12.5px;
+  color: #888;
+  line-height: 1.45;
+}
+
+/* Botón primario — color principal navy/klein */
+.perfil-btn-login {
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, var(--pm-navy) 0%, var(--pm-klein) 100%);
+  color: var(--pm-white);
+  border: none;
+  border-radius: 8px;
+  font-family: var(--pm-font-title);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  letter-spacing: 0.3px;
+}
+
+.perfil-btn-login:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* Botón secundario — acento amarillo */
+.perfil-btn-registro {
+  width: 100%;
+  padding: 11px;
+  background: var(--pm-yellow);
+  color: var(--pm-navy);
+  border: none;
+  border-radius: 8px;
+  font-family: var(--pm-font-title);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 6px;
+  letter-spacing: 0.3px;
+}
+
+.perfil-btn-registro:hover {
+  background: var(--pm-lemon);
+  transform: translateY(-1px);
+}

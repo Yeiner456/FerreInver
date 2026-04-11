@@ -5,6 +5,7 @@ import Login from './auth/Login'
 import Register from './auth/Register'
 import { RecuperarPassword } from './auth/RecuperarPassword'
 import AdminPanel from './Components/AdminPanel'
+import { MiPerfil } from './Components/Miperfil'
 
 import { Nav } from './Nav'
 import { HeroSection } from './heroSection'
@@ -71,6 +72,9 @@ export const ProjectApp = () => {
 
       {/* ── CLIENTE  ── */}
   <Route path="/" element={<Navigate to="/inicio" replace />} />
+
+  
+<Route path="/mi-perfil" element={<MiPerfil />} />
 
       {/* ── RUTA DESCONOCIDA → landing ── */}
       <Route path="*" element={<Navigate to="/inicio" replace />} />

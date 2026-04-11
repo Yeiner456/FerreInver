@@ -1,24 +1,19 @@
 import React from 'react'
 import './styles/Nav.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { PerfilMenu } from './Components/PerfilMenu'
 
 export const Nav = () => {
 
-  const navigate = useNavigate()
-
-  //  DEFINIR USUARIO
+  // Obtener usuario para mostrar/ocultar links de auth
   const usuarioStr = sessionStorage.getItem("usuario")
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
 
-  //  FUNCIÓN CERRAR SESIÓN
-  const cerrarSesion = () => {
-    sessionStorage.removeItem("usuario")
-    navigate("/")
-  }
-
   return (
     <nav>
-      <img className='perfil' src="/img/perfil.webp" alt="perfil" />
+      {/* PerfilMenu reemplaza la imagen de perfil */}
+      <PerfilMenu />
+
       <img className='logo' src="/img/logo.webp" alt="logo" />
 
       <ul className='nav-links'>
@@ -39,7 +34,7 @@ export const Nav = () => {
           <Link className="quienes-somos" to="/quienes-somos">¿Quiénes somos?</Link>
         </li>
 
-        {/*  SI NO HAY USUARIO */}
+        {/* Los links de login/registro ahora solo aparecen si no hay usuario */}
         {!usuario && (
           <>
             <li className='links'>
@@ -52,19 +47,11 @@ export const Nav = () => {
           </>
         )}
 
-        {/*  SI HAY USUARIO */}
+        {/* El saludo y cerrar sesión ahora viven dentro de PerfilMenu */}
         {usuario && (
-          <>
-            <li className='links bienvenida'>
-              Bienvenido, {usuario.nombre}
-            </li>
-
-            <li className='links'>
-              <button className='cerrar-sesion' onClick={cerrarSesion}>
-                Cerrar sesión
-              </button>
-            </li>
-          </>
+          <li className='links bienvenida'>
+            Bienvenido, {usuario.nombre}
+          </li>
         )}
 
       </ul>
