@@ -80,7 +80,15 @@ function validate(form, isEdit = false) {
 function ClienteModal({ cliente, tipos, onClose, onSave }) {
     const isEdit = !!cliente;
     const [form, setForm] = useState(
-        isEdit ? { ...cliente, password: "", confirmar_password: "" } : emptyForm
+        isEdit
+            ? {
+                ...cliente,
+                // ✅ Forzar string para que el select haga match correctamente
+                id_tipo_de_usuario: String(cliente.id_tipo_de_usuario),
+                password: "",
+                confirmar_password: "",
+              }
+            : emptyForm
     );
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
@@ -123,8 +131,9 @@ function ClienteModal({ cliente, tipos, onClose, onSave }) {
                 <label>Tipo de Usuario</label><br />
                 <select name="id_tipo_de_usuario" value={form.id_tipo_de_usuario} onChange={handle}>
                     <option value="">Seleccionar...</option>
+                    {/* Forzar string en value para que coincida con el estado */}
                     {tipos.map((t) => (
-                        <option key={t.id_tipo_de_usuario} value={t.id_tipo_de_usuario}>
+                        <option key={t.id_tipo_de_usuario} value={String(t.id_tipo_de_usuario)}>
                             {t.nombre}
                         </option>
                     ))}
@@ -153,17 +162,30 @@ function ClienteModal({ cliente, tipos, onClose, onSave }) {
             </div>
 
             <hr />
-            <h1>{isEdit ? "Dejar vacío para no cambiar la contraseña" : "Crea la contraseña"}</h1>
+            <p>{isEdit ? "Deja vacío para no cambiar la contraseña" : "Crea la contraseña"}</p>
 
             <div>
                 <label>Contraseña</label><br />
-                <input name="password" type="password" value={form.password} onChange={handle} /><br />
+                {/* autoComplete="new-password" evita que el navegador autorellene */}
+                <input
+                    name="password"
+                    type="password"
+                    value={form.password}
+                    onChange={handle}
+                    autoComplete="new-password"
+                /><br />
                 {errors.password && <span>{errors.password}</span>}
             </div>
 
             <div>
                 <label>Confirmar Contraseña</label><br />
-                <input name="confirmar_password" type="password" value={form.confirmar_password} onChange={handle} /><br />
+                <input
+                    name="confirmar_password"
+                    type="password"
+                    value={form.confirmar_password}
+                    onChange={handle}
+                    autoComplete="new-password"
+                /><br />
                 {errors.confirmar_password && <span>{errors.confirmar_password}</span>}
             </div>
 
@@ -273,7 +295,10 @@ export default function ClientesCRUD() {
                                 <td>{c.estado_inicio_sesion}</td>
                                 <td>
                                     <button onClick={() => setModal(c)}>Editar</button>{" "}
-                                    <button onClick={() => setConfirmDeactivate(c)}>Desactivar</button>
+                                    {/* ✅ Botón desactivar solo si está activo */}
+                                    {c.estado_inicio_sesion === "activo" && (
+                                        <button onClick={() => setConfirmDeactivate(c)}>Desactivar</button>
+                                    )}
                                 </td>
                             </tr>
                         ))}

@@ -21,9 +21,9 @@ switch ($method) {
     // ─── LISTAR CLIENTES ───────────────────────────────────────────────────
     case 'GET':
         $resultado = mysqli_query($conn, "
-            SELECT c.documento, c.nombre, c.correo, c.fecha_registro,
-                c.estado_inicio_sesion,
-                t.nombre AS tipo_usuario
+            SELECT c.documento, c.id_tipo_de_usuario, c.nombre, c.correo, c.fecha_registro,
+                    c.estado_inicio_sesion,
+                    t.nombre AS tipo_usuario
             FROM clientes c
             LEFT JOIN tipos_usuarios t ON c.id_tipo_de_usuario = t.id_tipo_de_usuario
             ORDER BY c.fecha_registro DESC
@@ -42,7 +42,7 @@ switch ($method) {
         $body = json_decode(file_get_contents("php://input"), true);
 
         // Validar campos obligatorios
-        $required = ['documento','id_tipo_de_usuario','nombre','correo','password','confirmar_password','estado'];
+        $required = ['documento', 'id_tipo_de_usuario', 'nombre', 'correo', 'password', 'confirmar_password', 'estado'];
         foreach ($required as $field) {
             if (empty($body[$field])) {
                 echo json_encode(["success" => false, "message" => "El campo '$field' es obligatorio."]);
@@ -50,13 +50,13 @@ switch ($method) {
             }
         }
 
-        $documento          = trim($body['documento']);
+        $documento = trim($body['documento']);
         $id_tipo_de_usuario = trim($body['id_tipo_de_usuario']);
-        $nombre             = trim($body['nombre']);
-        $correo             = trim($body['correo']);
-        $password           = trim($body['password']);
+        $nombre = trim($body['nombre']);
+        $correo = trim($body['correo']);
+        $password = trim($body['password']);
         $confirmar_password = trim($body['confirmar_password']);
-        $estado             = trim($body['estado']);
+        $estado = trim($body['estado']);
 
         // Validaciones
         if (!is_numeric($documento) || $documento <= 0 || strlen($documento) > 11) {
@@ -141,11 +141,11 @@ switch ($method) {
         $documento = $_GET['documento'];
         $body = json_decode(file_get_contents("php://input"), true);
 
-        $id_tipo_de_usuario = trim($body['id_tipo_de_usuario'] ?? '');
-        $nombre             = trim($body['nombre'] ?? '');
-        $correo             = trim($body['correo'] ?? '');
-        $estado             = trim($body['estado'] ?? '');
-        $password           = trim($body['password'] ?? '');
+        $id_tipo_de_usuario = (int) trim($body['id_tipo_de_usuario'] ?? '');
+        $nombre = trim($body['nombre'] ?? '');
+        $correo = trim($body['correo'] ?? '');
+        $estado = trim($body['estado'] ?? '');
+        $password = trim($body['password'] ?? '');
         $confirmar_password = trim($body['confirmar_password'] ?? '');
 
         // Validaciones básicas

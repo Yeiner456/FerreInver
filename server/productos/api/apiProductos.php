@@ -14,7 +14,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 function subirImagen($file) {
     $uploadDir    = __DIR__ . '/uploads/productos/';
     $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    $maxSize      = 2 * 1024 * 1024; // 2MB
+    $maxSize      = 2 * 1024 * 1024;
 
     if (!in_array($file['type'], $allowedTypes))
         return ['ok' => false, 'msg' => 'Solo se permiten imágenes JPG, PNG, WEBP o GIF.'];
@@ -44,8 +44,71 @@ switch ($method) {
         echo json_encode(["success" => true, "data" => $rows]);
         break;
 
-    // ─── CREAR ──────────────────────────────────────────────────────────────
+    // ─── CREAR o ACTUALIZAR (POST con _method=PUT para FormData) ────────────
     case 'POST':
+
+        // ✅ Si viene _method=PUT en la URL → es una actualización
+        if (isset($_GET['_method']) && $_GET['_method'] === 'PUT') {
+
+            if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+                echo json_encode(["success" => false, "message" => "ID inválido."]); exit;
+            }
+            $id = $_GET['id'];
+
+            $nombre      = trim($_POST['nombre'] ?? '');
+            $precio      = $_POST['precio'] ?? '';
+            $descripcion = trim($_POST['descripcion'] ?? '') ?: 'Producto de ferreinver disponible';
+
+            if (empty($nombre) || $precio === '') {
+                echo json_encode(["success" => false, "message" => "El nombre y el precio son obligatorios."]); exit;
+            }
+            if (strlen($nombre) > 30) {
+                echo json_encode(["success" => false, "message" => "El nombre no puede exceder 30 caracteres."]); exit;
+            }
+            if (!is_numeric($precio) || $precio <= 0) {
+                echo json_encode(["success" => false, "message" => "El precio debe ser un número mayor a 0."]); exit;
+            }
+            if (floor($precio) != $precio) {
+                echo json_encode(["success" => false, "message" => "El precio debe ser un número entero."]); exit;
+            }
+            if (strlen($descripcion) > 100) {
+                echo json_encode(["success" => false, "message" => "La descripción no puede exceder 100 caracteres."]); exit;
+            }
+
+            // ✅ Obtener imagen actual para no perderla si no se sube una nueva
+            $st = mysqli_prepare($conn, "SELECT imagen FROM productos WHERE id_producto = ?");
+            mysqli_stmt_bind_param($st, 'i', $id);
+            mysqli_stmt_execute($st);
+            $result = mysqli_stmt_get_result($st);
+            if (mysqli_num_rows($result) === 0) {
+                echo json_encode(["success" => false, "message" => "El producto no existe."]); exit;
+            }
+            $productoActual = mysqli_fetch_assoc($result);
+            $imagenUrl = $productoActual['imagen']; // conserva la imagen actual por defecto
+            mysqli_stmt_close($st);
+
+            // ✅ Solo reemplaza si el usuario subió una imagen nueva
+            if (!empty($_FILES['imagen']['name'])) {
+                $res = subirImagen($_FILES['imagen']);
+                if (!$res['ok']) { echo json_encode(["success" => false, "message" => $res['msg']]); exit; }
+                if ($imagenUrl) {
+                    $oldPath = __DIR__ . '/../../../' . $imagenUrl;
+                    if (file_exists($oldPath)) unlink($oldPath);
+                }
+                $imagenUrl = $res['url'];
+            }
+
+            $st = mysqli_prepare($conn, "UPDATE productos SET nombre=?, precio=?, descripcion=?, imagen=? WHERE id_producto=?");
+            mysqli_stmt_bind_param($st, 'sissi', $nombre, $precio, $descripcion, $imagenUrl, $id);
+            if (mysqli_stmt_execute($st))
+                echo json_encode(["success" => true, "message" => "Producto actualizado exitosamente."]);
+            else
+                echo json_encode(["success" => false, "message" => "Error: " . mysqli_error($conn)]);
+            mysqli_stmt_close($st);
+            break;
+        }
+
+        // ✅ Si no viene _method=PUT → es un CREATE normal
         $nombre      = trim($_POST['nombre'] ?? '');
         $precio      = $_POST['precio'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '') ?: 'Producto de ferreinver disponible';
@@ -66,7 +129,6 @@ switch ($method) {
             echo json_encode(["success" => false, "message" => "La descripción no puede exceder 100 caracteres."]); exit;
         }
 
-        // Subir imagen si viene
         $imagenUrl = null;
         if (!empty($_FILES['imagen']['name'])) {
             $res = subirImagen($_FILES['imagen']);
@@ -83,65 +145,6 @@ switch ($method) {
         mysqli_stmt_close($st);
         break;
 
-    // ─── ACTUALIZAR ─────────────────────────────────────────────────────────
-    case 'PUT':
-        if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-            echo json_encode(["success" => false, "message" => "ID inválido."]); exit;
-        }
-        $id = $_GET['id'];
-
-        $nombre      = trim($_POST['nombre'] ?? '');
-        $precio      = $_POST['precio'] ?? '';
-        $descripcion = trim($_POST['descripcion'] ?? '') ?: 'Producto de ferreinver disponible';
-
-        if (empty($nombre) || $precio === '') {
-            echo json_encode(["success" => false, "message" => "El nombre y el precio son obligatorios."]); exit;
-        }
-        if (strlen($nombre) > 30) {
-            echo json_encode(["success" => false, "message" => "El nombre no puede exceder 30 caracteres."]); exit;
-        }
-        if (!is_numeric($precio) || $precio <= 0) {
-            echo json_encode(["success" => false, "message" => "El precio debe ser un número mayor a 0."]); exit;
-        }
-        if (floor($precio) != $precio) {
-            echo json_encode(["success" => false, "message" => "El precio debe ser un número entero."]); exit;
-        }
-        if (strlen($descripcion) > 100) {
-            echo json_encode(["success" => false, "message" => "La descripción no puede exceder 100 caracteres."]); exit;
-        }
-
-        // Verificar que existe y obtener imagen actual
-        $st = mysqli_prepare($conn, "SELECT imagen FROM productos WHERE id_producto = ?");
-        mysqli_stmt_bind_param($st, 'i', $id);
-        mysqli_stmt_execute($st);
-        $result = mysqli_stmt_get_result($st);
-        if (mysqli_num_rows($result) === 0) {
-            echo json_encode(["success" => false, "message" => "El producto no existe."]); exit;
-        }
-        $productoActual = mysqli_fetch_assoc($result);
-        $imagenUrl = $productoActual['imagen'];
-        mysqli_stmt_close($st);
-
-        // Si viene nueva imagen, reemplazar
-        if (!empty($_FILES['imagen']['name'])) {
-            $res = subirImagen($_FILES['imagen']);
-            if (!$res['ok']) { echo json_encode(["success" => false, "message" => $res['msg']]); exit; }
-            if ($imagenUrl) {
-                $oldPath = __DIR__ . '/../../../' . $imagenUrl;
-                if (file_exists($oldPath)) unlink($oldPath);
-            }
-            $imagenUrl = $res['url'];
-        }
-
-        $st = mysqli_prepare($conn, "UPDATE productos SET nombre=?, precio=?, descripcion=?, imagen=? WHERE id_producto=?");
-        mysqli_stmt_bind_param($st, 'sissi', $nombre, $precio, $descripcion, $imagenUrl, $id);
-        if (mysqli_stmt_execute($st))
-            echo json_encode(["success" => true, "message" => "Producto actualizado exitosamente."]);
-        else
-            echo json_encode(["success" => false, "message" => "Error: " . mysqli_error($conn)]);
-        mysqli_stmt_close($st);
-        break;
-
     // ─── DESACTIVAR PRODUCTO ─────────────────────────────────────────────────
     case 'DELETE':
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -149,7 +152,6 @@ switch ($method) {
         }
         $id = $_GET['id'];
 
-        // Verificar que existe y obtener estado actual
         $st = mysqli_prepare($conn, "SELECT id_producto, estado_producto FROM productos WHERE id_producto = ?");
         mysqli_stmt_bind_param($st, 'i', $id);
         mysqli_stmt_execute($st);
@@ -160,10 +162,8 @@ switch ($method) {
         $prod = mysqli_fetch_assoc($result);
         mysqli_stmt_close($st);
 
-        // Verificar que no esté ya desactivado
         if ($prod['estado_producto'] === 'inactivo') {
-            echo json_encode(["success" => false, "message" => "El producto ya está desactivado."]);
-            exit;
+            echo json_encode(["success" => false, "message" => "El producto ya está desactivado."]); exit;
         }
 
         $st = mysqli_prepare($conn, "UPDATE productos SET estado_producto = 'inactivo' WHERE id_producto = ?");
