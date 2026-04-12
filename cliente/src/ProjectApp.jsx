@@ -14,6 +14,7 @@ import { QuienesSomos } from './QuienesSomos'
 import { InfoFi } from './InfoFi'
 import { TipoInvernadero } from './TipoInvernadero' 
 import { TiendaProductos } from "./tienda-productos"
+import { Contactanos } from "./Components/Contactanos" 
 
 const RutaPorRol = ({ children, rolRequerido }) => {
   const usuarioStr = sessionStorage.getItem("usuario")
@@ -50,11 +51,19 @@ export const ProjectApp = () => {
           
         </ClienteLayout>
       } />
+
           <Route path="/tienda-productos" element={
         <ClienteLayout>
           <TiendaProductos />
         </ClienteLayout>
       } />
+
+        <Route path="/contactanos" element={
+        <ClienteLayout>
+          <Contactanos />
+        </ClienteLayout>
+      } />
+
       <Route path="/quienes-somos" element={
         <ClienteLayout>
           <QuienesSomos />
