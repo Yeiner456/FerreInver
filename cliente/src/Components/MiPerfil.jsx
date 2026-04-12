@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import '../styles/MiPerfil.css'
 
-// ✅ Con el proxy de Vite, ya no hay CORS — la URL es relativa
-const API_URL = 'http://localhost/FerreInver/server/clientes/api/actualizarNombre.php'
+const API_URL = 'http://localhost/ferreinver/server/clientes/api/actualizarNombre.php'
 
-export const MiPerfil = () => {
-  const navigate = useNavigate()
+export const MiPerfil = ({ onCerrar }) => {
 
   const usuarioStr = sessionStorage.getItem('usuario')
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
@@ -18,8 +15,17 @@ export const MiPerfil = () => {
   const [error, setError]                   = useState('')
   const [cargando, setCargando]             = useState(false)
 
+  // Cerrar con ESC
   useEffect(() => {
-    if (!usuario) navigate('/login')
+    const handleKey = (e) => { if (e.key === 'Escape') onCerrar() }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [])
+
+  // Bloquear scroll del body mientras el modal está abierto
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
   }, [])
 
   if (!usuario) return null
@@ -45,7 +51,6 @@ export const MiPerfil = () => {
 
   const handleGuardar = async () => {
     const trimmed = nombreTemporal.trim()
-
     if (!trimmed) { setError('El nombre no puede estar vacío.'); return }
     if (trimmed.length < 2) { setError('El nombre debe tener al menos 2 caracteres.'); return }
 
@@ -53,31 +58,26 @@ export const MiPerfil = () => {
     setError('')
 
     try {
-const res = await fetch(API_URL, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    documento: usuario.documento,
-    nombre: trimmed,
-  }),
-})
+      const res = await fetch(API_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documento: usuario.documento, nombre: trimmed }),
+      })
+      const data = await res.json()
+      if (!data.success) throw new Error(data.mensaje || 'Error desconocido')
 
-  const data = await res.json()
-  if (!data.success) throw new Error(data.message)
+      const usuarioActualizado = { ...usuario, nombre: trimmed }
+      sessionStorage.setItem('usuario', JSON.stringify(usuarioActualizado))
 
-  const usuarioActualizado = { ...usuario, nombre: trimmed }
-  sessionStorage.setItem('usuario', JSON.stringify(usuarioActualizado))
-
-  setNombre(trimmed)
-  setEditando(false)
-  setGuardado(true)
-  setTimeout(() => setGuardado(false), 3000)
-
-} catch (err) {
-  setError(`No se pudo guardar: ${err.message}`)
-} finally {
-  setCargando(false)
-}
+      setNombre(trimmed)
+      setEditando(false)
+      setGuardado(true)
+      setTimeout(() => setGuardado(false), 3000)
+    } catch (err) {
+      setError(`No se pudo guardar: ${err.message}`)
+    } finally {
+      setCargando(false)
+    }
   }
 
   const handleKeyDown = (e) => {
@@ -86,18 +86,23 @@ const res = await fetch(API_URL, {
   }
 
   return (
-    <div className="miperfil-page">
-      <div className="miperfil-card">
+    // Overlay — clic fuera cierra el modal
+    <div className="miperfil-overlay" onClick={onCerrar}>
 
+      {/* Card — detener propagación para no cerrar al hacer clic dentro */}
+      <div className="miperfil-card" onClick={(e) => e.stopPropagation()}>
+
+        {/* Cabecera */}
         <div className="miperfil-header">
-          <button className="miperfil-volver" onClick={() => navigate(-1)}>
+          <button className="miperfil-volver" onClick={onCerrar}>
             <svg viewBox="0 0 24 24" fill="none">
-              <path d="M19 12H5M5 12l7 7M5 12l7-7"
+              <path d="M18 6L6 18M6 6l12 12"
                 stroke="currentColor" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Volver
+            Cerrar
           </button>
+
           <div className="miperfil-avatar">{obtenerIniciales(nombre)}</div>
           <h1 className="miperfil-titulo">Mi perfil</h1>
           <span className={`miperfil-estado ${esActivo ? 'activo' : 'inactivo'}`}>
@@ -105,6 +110,7 @@ const res = await fetch(API_URL, {
           </span>
         </div>
 
+        {/* Body */}
         <div className="miperfil-body">
 
           {guardado && (
@@ -113,7 +119,7 @@ const res = await fetch(API_URL, {
             </div>
           )}
 
-          {/* Nombre (editable) */}
+          {/* Nombre */}
           <div className="miperfil-campo">
             <label className="miperfil-label">
               <svg viewBox="0 0 24 24" fill="none">
@@ -162,14 +168,13 @@ const res = await fetch(API_URL, {
             )}
           </div>
 
-          {/* Correo (solo lectura) */}
+          {/* Correo */}
           <div className="miperfil-campo">
             <label className="miperfil-label">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
                   stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <polyline points="22,6 12,13 2,6" stroke="currentColor" strokeWidth="1.8"
-                  strokeLinecap="round" strokeLinejoin="round" />
+                <polyline points="22,6 12,13 2,6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
               </svg>
               Correo electrónico
             </label>
@@ -179,7 +184,7 @@ const res = await fetch(API_URL, {
             </div>
           </div>
 
-          {/* Documento (solo lectura) */}
+          {/* Documento */}
           {usuario.documento && (
             <div className="miperfil-campo">
               <label className="miperfil-label">
