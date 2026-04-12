@@ -12,8 +12,9 @@ import { Producto } from './Producto'
 import { Footer } from './Footer'
 import { QuienesSomos } from './QuienesSomos'
 import { InfoFi } from './InfoFi'
-import { TipoInvernadero } from './TipoInvernadero' 
+import { TipoInvernadero } from './TipoInvernadero'
 import { TiendaProductos } from "./tienda-productos"
+import CotizacionPublica from './CotizacionesPublicas.jsx'
 
 const RutaPorRol = ({ children, rolRequerido }) => {
   const usuarioStr = sessionStorage.getItem("usuario")
@@ -47,20 +48,26 @@ export const ProjectApp = () => {
           <InfoFi />
           <TipoInvernadero />
           <Producto />
-          
         </ClienteLayout>
       } />
-          <Route path="/tienda-productos" element={
+
+      <Route path="/cotizacion" element={
+        <ClienteLayout>
+          <CotizacionPublica />
+        </ClienteLayout>
+      } />
+
+      <Route path="/tienda-productos" element={
         <ClienteLayout>
           <TiendaProductos />
         </ClienteLayout>
       } />
+
       <Route path="/quienes-somos" element={
         <ClienteLayout>
           <QuienesSomos />
         </ClienteLayout>
       } />
-      
 
       {/* ── ADMIN ── */}
       <Route path="/admin" element={
@@ -69,8 +76,8 @@ export const ProjectApp = () => {
         </RutaPorRol>
       } />
 
-      {/* ── CLIENTE  ── */}
-  <Route path="/" element={<Navigate to="/inicio" replace />} />
+      {/* ── RUTA RAÍZ → landing ── */}
+      <Route path="/" element={<Navigate to="/inicio" replace />} />
 
       {/* ── RUTA DESCONOCIDA → landing ── */}
       <Route path="*" element={<Navigate to="/inicio" replace />} />
