@@ -14,7 +14,6 @@ import { QuienesSomos } from './QuienesSomos'
 import { InfoFi } from './InfoFi'
 import { TipoInvernadero } from './TipoInvernadero'
 import { TiendaProductos } from "./tienda-productos"
-import CotizacionPublica from './CotizacionesPublicas.jsx'
 
 const RutaPorRol = ({ children, rolRequerido }) => {
   const usuarioStr = sessionStorage.getItem("usuario")
@@ -56,13 +55,11 @@ export const ProjectApp = () => {
           <CotizacionPublica />
         </ClienteLayout>
       } />
-
-      <Route path="/tienda-productos" element={
+          <Route path="/tienda-productos" element={
         <ClienteLayout>
           <TiendaProductos />
         </ClienteLayout>
       } />
-
       <Route path="/quienes-somos" element={
         <ClienteLayout>
           <QuienesSomos />
