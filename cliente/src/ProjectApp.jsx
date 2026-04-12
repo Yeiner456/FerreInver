@@ -16,6 +16,7 @@ import { TipoInvernadero } from './TipoInvernadero'
 import { TiendaProductos } from "./tienda-productos"
 import { Contactanos } from "./Components/Contactanos" 
 import './Styles/ProjectApp.css'
+import CotizacionPublica from './CotizacionesPublicas'
 
 const RutaPorRol = ({ children, rolRequerido }) => {
   const usuarioStr = sessionStorage.getItem("usuario")
