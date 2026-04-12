@@ -15,6 +15,7 @@ import { InfoFi } from './InfoFi'
 import { TipoInvernadero } from './TipoInvernadero' 
 import { TiendaProductos } from "./tienda-productos"
 import { Contactanos } from "./Components/Contactanos" 
+import './Styles/ProjectApp.css'
 
 const RutaPorRol = ({ children, rolRequerido }) => {
   const usuarioStr = sessionStorage.getItem("usuario")
