@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ClientesCrud from "./ClientesCrud";
 import ComprasCrud from "./ComprasCrud";
 import CotizacionesCrud from "./CotizacionesCrud";
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
 
 export default function AdminPanel() {
     const [active, setActive] = useState(null);
+    const navigate = useNavigate();
 
     const current = NAV_ITEMS.find((n) => n.key === active);
     const ActiveComponent = current?.component ?? null;
@@ -40,6 +42,13 @@ export default function AdminPanel() {
                         
                         <span className="logo-text">Ferreinver</span>
                     </div>
+                    <div className="sidebar-section">Navegación</div>
+                    <ul className="nav-list">
+                        <li className="nav-item" onClick={() => navigate("/inicio")}>
+                            <span className="nav-icon">🏠</span>
+                            <span className="nav-label">Ir al Inicio</span>
+                        </li>
+                    </ul>
 
                     <div className="sidebar-section">Módulos</div>
 

@@ -54,6 +54,12 @@ export const Nav = () => {
           </li>
         )}
 
+        {usuario && usuario.tipo_usuario === "admin" && (
+          <li className='links'>
+            <Link className="admin-panel" to="/admin">Panel Admin</Link>
+          </li>
+        )}
+
       </ul>
     </nav>
   )

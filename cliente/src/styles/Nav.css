@@ -43,7 +43,7 @@ nav{
 }
 
 
-.registro,.productos,.inicio,.contactanos,.quienes-somos{
+.registro,.productos,.inicio,.contactanos,.quienes-somos, .admin-panel{
     color: white;
     text-decoration: none;
     font-size: 18px;
