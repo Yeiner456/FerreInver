@@ -63,6 +63,13 @@ export const ProjectApp = () => {
           <TiendaProductos />
         </ClienteLayout>
       } />
+
+      <Route path="/contactanos" element={
+        <ClienteLayout>
+          <Contactanos />
+        </ClienteLayout>
+      } />
+
       <Route path="/quienes-somos" element={
         <ClienteLayout>
           <QuienesSomos />
