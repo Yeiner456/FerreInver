@@ -14,10 +14,10 @@ const api = {
         }).then((r) => r.json()),
 
     updateProducto: (id, formData) =>
-        fetch(`${API_BASE}/apiProductos.php?id=${id}&_method=PUT`, {
-            method: "POST",
-            body: formData,
-        }).then((r) => r.json()),
+    fetch(`${API_BASE}/apiProductos.php?id=${id}&_method=PUT`, {
+        method: "POST",   
+        body: formData,
+    }).then((r) => r.json()),
 
     deactivateProducto: (id) =>
         fetch(`${API_BASE}/apiProductos.php?id=${id}`, {

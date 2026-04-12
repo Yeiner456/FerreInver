@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Link } from 'react-router-dom'
 import { data } from "./Components/data.js";
 import "./styles/HeroSection.css";
 
@@ -65,7 +66,9 @@ export const HeroSection = () => {
                     <p className="hero-subtitle">
                       Para todo el departamento de Antioquia
                     </p>
-                    <button className="btn-cotizar">¡Cotiza ahora!</button>
+                    <Link to="/cotizacion" className="btn-cotizar">
+                      ¡Cotiza ahora!
+                    </Link>
                   </div>
                 </li>
               ))}
