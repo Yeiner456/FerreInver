@@ -1,10 +1,36 @@
-/* ================================================
-   MI PERFIL — Estilos con paleta de marca
-   Colores: Navy / Klein / Amarillo / Verde
-   Tipografía: DM Sans (títulos) / Raleway (textos)
-   ================================================ */
+
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@400;500;600&display=swap');
+
+
+
+.miperfil-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 24, 90, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: overlayIn 0.2s ease;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.miperfil-card {
+  animation: cardIn 0.25s ease;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
 
 :root {
   --mp-navy:     #00185A;
