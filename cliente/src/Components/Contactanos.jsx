@@ -16,17 +16,40 @@ export function Contactanos() {
 
   const addRef = (el) => { if (el && !fadeRefs.current.includes(el)) fadeRefs.current.push(el); };
 
+  // ⚠️ Reemplaza este número por el real de Ferreinver (solo dígitos, con código de país)
+  const WHATSAPP_NUMBER = "573133637433";
+
   function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
-    const nombre  = form.nombre.value.trim();
-    const email   = form.email.value.trim();
-    const mensaje = form.mensaje.value.trim();
+    const nombre   = form.nombre.value.trim();
+    const apellido = form.apellido.value.trim();
+    const email    = form.email.value.trim();
+    const telefono = form.telefono.value.trim();
+    const tema     = form.tema.value;
+    const mensaje  = form.mensaje.value.trim();
 
     if (!nombre || !email || !mensaje) {
       alert("Por favor completa al menos nombre, correo y mensaje.");
       return;
     }
+
+    const texto = [
+      `🌿 *Nuevo contacto desde ferreinver.com*`,
+      ``,
+      `👤 *Nombre:* ${nombre}${apellido ? " " + apellido : ""}`,
+      `📧 *Correo:* ${email}`,
+      telefono ? `📞 *Teléfono:* ${telefono}` : null,
+      `📋 *Tema:* ${tema}`,
+      ``,
+      `💬 *Mensaje:*`,
+      mensaje,
+    ]
+      .filter((l) => l !== null)
+      .join("\n");
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(texto)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
 
     form.reset();
     setToast(true);
@@ -85,7 +108,7 @@ export function Contactanos() {
             </div>
             <div className="info-card-body">
               <span className="info-card-label">WhatsApp</span>
-              <span className="info-card-value">+57 310 000 0000</span>
+              <span className="info-card-value">+57 313637433</span>
               <span className="info-card-sub">Respuesta inmediata</span>
             </div>
           </div>
@@ -132,12 +155,12 @@ export function Contactanos() {
                 <label>¿En qué podemos ayudarte?</label>
                 <div className="topic-grid">
                   {[
-                    { id: "t1", value: "cotizacion",  label: "💰 Cotización" },
-                    { id: "t2", value: "instalacion", label: "🔧 Instalación" },
-                    { id: "t3", value: "productos",   label: "🌱 Productos" },
-                    { id: "t4", value: "soporte",     label: "🛠 Soporte" },
-                    { id: "t5", value: "visita",      label: "📍 Visita técnica" },
-                    { id: "t6", value: "otro",        label: "💬 Otro" },
+                    { id: "t1", value: "cotizacion",  label: " Cotización" },
+                    { id: "t2", value: "instalacion", label: " Instalación" },
+                    { id: "t3", value: "productos",   label: " Productos" },
+                    { id: "t4", value: "soporte",     label: " Soporte" },
+                    { id: "t5", value: "visita",      label: " Visita técnica" },
+                    { id: "t6", value: "otro",        label: " Otro" },
                   ].map((t, i) => (
                     <div className="topic-pill" key={t.id}>
                       <input type="radio" name="tema" id={t.id} value={t.value} defaultChecked={i === 0} />

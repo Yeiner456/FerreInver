@@ -146,11 +146,6 @@ function ModalProducto({ producto, onClose, onAgregar }) {
         <div className="tp-modal-img-wrap">
           {producto.imagen ? <img src={IMG_BASE + producto.imagen} alt={producto.nombre} className="tp-modal-img-main" /> : <div className="tp-modal-img-placeholder" />}
           <div className="tp-modal-thumbs">
-            {[0,1,2,3].map(i => (
-              <div key={i} className={`tp-thumb ${i === 0 ? 'active' : ''}`}>
-                {producto.imagen && i === 0 ? <img src={IMG_BASE + producto.imagen} alt="" /> : <div className="tp-thumb-empty" />}
-              </div>
-            ))}
           </div>
         </div>
         <div className="tp-modal-info">
