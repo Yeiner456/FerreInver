@@ -35,14 +35,14 @@ export function Contactanos() {
     }
 
     const texto = [
-      `🌿 *Nuevo contacto desde ferreinver.com*`,
+      ` *Nuevo contacto desde ferreinver.com*`,
       ``,
-      `👤 *Nombre:* ${nombre}${apellido ? " " + apellido : ""}`,
-      `📧 *Correo:* ${email}`,
-      telefono ? `📞 *Teléfono:* ${telefono}` : null,
-      `📋 *Tema:* ${tema}`,
+      ` *Nombre:* ${nombre}${apellido ? " " + apellido : ""}`,
+      ` *Correo:* ${email}`,
+      telefono ? ` *Teléfono:* ${telefono}` : null,
+      ` *Tema:* ${tema}`,
       ``,
-      `💬 *Mensaje:*`,
+      ` *Mensaje:*`, 
       mensaje,
     ]
       .filter((l) => l !== null)
