@@ -1,10 +1,4 @@
 <?php
-// api/clientes.php — Endpoint REST para el CRUD de clientes
-
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
 
 // Responder preflight CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
