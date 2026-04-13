@@ -57,7 +57,10 @@ if ($resultado->num_rows > 0) {
             "usuario" => [
                 "documento"    => $usuario["documento"],
                 "nombre"       => $usuario["nombre"],
-                "tipo_usuario" => $usuario["tipo_usuario"] // "admin" o "cliente"
+                "tipo_usuario" => $usuario["tipo_usuario"],
+                "correo"              => $usuario["correo"],              // ← agrega
+                "estado_inicio_sesion"=> $usuario["estado_inicio_sesion"] // "admin" o "cliente"
+                
             ]
         ]);
     } else {

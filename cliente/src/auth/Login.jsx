@@ -25,6 +25,7 @@ export const Login = () => {
       const data = await response.json();
 
       if (data.success === true) {
+         console.log('Usuario guardado:', data.usuario) // 
         //  Guardar usuario en sessionStorage para proteger rutas
         sessionStorage.setItem("usuario", JSON.stringify(data.usuario));
         //  Redirigir según el rol
