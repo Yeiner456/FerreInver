@@ -45,8 +45,8 @@ export const Register = () => {
       const data = await response.json();
 
       if (data.success) {
-        alert(" Cuenta creada correctamente. Ahora puedes iniciar sesión.");
-        navigate("/");
+        alert("✅ Cuenta creada correctamente. Ahora puedes iniciar sesión.");
+        navigate("/inicio");
       } else {
         setError(data.mensaje || "Error al crear la cuenta");
       }
@@ -59,8 +59,18 @@ export const Register = () => {
   };
 
   return (
-    <div className="body">
+    <div className="register-page-wrapper">
       <div className="card">
+
+        {/* ── Botón volver ── */}
+        <button className="volver-btn" onClick={() => navigate(-1)}>
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+            <path d="M19 12H5M5 12l7 7M5 12l7-7"
+              stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Volver
+        </button>
 
         <div className="card-header">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="#00185a">
@@ -125,7 +135,6 @@ export const Register = () => {
                 onChange={handleChange}
                 required
               />
-              <p className="password-hint">La contraseña debe tener al menos 8 caracteres</p>
             </div>
 
             {error && <p className="password-hint">{error}</p>}
@@ -138,7 +147,7 @@ export const Register = () => {
 
           <div className="login-link">
             <span>¿Ya tienes una cuenta?</span>
-            <a onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+            <a onClick={() => navigate("/inicio", { state: { abrirLogin: true } })} style={{ cursor: "pointer" }}>
               Iniciar sesión
             </a>
           </div>

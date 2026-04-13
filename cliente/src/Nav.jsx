@@ -1,20 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './styles/Nav.css'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { PerfilMenu } from './Components/PerfilMenu'
 import { MiPerfil } from './Components/Miperfil'
+import { Login } from './auth/Login'
 
 export const Nav = () => {
   const [mostrarPerfil, setMostrarPerfil] = useState(false)
+  const [mostrarLogin, setMostrarLogin]   = useState(false)
+  const location = useLocation()
 
   const usuarioStr = sessionStorage.getItem("usuario")
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
 
+ useEffect(() => {
+  if (location.state?.abrirLogin) {
+    setTimeout(() => setMostrarLogin(true), 0)  // ✅ diferir un tick
+    window.history.replaceState({}, '')
+  }
+}, [location.state])
+
   return (
     <>
       <nav>
-        {/* PerfilMenu recibe función para abrir el modal */}
-        <PerfilMenu onAbrirPerfil={() => setMostrarPerfil(true)} />
+        <PerfilMenu
+          onAbrirPerfil={() => setMostrarPerfil(true)}
+          onAbrirLogin={() => setMostrarLogin(true)}
+        />
 
         <img className='logo' src="/img/logo.webp" alt="logo" />
 
@@ -38,7 +50,9 @@ export const Nav = () => {
                 <Link className="registro" to="/register">Registrarte</Link>
               </li>
               <li className='links'>
-                <Link className="iniciar-sesion" to="/login">Iniciar sesión</Link>
+                <button className="iniciar-sesion" onClick={() => setMostrarLogin(true)}>
+                  Iniciar sesión
+                </button>
               </li>
             </>
           )}
@@ -57,10 +71,8 @@ export const Nav = () => {
         </ul>
       </nav>
 
-      {/* Modal de perfil — se renderiza encima de todo */}
-      {mostrarPerfil && (
-        <MiPerfil onCerrar={() => setMostrarPerfil(false)} />
-      )}
+      {mostrarPerfil && <MiPerfil onCerrar={() => setMostrarPerfil(false)} />}
+      {mostrarLogin  && <Login    onCerrar={() => setMostrarLogin(false)} />}
     </>
   )
 }

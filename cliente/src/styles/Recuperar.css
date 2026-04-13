@@ -1,64 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500;600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.body {
-    height: 100vh;
+/* ── Fondo de página ── */
+.recuperar-page-wrapper {
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: "Raleway", sans-serif;
-    }
+    padding: 80px 20px 40px;
+    position: relative;
+    background: linear-gradient(135deg, #00185A 0%, #1E12A4 50%, #002FB1 100%);
+    overflow: hidden;
+}
 
+.recuperar-page-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: rgba(253, 238, 24, 0.06);
+    pointer-events: none;
+}
+
+.recuperar-page-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -120px;
+    left: -80px;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    background: rgba(34, 187, 72, 0.05);
+    pointer-events: none;
+}
+
+/* ── Botón volver flotante ── */
+.volver-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 30px;
+    backdrop-filter: blur(6px);
+    transition: all 0.25s ease;
+}
+
+.volver-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateX(-3px);
+}
+
+/* ── Card ── */
 .login-container {
-    width: 450px;
-    max-width: 450px;
-    padding: 20px;
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    z-index: 1;
 }
 
 .login-card {
     background: #ffffff;
-    padding: 40px 35px;
+    padding: 36px 32px;
     border-radius: 20px;
-    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.15);
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.25),
+        0 4px 16px rgba(0, 24, 90, 0.15);
     text-align: center;
 }
 
-/* Icono  */
 .icon-user {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     display: flex;
     justify-content: center;
 }
 
 .icon-user svg {
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
 }
 
-/* Títulos */
 .login-card h1 {
-    font-size: 32px;
-    font-weight: 600;
+    font-size: 26px;
+    font-weight: 700;
     color: #00185a;
     margin-bottom: 8px;
     font-family: 'DM Sans', sans-serif;
 }
 
 .subtitle {
-    color: #333333;
-    font-size: 14px;
+    color: #555;
+    font-size: 13.5px;
     font-weight: 500;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
+    font-family: 'Raleway', sans-serif;
+    line-height: 1.5;
 }
 
-/* Formulario */
 form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 14px;
 }
 
 .form-group {
@@ -68,107 +129,113 @@ form {
 }
 
 .form-group label {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: #1a1b1b;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
+    font-family: 'Raleway', sans-serif;
 }
 
 .login-input {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #e0e0e0;
+    padding: 11px 14px;
+    border: 1.5px solid #e0e0e0;
     border-radius: 10px;
     outline: none;
     font-size: 14px;
-    color: #666666;
+    color: #333;
     background: #ffffff;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
+    font-family: 'Raleway', sans-serif;
 }
 
 .login-input::placeholder {
-    color: #999999;
+    color: #bbb;
 }
 
 .login-input:focus {
-    border-color: #fdee1b;
-    box-shadow: 0 0 8px rgba(29, 38, 113, 0.2);
-    background: #f9f9f9;
+    border-color: #FDEE18;
+    box-shadow: 0 0 0 3px rgba(253, 238, 24, 0.2);
+    background: #fffef5;
 }
 
-/* Recuperar contraseña */
+/* Caja de info */
 .mensaje {
     text-align: left;
-    margin-top: -5px;
-    background-color: #fff357;
+    background-color: #fffbe6;
+    border: 1px solid #FDEE18;
     border-radius: 10px;
     display: flex;
+    align-items: flex-start;
+    gap: 6px;
 }
 
 .mensaje p {
-    padding: 10px;
+    padding: 10px 10px 10px 0;
     color: #1a1b1b;
-    font-size: 14px;
-    font-weight: 300;
+    font-size: 13px;
+    font-weight: 400;
+    font-family: 'Raleway', sans-serif;
+    line-height: 1.5;
 }
-
-
 
 .mensaje svg {
-    width: 60px;
-    height: 60px;
-    margin: 5px;
-    padding-bottom: 32px;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    margin: 10px 4px 10px 10px;
 }
 
-/* Botón Iniciar Sesión */
+/* Botón principal */
 .login-button {
     width: 100%;
     padding: 13px;
-    margin-top: 10px;
-    background: #fdee1b;
-    color: #f4f4f4;
-    font-size: 16px;
-    font-weight: 600;
+    margin-top: 6px;
+    background: linear-gradient(135deg, #00185A 0%, #1E12A4 100%);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    transition: all 0.25s ease;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 14px rgba(0, 24, 90, 0.3);
 }
 
 .login-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 24, 90, 0.4);
 }
 
 .login-button:active {
     transform: translateY(0);
 }
 
+.login-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
 
-/* Botón enviar enlace */
+/* Botón secundario (volver entre pasos) */
 .register-button {
     display: block;
     width: 100%;
-    padding: 13px;
+    padding: 11px;
+    margin-top: 12px;
     border-radius: 10px;
-    background: white;
+    background: transparent;
+    border: 1.5px solid #002FB1;
     color: #002fb1;
-    text-decoration: none;
     font-weight: 600;
-    font-size: 15px;
-    transition: all 0.3s ease;
+    font-size: 14px;
+    font-family: 'Raleway', sans-serif;
     cursor: pointer;
+    transition: all 0.25s ease;
 }
 
 .register-button:hover {
-    opacity: 0.8;
-    text-decoration: underline;
-
+    background: #f0f4ff;
+    transform: translateY(-1px);
 }
-
-
-
-
-
