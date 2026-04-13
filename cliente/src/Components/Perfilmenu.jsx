@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Perfilmenu.css'
 
-export const PerfilMenu = () => {
+export const PerfilMenu = ({ onAbrirPerfil }) => {
   const [abierto, setAbierto] = useState(false)
   const menuRef = useRef(null)
   const navigate = useNavigate()
@@ -99,7 +99,7 @@ export const PerfilMenu = () => {
                 <li>
                   <button
                     className="perfil-opcion"
-                    onClick={() => { navigate('/mi-perfil'); setAbierto(false) }}
+                    onClick={() => { onAbrirPerfil(); setAbierto(false) }}
                   >
                     <svg viewBox="0 0 24 24" fill="none">
                       <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8" />
