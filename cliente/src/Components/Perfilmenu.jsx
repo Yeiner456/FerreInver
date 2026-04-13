@@ -10,6 +10,7 @@ export const PerfilMenu = () => {
   // Obtener usuario de sessionStorage (campos de tabla clientes)
   const usuarioStr = sessionStorage.getItem('usuario')
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
+  console.log('Usuario en sesión:', usuario)
 
   // Cerrar al hacer clic fuera
   useEffect(() => {
