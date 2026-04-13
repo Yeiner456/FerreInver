@@ -1,10 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import './styles/Producto.css'
 
+const IMG_BASE = 'http://localhost/FerreInver/'
+
+function ModalProducto({ producto, onClose, formatPrecio }) {
+  // Cerrar con Escape
+  useEffect(() => {
+    const handler = (e) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [onClose])
+
+  return (
+    <div className="prod-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="prod-modal">
+        <button className="prod-modal-close" onClick={onClose}>✕</button>
+
+        <div className="prod-modal-img-wrap">
+          {producto.imagen
+            ? <img src={IMG_BASE + producto.imagen} alt={producto.nombre} className="prod-modal-img" />
+            : <div className="prod-modal-img-placeholder">
+                <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-8.5-5.5l-2.51 3.01L7 14l-4 5h18l-5.5-7.5z"/></svg>
+                <span>Sin imagen</span>
+              </div>
+          }
+          <div className="prod-modal-badge">Disponible</div>
+        </div>
+
+        <div className="prod-modal-info">
+          <h2 className="prod-modal-nombre">{producto.nombre}</h2>
+          <p className="prod-modal-desc">{producto.descripcion}</p>
+          <div className="prod-modal-precio-wrap">
+            <span className="prod-modal-precio">{formatPrecio(producto.precio)}</span>
+          </div>
+          <button className="prod-modal-btn-cerrar" onClick={onClose}>Cerrar</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const Producto = () => {
-  const [productos, setProductos] = useState([])
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(null)
+  const [productos, setProductos]       = useState([])
+  const [loading, setLoading]           = useState(true)
+  const [error, setError]               = useState(null)
+  const [productoActivo, setProductoActivo] = useState(null)
 
   useEffect(() => {
     fetch('http://localhost/FerreInver/server/productos/api/apiProductos.php')
@@ -13,7 +53,6 @@ export const Producto = () => {
         return res.json()
       })
       .then(data => {
-        // Manejar distintos formatos de respuesta
         const lista = Array.isArray(data)
           ? data
           : Array.isArray(data.productos)
@@ -21,8 +60,7 @@ export const Producto = () => {
           : Array.isArray(data.data)
           ? data.data
           : []
-        const activos = lista.filter(p => p.estado_producto === 'activo')
-        setProductos(activos)
+        setProductos(lista.filter(p => p.estado_producto === 'activo'))
       })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
@@ -64,12 +102,12 @@ export const Producto = () => {
       {!loading && !error && productos.length > 0 && (
         <div className="tarjetas">
           {productos.map(prod => (
-            <div className="tarjeta-producto" key={prod.id_producto}>
+            <div className="tarjeta-producto" key={prod.id_producto} onClick={() => setProductoActivo(prod)} style={{ cursor: 'pointer' }}>
 
               <div className="tarjeta-img-wrap">
                 {prod.imagen
                   ? <img
-                      src={`http://localhost/FerreInver/${prod.imagen}`}
+                      src={`${IMG_BASE}${prod.imagen}`}
                       alt={prod.nombre}
                       className="tarjeta-img"
                     />
@@ -86,13 +124,20 @@ export const Producto = () => {
                 <p className="tarjeta-desc">{prod.descripcion}</p>
                 <div className="tarjeta-footer">
                   <span className="tarjeta-precio">{formatPrecio(prod.precio)}</span>
-                  <button className="tarjeta-btn">Ver más</button>
                 </div>
               </div>
 
             </div>
           ))}
         </div>
+      )}
+
+      {productoActivo && (
+        <ModalProducto
+          producto={productoActivo}
+          formatPrecio={formatPrecio}
+          onClose={() => setProductoActivo(null)}
+        />
       )}
 
     </section>
