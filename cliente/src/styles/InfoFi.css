@@ -9,7 +9,7 @@ p {
 .infofi{
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 5s ease, transform 5s ease;
+  transition: opacity 1s ease, transform 1s ease;
   color: white;
   padding:  5rem 1rem;
   text-align: center;
@@ -17,7 +17,7 @@ p {
   height: auto;
   display: flex;
 }
-
+ 
 .infofi.visible {
   opacity: 1;
   transform: translateY(0);
@@ -25,7 +25,7 @@ p {
 
 .corto-proceso{
 width: auto;
-height: 20rem;
+height: 30rem;
 border-radius: 1rem;
 }
 
@@ -40,9 +40,10 @@ border-radius: 1rem;
       font-family: "DM Sans", sans-serif;
       font-size: 2rem;
       margin-bottom: 1rem;
+      margin-top: 5rem;
 }
 
 .infofi-text{
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.8;  
 }
