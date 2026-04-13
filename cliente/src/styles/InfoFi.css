@@ -25,7 +25,7 @@ p {
 
 .corto-proceso{
 width: auto;
-height: 20rem;
+height: 30rem;
 border-radius: 1rem;
 }
 
@@ -40,9 +40,10 @@ border-radius: 1rem;
       font-family: "DM Sans", sans-serif;
       font-size: 2rem;
       margin-bottom: 1rem;
+      margin-top: 5rem;
 }
 
 .infofi-text{
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.8;  
 }
