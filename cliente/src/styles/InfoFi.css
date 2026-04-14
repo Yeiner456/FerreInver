@@ -9,7 +9,7 @@ p {
 .infofi{
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 5s ease, transform 5s ease;
+  transition: opacity 1s ease, transform 1s ease;
   color: white;
   padding:  5rem 1rem;
   text-align: center;
@@ -17,7 +17,7 @@ p {
   height: auto;
   display: flex;
 }
-
+ 
 .infofi.visible {
   opacity: 1;
   transform: translateY(0);
