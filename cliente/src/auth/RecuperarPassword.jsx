@@ -26,7 +26,7 @@ export const RecuperarPassword = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${BASE_URL}/enviar_codigo.php`, {
+      const res = await fetch(`${BASE_URL}/Enviar_codigo.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo }),
