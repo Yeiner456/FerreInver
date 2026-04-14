@@ -13,7 +13,7 @@ export const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost/ferreinver/server/backend-login/login.php", {
+      const response = await fetch("http://localhost/FerreInver/server/backend-login/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
