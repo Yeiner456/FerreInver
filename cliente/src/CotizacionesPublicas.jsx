@@ -14,7 +14,7 @@ const api = {
         }).then((r) => r.json()),
 };
 
-// ✅ Paso "Tu información" eliminado
+
 const PASOS = ["El invernadero", "Dimensiones", "Resumen"];
 
 const emptyForm = {
@@ -103,11 +103,11 @@ export default function CotizacionPublica() {
     const [exito, setExito] = useState(false);
     const [errorGeneral, setErrorGeneral] = useState(null);
 
-    // ✅ Estado para guardar el usuario de sesión
+
     const [usuarioSesion, setUsuarioSesion] = useState(null);
 
     useEffect(() => {
-        // ✅ Leer usuario desde sessionStorage y setearlo en el form automáticamente
+
         const raw = sessionStorage.getItem("usuario");
         if (raw) {
             const user = JSON.parse(raw);
@@ -152,7 +152,7 @@ export default function CotizacionPublica() {
 
     const validarPaso = () => {
         const e = {};
-        // ✅ Paso 0 ahora es el invernadero (ya no hay paso de cliente)
+        
         if (paso === 0 && !form.invernadero_id) e.invernadero_id = "Seleccione un invernadero para continuar.";
         if (paso === 1) {
             if (!form.largo || isNaN(form.largo) || Number(form.largo) <= 0)
@@ -211,7 +211,7 @@ export default function CotizacionPublica() {
                 </p>
                 <div className="exito-resumen">
                     <div className="exito-resumen__grid">
-                        {/* ✅ Nombre viene del usuario de sesión */}
+                        
                         <span className="exito-resumen__label">Cliente</span>
                         <span className="exito-resumen__valor">{usuarioSesion?.nombre}</span>
                         <span className="exito-resumen__label">Invernadero</span>
@@ -248,7 +248,7 @@ export default function CotizacionPublica() {
                     </div>
                     <h1 className="cotizacion-header__title">Solicitar cotización</h1>
                 </div>
-                {/* ✅ Mostrar nombre del usuario activo como bienvenida */}
+                
                 <p className="cotizacion-header__subtitle">
                     Hola, <strong>{usuarioSesion?.nombre}</strong>. Completa los datos para recibir tu estimado personalizado.
                 </p>
@@ -261,7 +261,7 @@ export default function CotizacionPublica() {
                     <div className="alerta-error">{errorGeneral}</div>
                 )}
 
-                {/* ✅ Paso 0 ahora es el invernadero */}
+                
                 {paso === 0 && (
                     <div>
                         <h3 className="paso-titulo">¿Qué invernadero te interesa?</h3>
@@ -351,7 +351,7 @@ export default function CotizacionPublica() {
                         <h3 className="paso-titulo">Revisa tu cotización</h3>
                         <div className="resumen-tabla">
                             {[
-                                // ✅ Nombre desde sesión, no desde selects
+                                
                                 { label: "Cliente", value: usuarioSesion?.nombre },
                                 { label: "Invernadero", value: invernaderoSeleccionado?.nombre },
                                 { label: "Largo", value: `${form.largo} m` },
