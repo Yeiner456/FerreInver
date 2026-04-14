@@ -1,49 +1,168 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Raleway:wght@300;400;500&display=swap');
 
-
-p {
-  font-family: "Raleway", sans-serif;
+.infofi {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    background: linear-gradient(135deg, #00185A 0%, #1E12A4 60%, #2F51AD 100%);
+    padding: 6rem 3rem;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
-.infofi{
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 1s ease, transform 1s ease;
-  color: white;
-  padding:  5rem 1rem;
-  text-align: center;
-  width: 100%;
-  height: auto;
-  display: flex;
+.infofi::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        -55deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.015) 40px,
+        rgba(255,255,255,0.015) 80px
+    );
+    pointer-events: none;
 }
- 
+
+
+.infofi::after {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(34,187,72,0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+
 .infofi.visible {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.corto-proceso{
-width: auto;
-height: 30rem;
-border-radius: 1rem;
+.infofi-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
-.infofi-container{
-    text-align: left;
-    padding:1rem;
-    
+
+.infofi-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+.infofi-pill {
+    display: inline-block;
+    background: rgba(34, 187, 72, 0.15);
+    border: 1px solid rgba(34, 187, 72, 0.4);
+    color: #45CC67;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 100px;
+    width: fit-content;
+}
+
+.infofi-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    color: white;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+}
+
+.infofi-title em {
+    font-style: normal;
+    color: #22BB48;
+}
+
+.infofi-text {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.97rem;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.85;
 }
 
 
-.infofi-title{
-      font-family: "DM Sans", sans-serif;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      margin-top: 5rem;
+.infofi-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-.infofi-text{
-    font-size: 1rem;
-    line-height: 1.8;  
+.infofi-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-num {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #22BB48;
+    line-height: 1;
+}
+
+.stat-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.3;
+}
+
+.infofi-media { display: flex; align-items: center; justify-content: center; }
+
+.infofi-media-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.corto-proceso {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 20px;
+    display: block;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.infofi-media-badge {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    background: rgba(0, 24, 90, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.infofi-media-badge span {
+    color: #22BB48;
+    font-size: 0.7rem;
 }

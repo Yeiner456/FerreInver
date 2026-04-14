@@ -62,10 +62,10 @@ export function Contactanos() {
       
       <section className="contact-section">
 
-        {/* LEFT: info cards */}
+  
         <div className="info-col fade-up" ref={addRef}>
           <div>
-            <h2 className="info-intro">Hablemos sobre tu <span>próximo invernadero</span></h2>
+            <h2 className="info-intro">Hablemos sobre tu próximo invernadero</h2>
             <p className="info-desc">En Ferreinver llevamos años construyendo soluciones agrícolas a la medida en todo Antioquia. Escríbenos, llámanos o visítanos. Cuéntanos sobre tu invernadero ideal. Nuestro equipo te responde en menos de 24 horas con una propuesta personalizada.</p>
           </div>
 
@@ -109,16 +109,16 @@ export function Contactanos() {
             <div className="info-card-body">
               <span className="info-card-label">WhatsApp</span>
               <span className="info-card-value">+57 313637433</span>
-              <span className="info-card-sub">Respuesta inmediata</span>
+              <span className="info-card-sub">Respuesta en menos de 24 horas</span>
             </div>
           </div>
 
           <div className="social-row">
-            <a className="social-btn" href="#">
+            <a className="social-btn" href="https://www.instagram.com/ferreinver_sas/">
               <svg viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5a4.25 4.25 0 004.25 4.25h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zm4.25 3.25a5.25 5.25 0 110 10.5 5.25 5.25 0 010-10.5zm0 1.5a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5zm5.5-.875a.875.875 0 110 1.75.875.875 0 010-1.75z"/></svg>
               Instagram
             </a>
-            <a className="social-btn" href="#">
+            <a className="social-btn" href="https://www.facebook.com/profile.php?id=61569142257089" target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
               Facebook
             </a>

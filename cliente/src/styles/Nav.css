@@ -1,69 +1,131 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 
-
-nav{
+nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #1E12A4;
+    background-color: #00185A;
     height: 5rem;
     width: 100%;
-    padding: 0 2rem;
+    padding: 0 2.5rem;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 200;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
-
-.nav-links{
-    display: flex;
-    gap: 2rem;
-    text-decoration: none;
-    font-family: "DM Sans", sans-serif;
-    margin-left: auto; 
+nav.scrolled {
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.35);
+    background-color: rgba(0, 24, 90, 0.97);
+    backdrop-filter: blur(12px);
 }
 
-
-.perfil{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.logo{
-    width: 20rem;  
-    height: 6rem;
+.logo {
+    width: 11rem;
+    height: 5rem;
     object-fit: contain;
-
+    flex-shrink: 0;
 }
 
-
-.links{
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
     list-style: none;
+    margin-left: auto;
+    font-family: 'DM Sans', sans-serif;
 }
 
+.links { list-style: none; }
 
-.registro,.productos,.inicio,.contactanos,.quienes-somos, .admin-panel{
-    color: white;
+.inicio, .productos, .contactanos, .quienes-somos, .registro, .admin-panel {
+    color: rgba(255, 255, 255, 0.82);
     text-decoration: none;
-    font-size: 18px;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
 }
 
-.registro:hover,.productos:hover,.inicio:hover,.contactanos:hover,.quienes-somos:hover{
-    color: #22bb48;
-    border-bottom: 2px solid #22bb48;
+.inicio:hover, .productos:hover, .contactanos:hover,
+.quienes-somos:hover, .registro:hover, .admin-panel:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.iniciar-sesion{
-    color: #1E12A4;
+
+.inicio.active, .productos.active, .contactanos.active,
+.quienes-somos.active {
+    color: #22BB48;
+    background: rgba(34, 187, 72, 0.1);
+}
+
+.admin-panel {
+    color: #FDEE18;
+    font-weight: 600;
+}
+
+.bienvenida {
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    padding: 0 8px;
+    font-style: italic;
+}
+
+
+.nav-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.15);
+    margin: 0 8px;
+}
+
+.registro {
+    color: rgba(255,255,255,0.82);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.registro:hover {
+    border-color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.08);
+}
+
+.iniciar-sesion {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #00185A;
     text-decoration: none;
-    font-size: 18px;
-    background-color: white;
-    padding: 5px 20px;
-    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    background: #22BB48;
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 12px rgba(34, 187, 72, 0.4);
+    white-space: nowrap;
 }
 
-.iniciar-sesion:hover{
-    background-color: #22bb48;
-    color: white;
+.iniciar-sesion:hover {
+    background: #1da040;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(34, 187, 72, 0.45);
 }
+
+.perfil {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    object-fit: cover;
+    transition: border-color 0.2s;
+}
+
+.perfil:hover { border-color: #22BB48; }
+

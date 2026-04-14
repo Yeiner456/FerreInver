@@ -1,12 +1,7 @@
-/* ================================================
-   PERFIL MENU — Estilos con paleta de marca
-   Colores: Azul Navy + Amarillo + Verde
-   Tipografía: DM Sans (títulos) / Raleway (textos)
-   ================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@400;500;600&display=swap');
 
-/* Variables de marca */
+
 :root {
   --pm-navy:      #00185A;
   --pm-klein:     #002FB1;
@@ -31,7 +26,7 @@
   align-items: center;
 }
 
-/* ---- Botón disparador ---- */
+
 .perfil-trigger {
   position: relative;
   width: 44px;
@@ -57,7 +52,7 @@
   box-shadow: 0 0 0 4px rgba(221, 206, 0, 0.18);
 }
 
-/* Iniciales */
+
 .perfil-iniciales {
   font-family: var(--pm-font-title);
   font-size: 15px;
@@ -67,13 +62,13 @@
   line-height: 1;
 }
 
-/* Ícono SVG genérico */
+
 .perfil-icono-svg {
   width: 22px;
   height: 22px;
 }
 
-/* Punto de estado */
+
 .perfil-estado-dot {
   position: absolute;
   bottom: 2px;
@@ -87,7 +82,7 @@
 .perfil-estado-dot.activo   { background: var(--pm-green); }
 .perfil-estado-dot.inactivo { background: #aaa; }
 
-/* ---- Dropdown ---- */
+
 .perfil-dropdown {
   position: absolute;
   top: calc(100% + 14px);
@@ -109,7 +104,7 @@
   to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
 
-/* ---- Cabecera (logueado) ---- */
+
 .perfil-header {
   display: flex;
   align-items: center;
@@ -177,7 +172,7 @@
 .perfil-badge.activo   { background: var(--pm-green);   color: #fff; }
 .perfil-badge.inactivo { background: #888;               color: #fff; }
 
-/* ---- Dato rápido (documento) ---- */
+
 .perfil-dato {
   display: flex;
   justify-content: space-between;
@@ -203,14 +198,14 @@
   color: var(--pm-navy);
 }
 
-/* ---- Divisor ---- */
+
 .perfil-divider {
   margin: 0;
   border: none;
   border-top: 1px solid #f0f0f4;
 }
 
-/* ---- Opciones ---- */
+
 .perfil-opciones {
   list-style: none;
   margin: 0;
@@ -246,11 +241,11 @@
   color: var(--pm-klein);
 }
 
-/* Opción cerrar sesión */
+
 .perfil-opcion--cerrar         { color: #c0392b; }
 .perfil-opcion--cerrar:hover   { background: #fff0f0; color: #a93226; }
 
-/* ---- Sin sesión ---- */
+
 .perfil-no-sesion {
   padding: 26px 20px 20px;
   display: flex;
@@ -293,7 +288,7 @@
   line-height: 1.45;
 }
 
-/* Botón primario — color principal navy/klein */
+
 .perfil-btn-login {
   width: 100%;
   padding: 11px;
@@ -314,7 +309,7 @@
   transform: translateY(-1px);
 }
 
-/* Botón secundario — acento amarillo */
+
 .perfil-btn-registro {
   width: 100%;
   padding: 11px;

@@ -1,11 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Raleway:wght@300;400;500&display=swap');
 
 .tipoinvernadero {
-    padding: 3rem 2rem;
-    text-align: center;
+    padding: 6rem 2.5rem;
+    background: #f0f3f8;
     opacity: 0;
     transform: translateY(40px);
-    transition: opacity 1s ease, transform 1s ease;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.tipoinvernadero::before {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,18,164,0.06) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .tipoinvernadero.visible {
@@ -13,44 +28,150 @@
     transform: translateY(0);
 }
 
-.tipoinvernadero h2 {
-    font-family: "DM Sans", sans-serif;
-    font-size: 2rem;
-    color: white;
-    margin-bottom: 3rem;
+
+.tipoinvernadero-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.tipo-pill {
+    display: inline-block;
+    background: rgba(30, 18, 164, 0.1);
+    border: 1px solid rgba(30, 18, 164, 0.2);
+    color: #1E12A4;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+}
+
+.tipoinvernadero-header h2 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: #00185A;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.6rem;
+}
+
+.tipoinvernadero-header h2 em {
+    font-style: normal;
+    color: #1E12A4;
+}
+
+.tipo-sub {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    color: #666;
 }
 
 .tipoinvernadero-img {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 3rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1050px;
+    margin: 0 auto;
 }
 
-.invernadero-metalico,
-.invernadero-tipocapilla {
+
+.invernadero-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 24, 90, 0.08);
+    border: 1px solid #e4e7f0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    max-width: 400px;
-    gap: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.invernadero-metalico img,
-.invernadero-tipocapilla img {
+.invernadero-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0, 24, 90, 0.14);
+}
+
+.invernadero-img-wrap {
+    position: relative;
     width: 100%;
     height: 280px;
-    object-fit: cover;
-    border-radius: 12px;
+    overflow: hidden;
 }
 
-.invernadero-metalico p,
-.invernadero-tipocapilla p {
-    font-family: "Raleway", sans-serif;
-    font-size: 1rem;
-    color: #ccc;
-    line-height: 1.7;
-    text-align: justify;
+.invernadero-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.invernadero-card:hover .invernadero-img-wrap img {
+    transform: scale(1.05);
+}
+
+.invernadero-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: #22BB48;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+}
+
+
+.invernadero-info {
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex: 1;
+}
+
+.invernadero-info h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #00185A;
+}
+
+.invernadero-info p {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.92rem;
+    color: #666;
+    line-height: 1.75;
+}
+
+.invernadero-features {
+    list-style: none;
+    padding: 0;
+    margin: 0.4rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.invernadero-features li {
+    background: rgba(30, 18, 164, 0.07);
+    color: #1E12A4;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(30, 18, 164, 0.15);
+}
+
+.invernadero-features li::before {
+    content: '✓ ';
+    color: #22BB48;
 }

@@ -6,7 +6,6 @@
     box-sizing: border-box;
 }
 
-/* ── Fondo de página ── */
 .recuperar-page-wrapper {
     min-height: 100vh;
     display: flex;
@@ -42,7 +41,7 @@
     pointer-events: none;
 }
 
-/* ── Botón volver flotante ── */
+
 .volver-btn {
     position: fixed;
     top: 20px;
@@ -70,7 +69,7 @@
     transform: translateX(-3px);
 }
 
-/* ── Card ── */
+
 .login-container {
     width: 100%;
     max-width: 460px;
@@ -159,7 +158,6 @@ form {
     background: #fffef5;
 }
 
-/* Caja de info */
 .mensaje {
     text-align: left;
     background-color: #fffbe6;
@@ -186,7 +184,7 @@ form {
     margin: 10px 4px 10px 10px;
 }
 
-/* Botón principal */
+
 .login-button {
     width: 100%;
     padding: 13px;
@@ -218,7 +216,7 @@ form {
     transform: none;
 }
 
-/* Botón secundario (volver entre pasos) */
+
 .register-button {
     display: block;
     width: 100%;

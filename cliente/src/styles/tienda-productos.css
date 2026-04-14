@@ -18,7 +18,7 @@
   --tp-shadow:   0 8px 32px rgba(0,0,0,0.45);
 }
 
-/* ── SECCIÓN ─────────────────────────────────────────────────────────────── */
+
 .tp-seccion {
   min-height: calc(100vh - 5rem);
   background-color: var(--tp-surface);
@@ -26,7 +26,7 @@
   font-family: 'DM Sans', sans-serif;
 }
 
-/* ── HEADER ─────────────────────────────────────────────────────────────── */
+
 .tp-header {
   background-color: var(--tp-nav);
   border-radius: var(--tp-radius);
@@ -105,7 +105,7 @@
   justify-content: center;
 }
 
-/* ── PANEL FILTRO ─────────────────────────────────────────────────────────── */
+
 .tp-filtro-panel {
   margin-top: 1rem;
   padding-top: 1rem;
@@ -180,14 +180,14 @@
   color: var(--tp-green);
 }
 
-/* ── CONTEO ─────────────────────────────────────────────────────────────── */
+
 .tp-conteo {
   color: var(--tp-muted);
   font-size: 0.85rem;
   margin-bottom: 1.2rem;
 }
 
-/* ── ESTADO ─────────────────────────────────────────────────────────────── */
+
 .tp-estado {
   text-align: center;
   color: var(--tp-muted);
@@ -196,14 +196,14 @@
 }
 .tp-estado--error { color: #e57373; }
 
-/* ── GRID ─────────────────────────────────────────────────────────────── */
+
 .tp-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 1.2rem;
 }
 
-/* ── TARJETA ─────────────────────────────────────────────────────────────── */
+
 .tp-tarjeta {
   background-color: var(--tp-card);
   border-radius: var(--tp-radius);
@@ -268,7 +268,7 @@
 }
 .tp-tarjeta-btn:hover { background: var(--tp-green-hover); }
 
-/* ── OVERLAY ─────────────────────────────────────────────────────────────── */
+
 .tp-overlay {
   position: fixed;
   inset: 0;
@@ -281,7 +281,7 @@
   backdrop-filter: blur(3px);
 }
 
-/* ── MODAL CLOSE ─────────────────────────────────────────────────────────── */
+
 .tp-modal-close {
   position: absolute;
   top: 1rem;
@@ -296,7 +296,7 @@
 }
 .tp-modal-close:hover { color: var(--tp-text); }
 
-/* ── MODAL DETALLE ─────────────────────────────────────────────────────────── */
+
 .tp-modal-detalle {
   position: relative;
   background: var(--tp-card);
@@ -453,7 +453,7 @@
   cursor: not-allowed;
 }
 
-/* ── BTN SEGUIR ─────────────────────────────────────────────────────────── */
+
 .tp-btn-seguir {
   width: 100%;
   background: var(--tp-border);
@@ -470,7 +470,7 @@
 }
 .tp-btn-seguir:hover { background: #5a5a5a; }
 
-/* ── BADGES ─────────────────────────────────────────────────────────────── */
+
 .tp-badges {
   margin-top: 1rem;
   display: flex;
@@ -493,7 +493,7 @@
 .tp-dot-blue  { background: #5b7fde; }
 .tp-dot-green { background: var(--tp-green); }
 
-/* ── MODAL ÉXITO ─────────────────────────────────────────────────────────── */
+
 .tp-modal-exito {
   position: relative;
   background: var(--tp-card);
@@ -526,7 +526,7 @@
   margin-bottom: 1.4rem;
 }
 
-/* ── CARRITO MODAL ─────────────────────────────────────────────────────────── */
+
 .tp-carrito {
   position: relative;
   background: var(--tp-card);
@@ -675,13 +675,13 @@
 }
 .tp-btn-historial:hover { background: var(--tp-green-hover); }
 
-/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+
 @media (max-width: 600px) {
   .tp-seccion { padding: 1rem 1rem 3rem; }
   .tp-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
 }
 
-/* ── SESION CHIP (header) ─────────────────────────────────────────────────── */
+
 .tp-sesion-chip {
   display: flex;
   align-items: center;
@@ -706,7 +706,7 @@
 }
 .tp-sesion-chip-x:hover { color: white; }
 
-/* ── MODAL LOGIN ─────────────────────────────────────────────────────────── */
+
 .tp-modal-login {
   max-width: 360px !important;
   text-align: left !important;
@@ -763,7 +763,7 @@
 .tp-login-field input:focus { border-color: var(--tp-green); }
 .tp-login-field input::placeholder { color: rgba(255,255,255,0.2); }
 
-/* ── CARRITO SESION BAR ──────────────────────────────────────────────────── */
+
 .tp-carrito-sesion {
   display: flex;
   align-items: center;
@@ -791,7 +791,6 @@
   background: rgba(34,187,72,0.1);
 }
 
-/* ── MODAL CHECKOUT ──────────────────────────────────────────────────────── */
 .tp-modal-checkout {
   position: relative;
   background: var(--tp-card);

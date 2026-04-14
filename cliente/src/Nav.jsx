@@ -27,7 +27,7 @@ export const Nav = () => {
           onAbrirPerfil={() => setMostrarPerfil(true)}
           onAbrirLogin={() => setMostrarLogin(true)}
         />
-
+        
         <img className='logo' src="/img/logo.webp" alt="logo" />
 
         <ul className='nav-links'>

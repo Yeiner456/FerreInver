@@ -6,7 +6,7 @@
     box-sizing: border-box;
 }
 
-/* ── Fondo de página ── */
+
 .register-page-wrapper {
     min-height: 100vh;
     display: flex;
@@ -18,7 +18,7 @@
     overflow: hidden;
 }
 
-/* Círculos decorativos de fondo */
+
 .register-page-wrapper::before {
     content: '';
     position: absolute;
@@ -43,7 +43,7 @@
     pointer-events: none;
 }
 
-/* ── Botón volver — fuera de la card, esquina superior izquierda ── */
+
 .volver-btn {
     position: fixed;
     top: 20px;
@@ -71,7 +71,7 @@
     transform: translateX(-3px);
 }
 
-/* ── Card ── */
+
 .card {
     background: white;
     border-radius: 16px;
@@ -85,7 +85,7 @@
     z-index: 1;
 }
 
-/* ── Header de la card ── */
+
 .card-header {
     background: linear-gradient(135deg, #FDEE18 0%, #DDCE00 100%);
     text-align: center;
@@ -109,7 +109,7 @@
     font-family: 'DM Sans', sans-serif;
 }
 
-/* ── Body ── */
+
 .card-body {
     padding: 32px 30px;
 }
