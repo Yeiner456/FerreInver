@@ -3,22 +3,26 @@ import './styles/Nav.css'
 import { Link, useLocation } from 'react-router-dom'
 import { PerfilMenu } from './Components/PerfilMenu'
 import { MiPerfil } from './Components/Miperfil'
+import { MisPedidos } from './Components/MisPedidos'
+import { MisCotizaciones } from './Components/MisCotizaciones'
 import { Login } from './auth/Login'
 
 export const Nav = () => {
-  const [mostrarPerfil, setMostrarPerfil] = useState(false)
-  const [mostrarLogin, setMostrarLogin]   = useState(false)
+  const [mostrarPerfil, setMostrarPerfil]             = useState(false)
+  const [mostrarLogin, setMostrarLogin]               = useState(false)
+  const [mostrarPedidos, setMostrarPedidos]           = useState(false)
+  const [mostrarCotizaciones, setMostrarCotizaciones] = useState(false)
   const location = useLocation()
 
   const usuarioStr = sessionStorage.getItem("usuario")
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
 
- useEffect(() => {
-  if (location.state?.abrirLogin) {
-    setTimeout(() => setMostrarLogin(true), 0)  // ✅ diferir un tick
-    window.history.replaceState({}, '')
-  }
-}, [location.state])
+  useEffect(() => {
+    if (location.state?.abrirLogin) {
+      setTimeout(() => setMostrarLogin(true), 0)
+      window.history.replaceState({}, '')
+    }
+  }, [location.state])
 
   return (
     <>
@@ -26,6 +30,8 @@ export const Nav = () => {
         <PerfilMenu
           onAbrirPerfil={() => setMostrarPerfil(true)}
           onAbrirLogin={() => setMostrarLogin(true)}
+          onAbrirPedidos={() => setMostrarPedidos(true)}
+          onAbrirCotizaciones={() => setMostrarCotizaciones(true)}
         />
         
         <img className='logo' src="/img/logo.webp" alt="logo" />
@@ -71,8 +77,10 @@ export const Nav = () => {
         </ul>
       </nav>
 
-      {mostrarPerfil && <MiPerfil onCerrar={() => setMostrarPerfil(false)} />}
-      {mostrarLogin  && <Login    onCerrar={() => setMostrarLogin(false)} />}
+      {mostrarPerfil       && <MiPerfil        onCerrar={() => setMostrarPerfil(false)} />}
+      {mostrarLogin        && <Login           onCerrar={() => setMostrarLogin(false)} />}
+      {mostrarPedidos      && <MisPedidos      onCerrar={() => setMostrarPedidos(false)} />}
+      {mostrarCotizaciones && <MisCotizaciones onCerrar={() => setMostrarCotizaciones(false)} />}
     </>
   )
 }
