@@ -525,12 +525,12 @@
 .exito-titulo {
     font-size: 22px;
     font-weight: 500;
-    color: #2C2C2A;
+    color: #42CC67;
     margin: 0 0 0.5rem;
 }
 
 .exito-descripcion {
-    color: #5F5E5A;
+    color: #FFF;
     margin-bottom: 1.5rem;
     line-height: 1.6;
 }
