@@ -15,19 +15,11 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(
-        -55deg,
-        transparent,
-        transparent 40px,
-        rgba(255,255,255,0.015) 40px,
-        rgba(255,255,255,0.015) 80px
-    );
     pointer-events: none;
 }
 
 
 .infofi::after {
-    content: '';
     position: absolute;
     top: -120px;
     right: -120px;

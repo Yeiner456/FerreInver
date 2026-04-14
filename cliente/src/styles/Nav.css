@@ -1,24 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #00185A;
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
     height: 5rem;
     width: 100%;
     padding: 0 2.5rem;
     position: sticky;
     top: 0;
     z-index: 200;
-    transition: box-shadow 0.3s ease, background-color 0.3s ease;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: box-shadow 0.3s ease;
 }
 
 nav.scrolled {
-    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.35);
-    background-color: rgba(0, 24, 90, 0.97);
-    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 32px rgba(0,0,0,0.5);
+    background-color: rgba(26, 31, 53, 0.96);
+    backdrop-filter: blur(14px);
 }
 
 .logo {
@@ -31,7 +31,7 @@ nav.scrolled {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.2rem;
     list-style: none;
     margin-left: auto;
     font-family: 'DM Sans', sans-serif;
@@ -40,92 +40,74 @@ nav.scrolled {
 .links { list-style: none; }
 
 .inicio, .productos, .contactanos, .quienes-somos, .registro, .admin-panel {
-    color: rgba(255, 255, 255, 0.82);
+    color: var(--muted);
     text-decoration: none;
-    font-size: 15px;
-    font-weight: 500;
-    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 7px 14px;
     border-radius: 8px;
-    transition: color 0.2s, background 0.2s;
+    border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
     white-space: nowrap;
 }
 
 .inicio:hover, .productos:hover, .contactanos:hover,
-.quienes-somos:hover, .registro:hover, .admin-panel:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-
-.inicio.active, .productos.active, .contactanos.active,
-.quienes-somos.active {
-    color: #22BB48;
-    background: rgba(34, 187, 72, 0.1);
+.quienes-somos:hover, .registro:hover {
+    color: var(--text);
+    background: var(--surface2);
+    border-color: var(--border);
 }
 
 .admin-panel {
-    color: #FDEE18;
-    font-weight: 600;
+    color: var(--accent);
+    font-weight: 700;
 }
 
 .bienvenida {
-    color: rgba(255,255,255,0.65);
-    font-size: 14px;
+    color: var(--muted);
+    font-size: 13px;
     padding: 0 8px;
     font-style: italic;
 }
 
-
-.nav-divider {
-    width: 1px;
-    height: 20px;
-    background: rgba(255,255,255,0.15);
-    margin: 0 8px;
-}
-
 .registro {
-    color: rgba(255,255,255,0.82);
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.registro:hover {
-    border-color: rgba(255,255,255,0.5);
-    background: rgba(255,255,255,0.08);
+    border-color: var(--border);
+    color: var(--muted);
 }
 
 .iniciar-sesion {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: #00185A;
+    color: var(--dark);
     text-decoration: none;
     font-size: 14px;
     font-weight: 700;
     font-family: 'DM Sans', sans-serif;
-    background: #22BB48;
+    background: var(--accent);
     padding: 8px 20px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 12px rgba(34, 187, 72, 0.4);
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 16px rgba(253,238,27,0.25);
     white-space: nowrap;
 }
 
 .iniciar-sesion:hover {
-    background: #1da040;
+    opacity: 0.88;
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(34, 187, 72, 0.45);
+    box-shadow: 0 6px 24px rgba(253,238,27,0.35);
 }
 
 .perfil {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.3);
+    border: 2px solid var(--border);
     object-fit: cover;
     transition: border-color 0.2s;
 }
 
-.perfil:hover { border-color: #22BB48; }
+.perfil:hover { border-color: var(--accent2); }
 
