@@ -196,7 +196,6 @@ export default function PedidosCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Cliente</th>
                             <th>Correo</th>
                             <th>Fecha y Hora</th>
@@ -208,7 +207,6 @@ export default function PedidosCRUD() {
                     <tbody>
                         {pedidos.map((p) => (
                             <tr key={p.id_pedido}>
-                                <td>{p.id_pedido}</td>
                                 <td>{p.nombre_cliente}</td>
                                 <td>{p.correo}</td>
                                 <td>{p.fecha_hora}</td>
@@ -240,7 +238,7 @@ export default function PedidosCRUD() {
             {confirmCancelar && (
                 <div>
                     <p>
-                        ¿Cancelar pedido <strong>#{confirmCancelar.id_pedido}</strong> de{" "}
+                        ¿Cancelar pedido de{" "}
                         <strong>{confirmCancelar.nombre_cliente}</strong>?
                         <br />
                         <small>El estado cambiará a "cancelado" y no podrá revertirse desde aquí.</small>

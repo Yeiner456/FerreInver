@@ -269,7 +269,7 @@ export default function ProveedoresCRUD() {
             {confirmDeactivate && (
                 <div>
                     <p>
-                        ¿Desactivar proveedor NIT <strong>{confirmDeactivate.nit_proveedor}</strong> ({confirmDeactivate.correo})?
+                        ¿Desactivar proveedor({confirmDeactivate.correo})?
                         <br />
                         <small>El proveedor no aparecerá disponible para nuevas compras.</small>
                     </p>

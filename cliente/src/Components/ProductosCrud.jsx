@@ -14,10 +14,10 @@ const api = {
         }).then((r) => r.json()),
 
     updateProducto: (id, formData) =>
-    fetch(`${API_BASE}/apiProductos.php?id=${id}&_method=PUT`, {
-        method: "POST",   
-        body: formData,
-    }).then((r) => r.json()),
+        fetch(`${API_BASE}/apiProductos.php?id=${id}&_method=PUT`, {
+            method: "POST",
+            body: formData,
+        }).then((r) => r.json()),
 
     deactivateProducto: (id) =>
         fetch(`${API_BASE}/apiProductos.php?id=${id}`, {
@@ -47,10 +47,10 @@ function ProductoModal({ producto, onClose, onSave }) {
             ? { nombre: producto.nombre, precio: producto.precio, descripcion: producto.descripcion }
             : emptyForm
     );
-    const [errors, setErrors]     = useState({});
-    const [loading, setLoading]   = useState(false);
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
     const [imagenFile, setImagenFile] = useState(null);
-    const [preview, setPreview]   = useState(
+    const [preview, setPreview] = useState(
         isEdit && producto.imagen ? IMG_BASE + producto.imagen : null
     );
     const fileInputRef = useRef();
@@ -76,8 +76,8 @@ function ProductoModal({ producto, onClose, onSave }) {
         setLoading(true);
         try {
             const fd = new FormData();
-            fd.append("nombre",      form.nombre);
-            fd.append("precio",      form.precio);
+            fd.append("nombre", form.nombre);
+            fd.append("precio", form.precio);
             fd.append("descripcion", form.descripcion);
             if (imagenFile) fd.append("imagen", imagenFile);
 
@@ -160,10 +160,10 @@ function ProductoModal({ producto, onClose, onSave }) {
 }
 
 export default function ProductosCRUD() {
-    const [productos, setProductos]         = useState([]);
-    const [loading, setLoading]             = useState(true);
-    const [modal, setModal]                 = useState(null);
-    const [mensaje, setMensaje]             = useState(null);
+    const [productos, setProductos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [modal, setModal] = useState(null);
+    const [mensaje, setMensaje] = useState(null);
     const [confirmDeactivate, setConfirmDeactivate] = useState(null);
 
     const load = useCallback(async () => {
@@ -217,7 +217,6 @@ export default function ProductosCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Imagen</th>
                             <th>Nombre</th>
                             <th>Precio</th>
@@ -229,11 +228,10 @@ export default function ProductosCRUD() {
                     <tbody>
                         {productos.map((p) => (
                             <tr key={p.id_producto}>
-                                <td>{p.id_producto}</td>
                                 <td>
                                     {p.imagen
                                         ? <img src={IMG_BASE + p.imagen} alt={p.nombre}
-                                               style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }} />
+                                            style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }} />
                                         : <span style={{ color: "#aaa", fontSize: 12 }}>Sin imagen</span>
                                     }
                                 </td>
@@ -267,7 +265,7 @@ export default function ProductosCRUD() {
             {confirmDeactivate && (
                 <div style={{ marginTop: 12, border: "1px solid #f99", padding: 12 }}>
                     <p>
-                        ¿Desactivar <strong>{confirmDeactivate.nombre}</strong> (ID: {confirmDeactivate.id_producto})?
+                        ¿Desactivar <strong>{confirmDeactivate.nombre}</strong>?
                         <br />
                         <small>El producto no aparecerá disponible para nuevos pedidos.</small>
                     </p>

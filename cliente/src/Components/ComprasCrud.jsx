@@ -216,7 +216,6 @@ export default function ComprasCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Cantidad</th>
                             <th>Descripción</th>
                             <th>Producto</th>
@@ -227,7 +226,6 @@ export default function ComprasCRUD() {
                     <tbody>
                         {compras.map((c) => (
                             <tr key={c.id_compra}>
-                                <td>{c.id_compra}</td>
                                 <td>{c.cantidad}</td>
                                 <td>{c.descripcion}</td>
                                 <td>{c.nombre_producto}</td>
@@ -252,7 +250,7 @@ export default function ComprasCRUD() {
 
             {confirmDelete && (
                 <div>
-                    <p>¿Eliminar compra ID <strong>{confirmDelete.id_compra}</strong>?</p>
+                    <p>¿Eliminar compra?</p>
                     <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
                     <button onClick={() => handleDelete(confirmDelete.id_compra)}>Sí, eliminar</button>
                 </div>

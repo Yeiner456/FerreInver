@@ -178,7 +178,6 @@ export default function TiposUsuariosCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nombre</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -187,7 +186,6 @@ export default function TiposUsuariosCRUD() {
                     <tbody>
                         {tipos.map((t) => (
                             <tr key={t.id_tipo_de_usuario}>
-                                <td>{t.id_tipo_de_usuario}</td>
                                 <td>{t.nombre}</td>
                                 <td>{t.estado}</td>
                                 <td>
@@ -211,7 +209,7 @@ export default function TiposUsuariosCRUD() {
             {confirmDelete && (
                 <div>
                     <p>
-                        ¿Eliminar el tipo <strong>{confirmDelete.nombre}</strong> (ID: {confirmDelete.id_tipo_de_usuario})?
+                        ¿Eliminar el tipo <strong>{confirmDelete.nombre}</strong>?
                     </p>
                     <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
                     <button onClick={() => handleDelete(confirmDelete.id_tipo_de_usuario)}>Sí, eliminar</button>

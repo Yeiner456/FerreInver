@@ -16,7 +16,7 @@ export function Contactanos() {
 
   const addRef = (el) => { if (el && !fadeRefs.current.includes(el)) fadeRefs.current.push(el); };
 
-  // ⚠️ Reemplaza este número por el real de Ferreinver (solo dígitos, con código de país)
+  // Reemplaza este número por el real de Ferreinver (solo dígitos, con código de país)
   const WHATSAPP_NUMBER = "573133637433";
 
   function handleSubmit(e) {

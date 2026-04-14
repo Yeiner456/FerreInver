@@ -83,7 +83,7 @@ function ClienteModal({ cliente, tipos, onClose, onSave }) {
         isEdit
             ? {
                 ...cliente,
-                // ✅ Forzar string para que el select haga match correctamente
+                
                 id_tipo_de_usuario: String(cliente.id_tipo_de_usuario),
                 password: "",
                 confirmar_password: "",
@@ -295,7 +295,7 @@ export default function ClientesCRUD() {
                                 <td>{c.estado_inicio_sesion}</td>
                                 <td>
                                     <button onClick={() => setModal(c)}>Editar</button>{" "}
-                                    {/* ✅ Botón desactivar solo si está activo */}
+                                    {/* Botón desactivar solo si está activo */}
                                     {c.estado_inicio_sesion === "activo" && (
                                         <button onClick={() => setConfirmDeactivate(c)}>Desactivar</button>
                                     )}
@@ -318,7 +318,7 @@ export default function ClientesCRUD() {
             {confirmDeactivate && (
                 <div>
                     <p>
-                        ¿Desactivar a <strong>{confirmDeactivate.nombre}</strong> (doc: {confirmDeactivate.documento})?
+                        ¿Desactivar a <strong>{confirmDeactivate.nombre}</strong>?
                         <br />
                         <small>El cliente no podrá iniciar sesión.</small>
                     </p>

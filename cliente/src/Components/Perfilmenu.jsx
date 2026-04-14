@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Perfilmenu.css'
 
-export const PerfilMenu = ({ onAbrirPerfil }) => {
+export const PerfilMenu = ({ onAbrirPerfil, onAbrirLogin }) => {
   const [abierto, setAbierto] = useState(false)
   const menuRef = useRef(null)
   const navigate = useNavigate()
@@ -10,7 +10,6 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
   // Obtener usuario de sessionStorage (campos de tabla clientes)
   const usuarioStr = sessionStorage.getItem('usuario')
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
-  console.log('Usuario en sesión:', usuario)
 
   // Cerrar al hacer clic fuera
   useEffect(() => {
@@ -135,7 +134,7 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
               <p className="perfil-no-sesion-sub">Accede a tu cuenta para ver tu perfil</p>
               <button
                 className="perfil-btn-login"
-                onClick={() => { navigate('/login'); setAbierto(false) }}
+                onClick={() => { onAbrirLogin?.(); setAbierto(false) }}
               >
                 Iniciar sesión
               </button>
