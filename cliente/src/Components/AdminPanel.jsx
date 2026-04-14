@@ -45,7 +45,7 @@ export default function AdminPanel() {
                     <div className="sidebar-section">Navegación</div>
                     <ul className="nav-list">
                         <li className="nav-item" onClick={() => navigate("/inicio")}>
-                            <span className="nav-icon">🏠</span>
+                            <span className="nav-icon"></span>
                             <span className="nav-label">Ir al Inicio</span>
                         </li>
                     </ul>
