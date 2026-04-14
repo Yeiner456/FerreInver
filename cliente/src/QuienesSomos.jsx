@@ -78,12 +78,12 @@ export const QuienesSomos = () => {
         </div>
         <div className="qs-objetivos-grid">
           {[
-            { num: "01", texto: "Diseñar una interfaz intuitiva y atractiva que refleje la identidad de FERREINVER." },
-            { num: "02", texto: "Presentar la misión y visión de la empresa de manera clara y accesible." },
-            { num: "03", texto: "Visualizar el inventario con precios actualizados en tiempo real." },
-            { num: "04", texto: "Publicar vacantes disponibles para quienes quieran unirse al equipo." },
-            { num: "05", texto: "Facilitar la comunicación rápida y eficiente mediante un formulario de contacto." },
-            { num: "06", texto: "Garantizar accesibilidad y compatibilidad en distintos dispositivos." },
+            { num: "01", texto: "Diseñar la plataforma estratégica de la empresa Ferreinver, incluyendo misión, visión y valores organizacionales." },
+            { num: "02", texto: "Identificar y analizar la estructura organizacional actual de la empresa para proponer mejoras en su funcionamiento." },
+            { num: "03", texto: "Realizar un análisis de cargos y funciones del personal administrativo y operativo, con el fin de optimizar roles y responsabilidades." },
+            { num: "04", texto: "Aplicar una metodología cualitativa mediante entrevistas a los dueños y empleados para obtener información relevante sobre la empresa." },
+            { num: "05", texto: "Proponer un diseño estructural adecuado de la sede, utilizando herramientas como AutoCAD para mejorar la distribución del espacio." },
+            { num: "06", texto: "Fortalecer la organización interna de la empresa mediante la implementación de una estructura clara que facilite la toma de decisiones y el crecimiento empresarial." },
           ].map((obj) => (
             <div className="qs-obj-item" key={obj.num}>
               <span className="qs-obj-num">{obj.num}</span>

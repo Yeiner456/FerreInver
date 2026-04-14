@@ -172,7 +172,6 @@ export default function StocksCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
-                            <th>ID Stock</th>
                             <th>Producto</th>
                             <th>Precio Unitario</th>
                             <th>Cantidad</th>

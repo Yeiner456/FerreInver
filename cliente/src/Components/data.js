@@ -6,13 +6,18 @@ export const data = [
     {
         id: 2, imgUrl: "./public/img/fondo2.webp", title: "Ferreteria 1"
     },
-
+    
     {
-        id: 3, imgUrl: "./public/img/fondo3.webp", title: "Ferreteria 2"
+        id: 3, imgUrl: "./public/img/fondo1.webp", title: "Ferreteria 2"
     },
 
     {
-        id: 4, imgUrl: "./public/img/fondo1.webp", title: "Ferreteria 3"
-    }
+        id: 4, type:"video", imgUrl: "./public/img/corto-trabajando-2.mp4", title: "Video 2"
+    },
+
+    {
+        id: 5, imgUrl: "./public/img/fondo3.webp", title: "Ferreteria 2"
+    },
+
 
 ]

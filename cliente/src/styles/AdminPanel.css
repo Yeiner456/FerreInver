@@ -373,9 +373,9 @@ body {
 
 /* Botones */
 .content-area button {
-    background: var(--accent2);
-    color: var(--dark);
-    border: none;
+    background: transparent;
+    color: var(--accent2);
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 9px 18px;
     font-family: 'Syne', sans-serif;
@@ -391,7 +391,7 @@ body {
 
 /* Botón secundario */
 .content-area button + button {
-    background: transparent;
+    background: var(--accent2);
     color: var(--muted);
     border: 1px solid var(--border);
     margin-left: 8px;

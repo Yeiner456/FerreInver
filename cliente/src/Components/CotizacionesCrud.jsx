@@ -246,7 +246,6 @@ export default function CotizacionesCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Cliente</th>
                             <th>Invernadero</th>
                             <th>Largo</th>
@@ -262,7 +261,6 @@ export default function CotizacionesCRUD() {
                     <tbody>
                         {cotizaciones.map((c) => (
                             <tr key={c.id_cotizacion}>
-                                <td>{c.id_cotizacion}</td>
                                 <td>{c.cliente_nombre}</td>
                                 <td>{c.invernadero_nombre}</td>
                                 <td>{Number(c.largo).toFixed(2)}</td>
@@ -298,7 +296,7 @@ export default function CotizacionesCRUD() {
             {confirmRechazar && (
                 <div>
                     <p>
-                        ¿Rechazar cotización ID <strong>{confirmRechazar.id_cotizacion}</strong> de{" "}
+                        ¿Rechazar cotización de{" "}
                         <strong>{confirmRechazar.cliente_nombre}</strong>?
                         <br />
                         <small>El estado cambiará a "rechazada" y no podrá revertirse desde aquí.</small>

@@ -215,7 +215,6 @@ export default function ProductosPedidosCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Producto</th>
                             <th>Pedido</th>
                             <th>Descripción</th>
@@ -226,7 +225,6 @@ export default function ProductosPedidosCRUD() {
                     <tbody>
                         {registros.map((r) => (
                             <tr key={r.id}>
-                                <td>{r.id}</td>
                                 <td>{r.nombre_producto}</td>
                                 <td>#{r.id_pedido}</td>
                                 <td>{r.descripcion}</td>
@@ -252,8 +250,7 @@ export default function ProductosPedidosCRUD() {
             {confirmDelete && (
                 <div>
                     <p>
-                        ¿Quitar <strong>{confirmDelete.nombre_producto}</strong> del Pedido{" "}
-                        <strong>#{confirmDelete.id_pedido}</strong>?
+                        ¿Quitar <strong>{confirmDelete.nombre_producto}</strong> del Pedido{" "}?
                     </p>
                     <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
                     <button onClick={() => handleDelete(confirmDelete.id)}>Sí, quitar</button>

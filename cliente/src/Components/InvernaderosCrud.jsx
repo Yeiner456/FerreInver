@@ -168,7 +168,6 @@ export default function InvernaderoCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nombre</th>
                             <th>Descripción</th>
                             <th>Precio m²</th>
@@ -179,7 +178,6 @@ export default function InvernaderoCRUD() {
                     <tbody>
                         {invernaderos.map((inv) => (
                             <tr key={inv.id_invernadero}>
-                                <td>{inv.id_invernadero}</td>
                                 <td>{inv.nombre}</td>
                                 <td>{inv.descripcion}</td>
                                 <td>$ {Number(inv.precio_m2).toLocaleString("es-CO", { minimumFractionDigits: 2 })}</td>
@@ -210,7 +208,7 @@ export default function InvernaderoCRUD() {
             {confirmDeactivate && (
                 <div>
                     <p>
-                        ¿Desactivar invernadero <strong>{confirmDeactivate.nombre}</strong> (ID: {confirmDeactivate.id_invernadero})?
+                        ¿Desactivar invernadero <strong>{confirmDeactivate.nombre}</strong>?
                         <br />
                         <small>El invernadero no aparecerá disponible para nuevas cotizaciones.</small>
                     </p>

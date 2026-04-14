@@ -2,16 +2,14 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Perfilmenu.css'
 
-export const PerfilMenu = ({ onAbrirPerfil }) => {
+export const PerfilMenu = ({ onAbrirPerfil, onAbrirLogin, onAbrirPedidos, onAbrirCotizaciones }) => {
   const [abierto, setAbierto] = useState(false)
   const menuRef = useRef(null)
   const navigate = useNavigate()
 
-  // Obtener usuario de sessionStorage (campos de tabla clientes)
   const usuarioStr = sessionStorage.getItem('usuario')
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
 
-  // Cerrar al hacer clic fuera
   useEffect(() => {
     const handleClickFuera = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -28,15 +26,9 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
     navigate('/')
   }
 
-  // Iniciales del nombre
   const obtenerIniciales = (nombre) => {
     if (!nombre) return '?'
-    return nombre
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
+    return nombre.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
   }
 
   const esActivo = usuario?.estado_inicio_sesion === 'activo'
@@ -51,9 +43,7 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
         aria-label="Menú de perfil"
       >
         {usuario ? (
-          <span className="perfil-iniciales">
-            {obtenerIniciales(usuario.nombre)}
-          </span>
+          <span className="perfil-iniciales">{obtenerIniciales(usuario.nombre)}</span>
         ) : (
           <svg className="perfil-icono-svg" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8" />
@@ -70,15 +60,14 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
         <div className="perfil-dropdown">
           {usuario ? (
             <>
+              {/* Cabecera */}
               <div className="perfil-header">
                 <div className="perfil-avatar-grande">
                   {obtenerIniciales(usuario.nombre)}
                 </div>
                 <div className="perfil-info">
                   <p className="perfil-nombre">{usuario.nombre}</p>
-                  {usuario.correo && (
-                    <p className="perfil-correo">{usuario.correo}</p>
-                  )}
+                  {usuario.correo && <p className="perfil-correo">{usuario.correo}</p>}
                   <span className={`perfil-badge ${esActivo ? 'activo' : 'inactivo'}`}>
                     {esActivo ? '● Activo' : '● Inactivo'}
                   </span>
@@ -95,11 +84,10 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
               <hr className="perfil-divider" />
 
               <ul className="perfil-opciones">
+
+                {/* Mi perfil */}
                 <li>
-                  <button
-                    className="perfil-opcion"
-                    onClick={() => { onAbrirPerfil(); setAbierto(false) }}
-                  >
+                  <button className="perfil-opcion" onClick={() => { onAbrirPerfil(); setAbierto(false) }}>
                     <svg viewBox="0 0 24 24" fill="none">
                       <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8" />
                       <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -107,11 +95,36 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
                     Mi perfil
                   </button>
                 </li>
+
+                {/* Mis pedidos */}
                 <li>
-                  <button
-                    className="perfil-opcion perfil-opcion--cerrar"
-                    onClick={cerrarSesion}
-                  >
+                  <button className="perfil-opcion" onClick={() => { onAbrirPedidos?.(); setAbierto(false) }}>
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      <path d="M16 10a4 4 0 0 1-8 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Mis pedidos
+                  </button>
+                </li>
+
+                {/* Mis cotizaciones */}
+                <li>
+                  <button className="perfil-opcion" onClick={() => { onAbrirCotizaciones?.(); setAbierto(false) }}>
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      <polyline points="14 2 14 8 20 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      <polyline points="10 9 9 9 8 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    </svg>
+                    Mis cotizaciones
+                  </button>
+                </li>
+
+                {/* Cerrar sesión */}
+                <li>
+                  <button className="perfil-opcion perfil-opcion--cerrar" onClick={cerrarSesion}>
                     <svg viewBox="0 0 24 24" fill="none">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                       <polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -120,6 +133,7 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
                     Cerrar sesión
                   </button>
                 </li>
+
               </ul>
             </>
           ) : (
@@ -132,16 +146,10 @@ export const PerfilMenu = ({ onAbrirPerfil }) => {
               </div>
               <p className="perfil-no-sesion-texto">No has iniciado sesión</p>
               <p className="perfil-no-sesion-sub">Accede a tu cuenta para ver tu perfil</p>
-              <button
-                className="perfil-btn-login"
-                onClick={() => { navigate('/login'); setAbierto(false) }}
-              >
+              <button className="perfil-btn-login" onClick={() => { onAbrirLogin?.(); setAbierto(false) }}>
                 Iniciar sesión
               </button>
-              <button
-                className="perfil-btn-registro"
-                onClick={() => { navigate('/register'); setAbierto(false) }}
-              >
+              <button className="perfil-btn-registro" onClick={() => { navigate('/register'); setAbierto(false) }}>
                 Crear cuenta
               </button>
             </div>

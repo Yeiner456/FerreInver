@@ -3,24 +3,26 @@ import { useNavigate } from "react-router-dom";
 import ClientesCrud from "./ClientesCrud";
 import ComprasCrud from "./ComprasCrud";
 import CotizacionesCrud from "./CotizacionesCrud";
-import InvernaderoCRUD from "./InvernaderosCRUD";
+import InvernaderoCRUD from "./InvernaderosCrud";
 import PedidosCrud from "./PedidosCrud";
 import ProductosCrud from "./ProductosCrud";
 import ProveedoresCrud from "./ProveedoresCrud";
 import StockCrud from "./StockCrud";
 import TiposUsuariosCrud from "./TiposUsuariosCrud";
 import "../styles/AdminPanel.css"
+import ProductosPedidosCRUD from "./ProductosPedidosCrud";
 
 const NAV_ITEMS = [
-    { key: "clientes", label: "Clientes", icon: "👥", component: ClientesCrud },
-    { key: "tipos_usuarios", label: "Tipos de Usuarios", icon: "🏷️", component: TiposUsuariosCrud },
-    { key: "proveedores", label: "Proveedores", icon: "🏭", component: ProveedoresCrud },
-    { key: "productos", label: "Productos", icon: "📦", component: ProductosCrud },
-    { key: "stock", label: "Stock", icon: "🗃️", component: StockCrud },
-    { key: "pedidos", label: "Pedidos", icon: "🛒", component: PedidosCrud },
-    { key: "compras", label: "Compras", icon: "💳", component: ComprasCrud },
-    { key: "invernaderos", label: "Invernaderos", icon: "🌿", component: InvernaderoCRUD },
-    { key: "cotizaciones", label: "Cotizaciones", icon: "📋", component: CotizacionesCrud },
+    { key: "clientes", label: "Clientes", component: ClientesCrud },
+    { key: "tipos_usuarios", label: "Tipos de Usuarios", component: TiposUsuariosCrud },
+    { key: "proveedores", label: "Proveedores", component: ProveedoresCrud },
+    { key: "productos", label: "Productos", component: ProductosCrud },
+    { key: "stock", label: "Stock", component: StockCrud },
+    { key: "pedidos", label: "Pedidos", component: PedidosCrud },
+    { key: "compras", label: "Compras", component: ComprasCrud },
+    { key: "invernaderos", label: "Invernaderos", component: InvernaderoCRUD },
+    { key: "cotizaciones", label: "Cotizaciones", component: CotizacionesCrud },
+    { key: "productospedidos", label: "ProductosPedidos", component: ProductosPedidosCRUD  },
 ];
 
 export default function AdminPanel() {
@@ -57,7 +59,7 @@ export default function AdminPanel() {
                                 className={`nav-item ${active === item.key ? "active" : ""}`}
                                 onClick={() => setActive(item.key)}
                             >
-                                <span className="nav-icon">{item.icon}</span>
+                                
                                 <span className="nav-label">{item.label}</span>
                             </li>
                         ))}

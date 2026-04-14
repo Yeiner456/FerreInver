@@ -6,51 +6,34 @@ const BASE_URL = "http://localhost/ferreinver/server/backend-login";
 
 export const RecuperarPassword = () => {
   const navigate = useNavigate();
-
-  // Controla en qué paso estamos: 1, 2 o 3
   const [paso, setPaso] = useState(1);
-
-  // Datos compartidos entre pasos
   const [correo, setCorreo] = useState("");
   const [codigo, setCodigo] = useState("");
   const [nuevaPassword, setNuevaPassword] = useState("");
   const [confirmarPassword, setConfirmarPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Enviar código al correo 
   const handleEnviarCodigo = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
-      const res = await fetch(`${BASE_URL}/enviar_codigo.php`, {
+      const res = await fetch(`${BASE_URL}/Enviar_codigo.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo }),
       });
       const data = await res.json();
-
-      if (data.success) {
-        setPaso(2);
-      } else {
-        setError(data.mensaje);
-      }
-    } catch {
-      setError("Error del servidor. Intenta de nuevo.");
-    } finally {
-      setLoading(false);
-    }
+      if (data.success) { setPaso(2); } else { setError(data.mensaje); }
+    } catch { setError("Error del servidor. Intenta de nuevo."); }
+    finally { setLoading(false); }
   };
 
-  //  Verificar código 
   const handleVerificarCodigo = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const res = await fetch(`${BASE_URL}/verificar_codigo.php`, {
         method: "POST",
@@ -58,35 +41,17 @@ export const RecuperarPassword = () => {
         body: JSON.stringify({ correo, codigo }),
       });
       const data = await res.json();
-
-      if (data.success) {
-        setPaso(3);
-      } else {
-        setError(data.mensaje);
-      }
-    } catch {
-      setError("Error del servidor. Intenta de nuevo.");
-    } finally {
-      setLoading(false);
-    }
+      if (data.success) { setPaso(3); } else { setError(data.mensaje); }
+    } catch { setError("Error del servidor. Intenta de nuevo."); }
+    finally { setLoading(false); }
   };
 
-  //  Cambiar contraseña 
   const handleCambiarPassword = async (e) => {
     e.preventDefault();
     setError("");
-
-    if (nuevaPassword !== confirmarPassword) {
-      setError("Las contraseñas no coinciden");
-      return;
-    }
-    if (nuevaPassword.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres");
-      return;
-    }
-
+    if (nuevaPassword !== confirmarPassword) { setError("Las contraseñas no coinciden"); return; }
+    if (nuevaPassword.length < 8) { setError("La contraseña debe tener al menos 8 caracteres"); return; }
     setLoading(true);
-
     try {
       const res = await fetch(`${BASE_URL}/cambiar_password.php`, {
         method: "POST",
@@ -94,24 +59,28 @@ export const RecuperarPassword = () => {
         body: JSON.stringify({ correo, codigo, nueva_password: nuevaPassword }),
       });
       const data = await res.json();
-
       if (data.success) {
-        alert(" Contraseña actualizada correctamente");
-        navigate("/");
-      } else {
-        setError(data.mensaje);
-      }
-    } catch {
-      setError("Error del servidor. Intenta de nuevo.");
-    } finally {
-      setLoading(false);
-    }
+        alert("✅ Contraseña actualizada correctamente");
+        navigate("/inicio");
+      } else { setError(data.mensaje); }
+    } catch { setError("Error del servidor. Intenta de nuevo."); }
+    finally { setLoading(false); }
   };
 
   return (
-    <div className="body">
+    <div className="recuperar-page-wrapper">
       <div className="login-container">
         <div className="login-card">
+
+          {/* ── Botón volver arriba a la izquierda ── */}
+          <button className="volver-btn" onClick={() => navigate(-1)}>
+            <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+              <path d="M19 12H5M5 12l7 7M5 12l7-7"
+                stroke="currentColor" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Volver
+          </button>
 
           <div className="icon-user">
             <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24">
@@ -124,21 +93,13 @@ export const RecuperarPassword = () => {
             <>
               <h1>Recuperar contraseña</h1>
               <p className="subtitle">Ingresa tu correo electrónico para recuperar tu contraseña</p>
-
               <form onSubmit={handleEnviarCodigo}>
                 <div className="form-group">
                   <label htmlFor="email">Correo electrónico</label>
-                  <input
-                    className="login-input"
-                    type="email"
-                    id="email"
+                  <input className="login-input" type="email" id="email"
                     placeholder="Ingresa tu correo electrónico"
-                    value={correo}
-                    onChange={(e) => setCorreo(e.target.value)}
-                    required
-                  />
+                    value={correo} onChange={(e) => setCorreo(e.target.value)} required />
                 </div>
-
                 <div className="mensaje">
                   <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24">
                     <g fill="none">
@@ -149,9 +110,7 @@ export const RecuperarPassword = () => {
                   </svg>
                   <p>Te enviaremos un correo con un código para restablecer tu contraseña. Revisa también tu carpeta de spam</p>
                 </div>
-
                 {error && <p style={{color:"red", fontSize:"13px", textAlign:"left"}}>{error}</p>}
-
                 <button className="login-button" type="submit" disabled={loading}>
                   {loading ? "Enviando..." : "Enviar código"}
                 </button>
@@ -164,31 +123,21 @@ export const RecuperarPassword = () => {
             <>
               <h1>Verificar código</h1>
               <p className="subtitle">Ingresa el código de 6 dígitos que enviamos a <strong>{correo}</strong></p>
-
               <form onSubmit={handleVerificarCodigo}>
                 <div className="form-group">
                   <label htmlFor="codigo">Código de verificación</label>
-                  <input
-                    className="login-input"
-                    type="text"
-                    id="codigo"
+                  <input className="login-input" type="text" id="codigo"
                     placeholder="Ingresa el código de 6 dígitos"
-                    value={codigo}
-                    onChange={(e) => setCodigo(e.target.value)}
-                    maxLength={6}
-                    required
-                  />
+                    value={codigo} onChange={(e) => setCodigo(e.target.value)}
+                    maxLength={6} required />
                 </div>
-
                 {error && <p style={{color:"red", fontSize:"13px", textAlign:"left"}}>{error}</p>}
-
                 <button className="login-button" type="submit" disabled={loading}>
                   {loading ? "Verificando..." : "Verificar código"}
                 </button>
               </form>
-
               <button className="register-button" onClick={() => { setPaso(1); setError(""); }}>
-                ← Volver
+                ← Volver al correo
               </button>
             </>
           )}
@@ -198,48 +147,25 @@ export const RecuperarPassword = () => {
             <>
               <h1>Nueva contraseña</h1>
               <p className="subtitle">Ingresa tu nueva contraseña</p>
-
               <form onSubmit={handleCambiarPassword}>
                 <div className="form-group">
                   <label htmlFor="nuevaPassword">Nueva contraseña</label>
-                  <input
-                    className="login-input"
-                    type="password"
-                    id="nuevaPassword"
+                  <input className="login-input" type="password" id="nuevaPassword"
                     placeholder="Mínimo 8 caracteres"
-                    value={nuevaPassword}
-                    onChange={(e) => setNuevaPassword(e.target.value)}
-                    required
-                  />
+                    value={nuevaPassword} onChange={(e) => setNuevaPassword(e.target.value)} required />
                 </div>
-
                 <div className="form-group">
                   <label htmlFor="confirmarPassword">Confirmar contraseña</label>
-                  <input
-                    className="login-input"
-                    type="password"
-                    id="confirmarPassword"
+                  <input className="login-input" type="password" id="confirmarPassword"
                     placeholder="Repite tu nueva contraseña"
-                    value={confirmarPassword}
-                    onChange={(e) => setConfirmarPassword(e.target.value)}
-                    required
-                  />
+                    value={confirmarPassword} onChange={(e) => setConfirmarPassword(e.target.value)} required />
                 </div>
-
                 {error && <p style={{color:"red", fontSize:"13px", textAlign:"left"}}>{error}</p>}
-
                 <button className="login-button" type="submit" disabled={loading}>
                   {loading ? "Guardando..." : "Cambiar contraseña"}
                 </button>
               </form>
             </>
-          )}
-
-          {/* Volver al login — visible en paso 1 */}
-          {paso === 1 && (
-            <button className="register-button" onClick={() => navigate("/")}>
-              ← Volver al inicio de sesión
-            </button>
           )}
 
         </div>
