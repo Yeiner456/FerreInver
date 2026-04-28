@@ -70,8 +70,10 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/pedidos`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_cliente: cliente.documento, medio_pago: medioPago, items: items.map(it => ({ id_producto: it.id_producto, nombre: it.nombre, cantidad: it.cantidad })) }),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_cliente: cliente.documento,
+        medio_pago: medioPago, items: items.map(it => ({ id_producto: it.id_producto, nombre: it.nombre, cantidad: it.cantidad })) }),
       }).then(r => r.json());
       if (res.success) onPedidoConfirmado(res.id_pedido);
       else setError(res.message);
