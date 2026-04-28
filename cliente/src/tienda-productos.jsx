@@ -20,7 +20,7 @@ function ModalLogin({ onClose, onLoginExitoso }) {
     if (!form.documento || !form.password) { setError('Completa todos los campos.'); return; }
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
+      const res = await fetch(`${API_BASE}/auth`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ documento: form.documento, password: form.password }),
       }).then(r => r.json());
@@ -69,7 +69,7 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/pedidos/completo`, {
+      const res = await fetch(`${API_BASE}/pedidos`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id_cliente: cliente.documento, medio_pago: medioPago, items: items.map(it => ({ id_producto: it.id_producto, nombre: it.nombre, cantidad: it.cantidad })) }),
       }).then(r => r.json());

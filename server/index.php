@@ -34,7 +34,7 @@ require_once __DIR__ . '/controllers/CotizacionesController.php';
 
 
 $uri       = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$base      = '/FerreInver-MVC/server/';
+$base      = '/FerreInver/server/';
 $ruta      = str_replace($base, '', $uri);
 $ruta      = trim($ruta, '/');
 $segmentos = $ruta ? explode('/', $ruta) : [];
