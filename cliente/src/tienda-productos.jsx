@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './styles/tienda-productos.css';
 
-const API_PRODUCTOS       = 'http://localhost/ferreinver/server/productos/api';
-const API_LOGIN           = 'http://localhost/ferreinver/server/auth/api/apiLogin.php';
-const API_PEDIDO_COMPLETO = 'http://localhost/ferreinver/server/pedidos/api/apiPedidoCompleto.php';
-const IMG_BASE            = 'http://localhost/ferreinver/';
+const API_BASE            = 'http://localhost/FerreInver/server';
+const IMG_BASE            = 'http://localhost/FerreInver/';
 
 const MEDIOS_PAGO = ['Efectivo', 'Tarjeta Débito', 'Tarjeta Crédito', 'Transferencia', 'PSE', 'Nequi', 'Daviplata'];
 
@@ -22,7 +20,7 @@ function ModalLogin({ onClose, onLoginExitoso }) {
     if (!form.documento || !form.password) { setError('Completa todos los campos.'); return; }
     setLoading(true);
     try {
-      const res = await fetch(API_LOGIN, {
+      const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ documento: form.documento, password: form.password }),
       }).then(r => r.json());
@@ -71,7 +69,7 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(API_PEDIDO_COMPLETO, {
+      const res = await fetch(`${API_BASE}/pedidos/completo`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id_cliente: cliente.documento, medio_pago: medioPago, items: items.map(it => ({ id_producto: it.id_producto, nombre: it.nombre, cantidad: it.cantidad })) }),
       }).then(r => r.json());
@@ -270,7 +268,7 @@ export const TiendaProductos = () => {
   const [idPedidoExitoso, setIdPedidoExitoso] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_PRODUCTOS}/apiProductos.php`)
+    fetch(`${API_BASE}/productos`)
       .then(r => r.json())
       .then(res => {
         if (res.success) setProductos(res.data.filter(p => p.estado_producto === 'activo'));

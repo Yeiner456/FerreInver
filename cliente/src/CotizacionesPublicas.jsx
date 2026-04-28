@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import "../src/styles/CotizacionesPublicas.css";
 
-const API_BASE = "http://localhost/ferreinver/server/cotizaciones/api";
+const API_BASE = "http://localhost/FerreInver/server";
 
 const api = {
     getSelects: () =>
-        fetch(`${API_BASE}/apiCotizaciones.php?selects=1`).then((r) => r.json()),
+        fetch(`${API_BASE}/cotizaciones?selects=1`).then((r) => r.json()),
     createCotizacion: (data) =>
-        fetch(`${API_BASE}/apiCotizaciones.php`, {
+        fetch(`${API_BASE}/cotizaciones`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),

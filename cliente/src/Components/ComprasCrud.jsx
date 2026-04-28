@@ -3,31 +3,31 @@ import { useState, useEffect, useCallback } from "react";
 // Nota: proveedor e id_producto NO son editables en el update
 // Solo se pueden cambiar cantidad y descripcion al editar
 
-const API_BASE = "http://localhost/ferreinver/server/compras/api";
+const API_BASE = "http://localhost/FerreInver/server";
 
 const api = {
     getCompras: () =>
-        fetch(`${API_BASE}/apiCompras.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/compras`).then((r) => r.json()),
 
     getSelects: () =>
-        fetch(`${API_BASE}/apiCompras.php?selects=1`, { method: "POST" }).then((r) => r.json()),
+        fetch(`${API_BASE}/compras/selects`).then((r) => r.json()),
 
     createCompra: (data) =>
-        fetch(`${API_BASE}/apiCompras.php`, {
+        fetch(`${API_BASE}/compras`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateCompra: (id, data) =>
-        fetch(`${API_BASE}/apiCompras.php?id=${id}`, {
+        fetch(`${API_BASE}/compras?id=${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteCompra: (id) =>
-        fetch(`${API_BASE}/apiCompras.php?id=${id}`, {
+        fetch(`${API_BASE}/compras?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

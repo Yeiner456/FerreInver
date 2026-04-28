@@ -1,27 +1,27 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/ferreinver/server/tipos_usuarios/api";
+const API_BASE = "http://localhost/FerreInver/server";
 
 const api = {
     getTipos: () =>
-        fetch(`${API_BASE}/apiTipoUsuario.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/tipos-usuarios`).then((r) => r.json()),
 
     createTipo: (data) =>
-        fetch(`${API_BASE}/apiTipoUsuario.php`, {
+        fetch(`${API_BASE}/tipos-usuarios`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateTipo: (id, data) =>
-        fetch(`${API_BASE}/apiTipoUsuario.php?id=${id}`, {
+        fetch(`${API_BASE}/tipos-usuarios?id=${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteTipo: (id) =>
-        fetch(`${API_BASE}/apiTipoUsuario.php?id=${id}`, {
+        fetch(`${API_BASE}/tipos-usuarios?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

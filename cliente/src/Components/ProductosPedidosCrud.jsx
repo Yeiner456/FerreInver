@@ -2,31 +2,32 @@ import { useState, useEffect, useCallback } from "react";
 
 // Solo se pueden editar descripcion y cantidad (igual que en el PHP original)
 
-const API_BASE = "http://localhost/ferreinver/server/productos_pedidos/api";
+const API_BASE = "http://localhost/FerreInver/server";
 
 const api = {
     getProductosPedidos: () =>
-        fetch(`${API_BASE}/apiProductosPedidos.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/productos-pedidos`).then((r) => r.json()),
 
+    // El controller devuelve { success, data: { productos: [...], pedidos: [...] } }
     getSelects: () =>
-        fetch(`${API_BASE}/apiProductosPedidos.php?selects=1`).then((r) => r.json()),
+        fetch(`${API_BASE}/productos-pedidos?selects=1`).then((r) => r.json()),
 
     createProductoPedido: (data) =>
-        fetch(`${API_BASE}/apiProductosPedidos.php`, {
+        fetch(`${API_BASE}/productos-pedidos`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateProductoPedido: (id, data) =>
-        fetch(`${API_BASE}/apiProductosPedidos.php?id=${id}`, {
+        fetch(`${API_BASE}/productos-pedidos?id=${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteProductoPedido: (id) =>
-        fetch(`${API_BASE}/apiProductosPedidos.php?id=${id}`, {
+        fetch(`${API_BASE}/productos-pedidos?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };
@@ -71,7 +72,8 @@ function ProductoPedidoModal({ registro, onClose, onSave }) {
     useEffect(() => {
         if (!isEdit) {
             api.getSelects().then((res) => {
-                if (res.success) setSelects({ productos: res.productos, pedidos: res.pedidos });
+                // El controller devuelve { success, data: { productos: [...], pedidos: [...] } }
+                if (res.success) setSelects({ productos: res.data.productos, pedidos: res.data.pedidos });
             });
         }
     }, [isEdit]);
@@ -250,7 +252,7 @@ export default function ProductosPedidosCRUD() {
             {confirmDelete && (
                 <div>
                     <p>
-                        ¿Quitar <strong>{confirmDelete.nombre_producto}</strong> del Pedido{" "}?
+                        ¿Quitar <strong>{confirmDelete.nombre_producto}</strong> del Pedido #{confirmDelete.id_pedido}?
                     </p>
                     <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
                     <button onClick={() => handleDelete(confirmDelete.id)}>Sí, quitar</button>

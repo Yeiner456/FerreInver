@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import '../styles/MiPerfil.css'
 
-const API_URL = 'http://localhost/ferreinver/server/clientes/api/actualizarNombre.php'
+const API_URL = 'http://localhost/FerreInver/server';
 
 export const MiPerfil = ({ onCerrar }) => {
 
   const usuarioStr = sessionStorage.getItem('usuario')
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
 
-  const [nombre, setNombre]                 = useState(usuario?.nombre || '')
-  const [editando, setEditando]             = useState(false)
+  const [nombre, setNombre] = useState(usuario?.nombre || '')
+  const [editando, setEditando] = useState(false)
   const [nombreTemporal, setNombreTemporal] = useState(usuario?.nombre || '')
-  const [guardado, setGuardado]             = useState(false)
-  const [error, setError]                   = useState('')
-  const [cargando, setCargando]             = useState(false)
+  const [guardado, setGuardado] = useState(false)
+  const [error, setError] = useState('')
+  const [cargando, setCargando] = useState(false)
 
   // Cerrar con ESC
   useEffect(() => {
@@ -58,13 +58,13 @@ export const MiPerfil = ({ onCerrar }) => {
     setError('')
 
     try {
-      const res = await fetch(API_URL, {
-        method: 'PUT',
+      const res = await fetch(`${API_URL}/clientes/nombre?documento=${usuario.documento}`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ documento: usuario.documento, nombre: trimmed }),
+        body: JSON.stringify({ nombre: trimmed }),
       })
       const data = await res.json()
-      if (!data.success) throw new Error(data.mensaje || 'Error desconocido')
+      if (!data.success) throw new Error(data.message || 'Error desconocido')
 
       const usuarioActualizado = { ...usuario, nombre: trimmed }
       sessionStorage.setItem('usuario', JSON.stringify(usuarioActualizado))
@@ -81,7 +81,7 @@ export const MiPerfil = ({ onCerrar }) => {
   }
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter')  handleGuardar()
+    if (e.key === 'Enter') handleGuardar()
     if (e.key === 'Escape') handleCancelar()
   }
 

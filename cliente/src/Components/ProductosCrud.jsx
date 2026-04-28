@@ -1,26 +1,27 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-const API_BASE = "http://localhost/ferreinver/server/productos/api";
-const IMG_BASE = "http://localhost/ferreinver/";
+const API_BASE = "http://localhost/FerreInver/server";
+const IMG_BASE = "http://localhost/FerreInver/";
 
 const api = {
     getProductos: () =>
-        fetch(`${API_BASE}/apiProductos.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/productos`).then((r) => r.json()),
 
     createProducto: (formData) =>
-        fetch(`${API_BASE}/apiProductos.php`, {
+        fetch(`${API_BASE}/productos`, {
             method: "POST",
             body: formData,
         }).then((r) => r.json()),
 
+    // FormData no puede enviarse con PUT nativo → usamos POST + ?_method=PUT
     updateProducto: (id, formData) =>
-        fetch(`${API_BASE}/apiProductos.php?id=${id}&_method=PUT`, {
+        fetch(`${API_BASE}/productos?id=${id}&_method=PUT`, {
             method: "POST",
             body: formData,
         }).then((r) => r.json()),
 
     deactivateProducto: (id) =>
-        fetch(`${API_BASE}/apiProductos.php?id=${id}`, {
+        fetch(`${API_BASE}/productos?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

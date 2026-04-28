@@ -19,7 +19,7 @@ export const MisCotizaciones = ({ onCerrar }) => {
     const fetchCotizaciones = async () => {
       try {
         const res = await fetch(
-          `http://localhost/FerreInver/server/cotizaciones/api/cotizacionesCliente.php?documento=${usuario.documento}`
+          `http://localhost/FerreInver/server/cotizaciones?documento=${usuario.documento}`
         )
         const data = await res.json()
         if (!data.success) throw new Error(data.mensaje)

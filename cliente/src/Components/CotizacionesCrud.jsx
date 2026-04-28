@@ -1,30 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/ferreinver/server/cotizaciones/api";
+const API_BASE = "http://localhost/FerreInver/server";
 
 const api = {
     getCotizaciones: () =>
-        fetch(`${API_BASE}/apiCotizaciones.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/cotizaciones`).then((r) => r.json()),
 
     getSelects: () =>
-        fetch(`${API_BASE}/apiCotizaciones.php?selects=1`).then((r) => r.json()),
+        fetch(`${API_BASE}/cotizaciones?selects=1`).then((r) => r.json()),
 
     createCotizacion: (data) =>
-        fetch(`${API_BASE}/apiCotizaciones.php`, {
+        fetch(`${API_BASE}/cotizaciones`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateCotizacion: (id, data) =>
-        fetch(`${API_BASE}/apiCotizaciones.php?id=${id}`, {
+        fetch(`${API_BASE}/cotizaciones/?id=${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     rechazarCotizacion: (id) =>
-        fetch(`${API_BASE}/apiCotizaciones.php?id=${id}`, {
+        fetch(`${API_BASE}/Cotizaciones/?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

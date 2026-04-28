@@ -1,30 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/ferreinver/server/stocks/api";
+const API_BASE = "http://localhost/FerreInver/server";
 
 const api = {
     getStocks: () =>
-        fetch(`${API_BASE}/apiStock.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/stocks`).then((r) => r.json()),
 
     getProductos: () =>
-        fetch(`${API_BASE}/apiStock.php?selects=1`).then((r) => r.json()),
+        fetch(`${API_BASE}/stocks?selects=1`).then((r) => r.json()),
 
     createStock: (data) =>
-        fetch(`${API_BASE}/apiStock.php`, {
+        fetch(`${API_BASE}/stocks`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateStock: (id, data) =>
-        fetch(`${API_BASE}/apiStock.php?id=${id}`, {
+        fetch(`${API_BASE}/stocks?id=${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteStock: (id) =>
-        fetch(`${API_BASE}/apiStock.php?id=${id}`, {
+        fetch(`${API_BASE}/stocks?id=${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };
@@ -54,7 +54,8 @@ function StockModal({ stock, onClose, onSave }) {
 
     useEffect(() => {
         api.getProductos().then((res) => {
-            if (res.success) setProductos(res.productos);
+            // El controller devuelve { success, data: { productos: [...] } }
+            if (res.success) setProductos(res.data.productos);
         });
     }, []);
 
@@ -172,6 +173,7 @@ export default function StocksCRUD() {
                 <table border="1" cellPadding="8">
                     <thead>
                         <tr>
+                            <th>ID Stock</th>
                             <th>Producto</th>
                             <th>Precio Unitario</th>
                             <th>Cantidad</th>

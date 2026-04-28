@@ -2,28 +2,28 @@ import { useState, useEffect, useCallback } from "react";
 
 // NIT no es editable en el update (es la PK de proveedores)
 
-const API_BASE = "http://localhost/ferreinver/server/proveedores/api";
+const API_BASE = "http://localhost/FerreInver/server";
 
 const api = {
     getProveedores: () =>
-        fetch(`${API_BASE}/apiProveedores.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/proveedores`).then((r) => r.json()),
 
     createProveedor: (data) =>
-        fetch(`${API_BASE}/apiProveedores.php`, {
+        fetch(`${API_BASE}/proveedores`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateProveedor: (nit, data) =>
-        fetch(`${API_BASE}/apiProveedores.php?nit=${nit}`, {
+        fetch(`${API_BASE}/proveedores?nit=${nit}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deactivateProveedor: (nit) =>
-        fetch(`${API_BASE}/apiProveedores.php?nit=${nit}`, {
+        fetch(`${API_BASE}/proveedores?nit=${nit}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

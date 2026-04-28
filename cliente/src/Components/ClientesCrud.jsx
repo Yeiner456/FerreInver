@@ -1,30 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/Ferreinver/server/clientes/api";
+const API_BASE = "http://localhost/FerreInver/server";
 
 const api = {
     getClientes: () =>
-        fetch(`${API_BASE}/apiClientes.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/clientes`).then((r) => r.json()),
 
     getTiposUsuario: () =>
-        fetch(`${API_BASE}/apiTipoDeUsuario.php`).then((r) => r.json()),
+        fetch(`${API_BASE}/clientes/tipos`).then((r) => r.json()),
 
     createCliente: (data) =>
-        fetch(`${API_BASE}/apiClientes.php`, {
+        fetch(`${API_BASE}/clientes`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateCliente: (documento, data) =>
-        fetch(`${API_BASE}/apiClientes.php?documento=${documento}`, {
+        fetch(`${API_BASE}/clientes?documento=${documento}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deactivateCliente: (documento) =>
-        fetch(`${API_BASE}/apiClientes.php?documento=${documento}`, {
+        fetch(`${API_BASE}/clientes?documento=${documento}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

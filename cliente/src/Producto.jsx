@@ -47,7 +47,7 @@ export const Producto = () => {
   const [productoActivo, setProductoActivo] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost/FerreInver/server/productos/api/apiProductos.php')
+    fetch('http://localhost/FerreInver/server/productos')
       .then(res => {
         if (!res.ok) throw new Error('Error al cargar productos')
         return res.json()
