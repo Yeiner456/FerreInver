@@ -105,15 +105,43 @@ function ModalLogin({ onClose, onLoginExitoso }) {
 
 // ─── Modal Checkout ───────────────────────────────────────────────────────────
 function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
-  const [medioPago, setMedioPago] = useState('Efectivo');
-  const [loading, setLoading]    = useState(false);
-  const [error, setError]        = useState('');
+  const [medioPago, setMedioPago]       = useState('Efectivo');
+  const [loading, setLoading]           = useState(false);
+  const [error, setError]               = useState('');
+  const [erroresStock, setErroresStock] = useState([]); // [{ nombre, pedido, disponible }]
   const total = items.reduce((s, it) => s + Number(it.precio) * it.cantidad, 0);
 
   const confirmar = async () => {
     setError('');
+    setErroresStock([]);
     setLoading(true);
     try {
+      // 1️⃣ Validar stock antes de enviar el pedido
+      const stockRes = await fetch(`${API_BASE}/stocks`).then(r => r.json());
+
+      if (stockRes.success) {
+        const stockMap = {};
+        stockRes.data.forEach(s => { stockMap[s.id_producto] = Number(s.cantidad); });
+
+        const faltantes = items
+          .filter(it => {
+            const disponible = stockMap[it.id_producto] ?? 0;
+            return it.cantidad > disponible;
+          })
+          .map(it => ({
+            nombre:     it.nombre,
+            pedido:     it.cantidad,
+            disponible: stockMap[it.id_producto] ?? 0,
+          }));
+
+        if (faltantes.length > 0) {
+          setErroresStock(faltantes);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // 2️⃣ Stock OK → crear el pedido
       const res = await fetch(`${API_BASE}/pedidos/completo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -122,13 +150,22 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
           medio_pago: medioPago,
           items: items.map(it => ({
             id_producto: it.id_producto,
-            nombre: it.nombre,
-            cantidad: it.cantidad
-          }))
+            nombre:      it.nombre,
+            cantidad:    it.cantidad,
+          })),
         }),
       }).then(r => r.json());
-      if (res.success) onPedidoConfirmado(res.data.id_pedido);
-      else setError(res.message);
+
+      if (res.success) {
+        onPedidoConfirmado(res.data.id_pedido);
+      } else {
+        // Manejar errores de stock que devuelva el servidor (segunda línea de defensa)
+        if (res.stock_errors && res.stock_errors.length > 0) {
+          setErroresStock(res.stock_errors);
+        } else {
+          setError(res.message);
+        }
+      }
     } catch { setError('No se pudo conectar con el servidor.'); }
     finally { setLoading(false); }
   };
@@ -171,7 +208,36 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
             ))}
           </div>
         </div>
+
+        {/* ── Error genérico ── */}
         {error && <p className="tp-login-error">{error}</p>}
+
+        {/* ── Errores de stock insuficiente ── */}
+        {erroresStock.length > 0 && (
+          <div className="tp-stock-error">
+            <div className="tp-stock-error-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div className="tp-stock-error-body">
+              <p className="tp-stock-error-titulo">No se puede completar el pedido</p>
+              {erroresStock.map((e, i) => (
+                <p key={i} className="tp-stock-error-linea">
+                  <strong>{e.nombre}</strong>: pediste {e.pedido}, pero{' '}
+                  {e.disponible === 0
+                    ? 'no hay unidades disponibles en este momento.'
+                    : <>solo {e.disponible === 1 ? 'queda' : 'quedan'} <strong>{e.disponible}</strong> {e.disponible === 1 ? 'unidad' : 'unidades'} disponibles.</>
+                  }
+                </p>
+              ))}
+              <p className="tp-stock-error-ayuda">Por favor ajusta las cantidades en tu carrito e intenta de nuevo.</p>
+            </div>
+          </div>
+        )}
+
         <button className="tp-btn-agregar" onClick={confirmar} disabled={loading}>
           {loading ? 'Procesando...' : 'Confirmar pedido'}
         </button>
@@ -320,7 +386,7 @@ function TarjetaProducto({ producto, onClick }) {
       </div>
       <div className="tp-tarjeta-body">
         <p className="tp-tarjeta-nombre">{producto.nombre}</p>
-        <p className="tp-tarjeta-precio">{Number(producto.precio).toLocaleString('es-CO')}</p>
+        <p className="tp-tarjeta-precio">$ {Number(producto.precio).toLocaleString('es-CO')}</p>
         <button className="tp-tarjeta-btn" onClick={e => { e.stopPropagation(); onClick(producto); }}>Ver producto</button>
       </div>
     </div>
@@ -342,13 +408,25 @@ export const TiendaProductos = () => {
   const [productoActivo, setProductoActivo] = useState(null);
   const [idPedidoExitoso, setIdPedidoExitoso] = useState(null);
 
-  // Cargar productos
+  // Cargar productos y stocks en paralelo, mostrando solo activos con stock > 0
   useEffect(() => {
-    fetch(`${API_BASE}/productos`)
-      .then(r => r.json())
-      .then(res => {
-        if (res.success) setProductos(res.data.filter(p => p.estado_producto === 'activo'));
-        else setError('No se pudieron cargar los productos.');
+    Promise.all([
+      fetch(`${API_BASE}/productos`).then(r => r.json()),
+      fetch(`${API_BASE}/stocks`).then(r => r.json()),
+    ])
+      .then(([prodRes, stockRes]) => {
+        if (!prodRes.success) { setError('No se pudieron cargar los productos.'); return; }
+
+        // Mapa id_producto → cantidad disponible
+        const stockMap = {};
+        if (stockRes.success) {
+          stockRes.data.forEach(s => { stockMap[s.id_producto] = Number(s.cantidad); });
+        }
+
+        const visibles = prodRes.data.filter(p =>
+          p.estado_producto === 'activo' && (stockMap[p.id_producto] ?? 0) > 0
+        );
+        setProductos(visibles);
       })
       .catch(() => setError('Error de conexion con el servidor.'))
       .finally(() => setLoading(false));

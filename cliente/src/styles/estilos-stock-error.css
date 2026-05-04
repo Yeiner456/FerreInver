@@ -1,0 +1,45 @@
+/* ── Bloque de error de stock insuficiente en el checkout ── */
+/* Pega estos estilos al final de tu archivo tienda-productos.css */
+
+.tp-stock-error {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: #fff5f5;
+  border: 1.5px solid #f87171;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 12px 0;
+}
+
+.tp-stock-error-icon {
+  flex-shrink: 0;
+  color: #dc2626;
+  margin-top: 2px;
+}
+
+.tp-stock-error-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tp-stock-error-titulo {
+  font-weight: 700;
+  color: #dc2626;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.tp-stock-error-linea {
+  font-size: 0.88rem;
+  color: #374151;
+  margin: 0;
+}
+
+.tp-stock-error-ayuda {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
