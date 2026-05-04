@@ -19,10 +19,20 @@ const getSession = () => {
   } catch { return null; }
 };
 
-// ✅ Limpia ambas claves al cerrar sesión
-const clearSession = () => {
-  sessionStorage.removeItem('usuario');
-  sessionStorage.removeItem('ferreinver_cliente');
+// ─── Helpers carrito persistente ─────────────────────────────────────────────
+const CARRITO_KEY = (doc) => `ferreinver_carrito_${doc}`;
+
+const cargarCarrito = (sesion) => {
+  if (!sesion) return [];
+  try {
+    const data = localStorage.getItem(CARRITO_KEY(sesion.documento));
+    return data ? JSON.parse(data) : [];
+  } catch { return []; }
+};
+
+const guardarCarrito = (sesion, items) => {
+  if (!sesion) return;
+  localStorage.setItem(CARRITO_KEY(sesion.documento), JSON.stringify(items));
 };
 
 // ─── Modal Login propio del carrito ──────────────────────────────────────────
@@ -45,7 +55,6 @@ function ModalLogin({ onClose, onLoginExitoso }) {
       }).then(r => r.json());
 
       if (res.success) {
-        // Guarda en sessionStorage para que getSession() lo encuentre
         sessionStorage.setItem('ferreinver_cliente', JSON.stringify(res.cliente));
         onLoginExitoso(res.cliente);
       } else {
@@ -105,11 +114,11 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/pedidos/completo`, { // ✅ endpoint correcto
+      const res = await fetch(`${API_BASE}/pedidos/completo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id_cliente: cliente.documento,  // ✅ número entero que espera el backend
+          id_cliente: cliente.documento,
           medio_pago: medioPago,
           items: items.map(it => ({
             id_producto: it.id_producto,
@@ -251,19 +260,14 @@ function ModalAgregado({ onIrCarrito, onSeguir }) {
 }
 
 // ─── Carrito ──────────────────────────────────────────────────────────────────
-function Carrito({ items, sesion, onCambiarCantidad, onCerrar, onFinalizarPedido, onCerrarSesion }) {
+// ✅ Se eliminaron: botón "Cerrar sesion" y el bloque "Sesion activa"
+function Carrito({ items, onCambiarCantidad, onCerrar, onFinalizarPedido }) {
   const total = items.reduce((s, it) => s + Number(it.precio) * it.cantidad, 0);
   return (
     <div className="tp-overlay" onClick={e => e.target === e.currentTarget && onCerrar()}>
       <div className="tp-carrito">
         <button className="tp-modal-close" onClick={onCerrar}>x</button>
         <h2 className="tp-carrito-titulo">Carrito de compras</h2>
-        {sesion && (
-          <div className="tp-carrito-sesion">
-            <span>Sesion activa: {sesion.nombre}</span>
-            <button className="tp-btn-cerrar-sesion" onClick={onCerrarSesion}>Cerrar sesion</button>
-          </div>
-        )}
         <div className="tp-carrito-body">
           <div className="tp-carrito-items">
             {items.length === 0
@@ -298,7 +302,6 @@ function Carrito({ items, sesion, onCambiarCantidad, onCerrar, onFinalizarPedido
               <button className="tp-btn-agregar" onClick={onFinalizarPedido} disabled={items.length === 0}>Finalizar pedido</button>
               <button className="tp-btn-seguir" onClick={onCerrar}>Seguir comprando</button>
             </div>
-            <button className="tp-btn-historial">consultar historial de pedidos realizados</button>
           </div>
         </div>
       </div>
@@ -332,8 +335,9 @@ export const TiendaProductos = () => {
   const [precioMin, setPrecioMin]         = useState('');
   const [precioMax, setPrecioMax]         = useState('');
   const [filtroAbierto, setFiltroAbierto] = useState(false);
-  const [carrito, setCarrito]             = useState([]);
-  const [sesion, setSesion]               = useState(getSession); // ✅ lee de sessionStorage (principal o carrito)
+  const [sesion, setSesion]               = useState(getSession);
+  // ✅ Inicializa el carrito desde localStorage según la sesión activa
+  const [carrito, setCarrito]             = useState(() => cargarCarrito(getSession()));
   const [modal, setModal]                 = useState(null);
   const [productoActivo, setProductoActivo] = useState(null);
   const [idPedidoExitoso, setIdPedidoExitoso] = useState(null);
@@ -356,6 +360,11 @@ export const TiendaProductos = () => {
     window.addEventListener('storage', syncSesion);
     return () => window.removeEventListener('storage', syncSesion);
   }, []);
+
+  // ✅ Guarda el carrito en localStorage cada vez que cambia
+  useEffect(() => {
+    guardarCarrito(sesion, carrito);
+  }, [carrito, sesion]);
 
   const productosFiltrados = productos.filter(p => {
     const precio = Number(p.precio);
@@ -390,22 +399,19 @@ export const TiendaProductos = () => {
     }
   };
 
-  // ✅ Cuando el login del carrito es exitoso
+  // ✅ Cuando el login es exitoso, carga el carrito guardado de ese cliente
   const handleLoginExitoso = (cliente) => {
     setSesion(cliente);
+    setCarrito(cargarCarrito(cliente));
     setModal('checkout');
   };
 
+  // ✅ Al confirmar pedido, limpia localStorage y el estado
   const handlePedidoConfirmado = (idPedido) => {
     setIdPedidoExitoso(idPedido);
+    if (sesion) localStorage.removeItem(CARRITO_KEY(sesion.documento));
     setCarrito([]);
     setModal('exitoso');
-  };
-
-  // ✅ Limpia ambas claves de sessionStorage
-  const cerrarSesion = () => {
-    clearSession();
-    setSesion(null);
   };
 
   const totalItems = carrito.reduce((s, it) => s + it.cantidad, 0);
@@ -416,12 +422,7 @@ export const TiendaProductos = () => {
         <div className="tp-header-inner">
           <h1 className="tp-titulo">Productos</h1>
           <div className="tp-header-actions">
-            {sesion && (
-              <span className="tp-sesion-chip">
-                {sesion.nombre}
-                <button onClick={cerrarSesion} className="tp-sesion-chip-x">x</button>
-              </span>
-            )}
+
             <button className="tp-btn-filtro" onClick={() => setFiltroAbierto(f => !f)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
@@ -473,7 +474,7 @@ export const TiendaProductos = () => {
 
       {modal === 'producto'  && productoActivo && <ModalProducto producto={productoActivo} onClose={() => setModal(null)} onAgregar={agregarAlCarrito} />}
       {modal === 'agregado'  && <ModalAgregado onIrCarrito={() => setModal('carrito')} onSeguir={() => setModal(null)} />}
-      {modal === 'carrito'   && <Carrito items={carrito} sesion={sesion} onCambiarCantidad={cambiarCantidad} onCerrar={() => setModal(null)} onFinalizarPedido={handleFinalizarPedido} onCerrarSesion={cerrarSesion} />}
+      {modal === 'carrito'   && <Carrito items={carrito} onCambiarCantidad={cambiarCantidad} onCerrar={() => setModal(null)} onFinalizarPedido={handleFinalizarPedido} />}
       {modal === 'login'     && <ModalLogin onClose={() => setModal('carrito')} onLoginExitoso={handleLoginExitoso} />}
       {modal === 'checkout'  && <ModalCheckout items={carrito} cliente={sesion} onCerrar={() => setModal('carrito')} onPedidoConfirmado={handlePedidoConfirmado} />}
       {modal === 'exitoso'   && <ModalPedidoExitoso idPedido={idPedidoExitoso} onCerrar={() => setModal(null)} />}
