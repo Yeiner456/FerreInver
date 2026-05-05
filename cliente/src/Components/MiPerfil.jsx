@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../styles/MiPerfil.css'
 
-const API_URL = 'http://localhost/FerreInver/server';
+const API_URL = 'http://127.0.0.1:8000/api';
 
 export const MiPerfil = ({ onCerrar }) => {
 
@@ -58,7 +58,7 @@ export const MiPerfil = ({ onCerrar }) => {
     setError('')
 
     try {
-      const res = await fetch(`${API_URL}/clientes/nombre?documento=${usuario.documento}`, {
+      const res = await fetch(`${API_URL}/clientes/${usuario.documento}/nombre`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre: trimmed }),

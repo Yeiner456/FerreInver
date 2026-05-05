@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './styles/Producto.css'
 
-const IMG_BASE = 'http://localhost/FerreInver/'
+const IMG_BASE = 'http://127.0.0.1:8000/'
 
 function ModalProducto({ producto, onClose, formatPrecio }) {
   // Cerrar con Escape
@@ -47,7 +47,7 @@ export const Producto = () => {
   const [productoActivo, setProductoActivo] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost/FerreInver/server/productos')
+    fetch('http://127.0.0.1:8000/api/productos')
       .then(res => {
         if (!res.ok) throw new Error('Error al cargar productos')
         return res.json()

@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 // Nota: proveedor e id_producto NO son editables en el update
 // Solo se pueden cambiar cantidad y descripcion al editar
 
-const API_BASE = "http://localhost/FerreInver/server";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 const api = {
     getCompras: () =>
@@ -20,14 +20,14 @@ const api = {
         }).then((r) => r.json()),
 
     updateCompra: (id, data) =>
-        fetch(`${API_BASE}/compras?id=${id}`, {
+        fetch(`${API_BASE}/compras/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteCompra: (id) =>
-        fetch(`${API_BASE}/compras?id=${id}`, {
+        fetch(`${API_BASE}/compras/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

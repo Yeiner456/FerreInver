@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/recuperar.css";
 
-const BASE_URL = "http://localhost/ferreinver/server/backend-login";
+const BASE_URL = "http://127.0.0.1:8000/api";
 
 export const RecuperarPassword = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export const RecuperarPassword = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/Enviar_codigo.php`, {
+      const res = await fetch(`${BASE_URL}/auth/enviar-codigo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo }),
@@ -35,7 +35,7 @@ export const RecuperarPassword = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/verificar_codigo.php`, {
+      const res = await fetch(`${BASE_URL}/auth/verificar-codigo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, codigo }),
@@ -53,7 +53,7 @@ export const RecuperarPassword = () => {
     if (nuevaPassword.length < 8) { setError("La contraseña debe tener al menos 8 caracteres"); return; }
     setLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/cambiar_password.php`, {
+      const res = await fetch(`${BASE_URL}/auth/cambiar-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, codigo, nueva_password: nuevaPassword }),

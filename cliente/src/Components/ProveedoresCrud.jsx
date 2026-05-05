@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 // NIT no es editable en el update (es la PK de proveedores)
 
-const API_BASE = "http://localhost/FerreInver/server";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 const api = {
     getProveedores: () =>

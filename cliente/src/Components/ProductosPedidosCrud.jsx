@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 // Solo se pueden editar descripcion y cantidad (igual que en el PHP original)
 
-const API_BASE = "http://localhost/FerreInver/server";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 const api = {
     getProductosPedidos: () =>
@@ -20,14 +20,14 @@ const api = {
         }).then((r) => r.json()),
 
     updateProductoPedido: (id, data) =>
-        fetch(`${API_BASE}/productos-pedidos?id=${id}`, {
+        fetch(`${API_BASE}/productos-pedidos/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteProductoPedido: (id) =>
-        fetch(`${API_BASE}/productos-pedidos?id=${id}`, {
+        fetch(`${API_BASE}/productos-pedidos/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

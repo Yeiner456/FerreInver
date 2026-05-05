@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/FerreInver/server";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 const api = {
     getStocks: () =>
@@ -17,14 +17,14 @@ const api = {
         }).then((r) => r.json()),
 
     updateStock: (id, data) =>
-        fetch(`${API_BASE}/stocks?id=${id}`, {
+        fetch(`${API_BASE}/stocks/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteStock: (id) =>
-        fetch(`${API_BASE}/stocks?id=${id}`, {
+        fetch(`${API_BASE}/stocks/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };
@@ -185,10 +185,10 @@ export default function StocksCRUD() {
                         {stocks.map((s) => (
                             <tr key={s.id_stock}>
                                 <td>{s.id_stock}</td>
-                                <td>{s.nombre_producto}</td>
-                                <td>$ {Number(s.precio).toLocaleString("es-CO")}</td>
+                                <td>{s.producto?.nombre}</td>
+                                <td>$ {s.producto?.precio.toLocaleString("es-CO")}</td>
                                 <td>{s.cantidad}</td>
-                                <td>$ {(Number(s.precio) * Number(s.cantidad)).toLocaleString("es-CO")}</td>
+                                <td>$ {(Number(s.producto?.precio) * Number(s.cantidad)).toLocaleString("es-CO")}</td>
                                 <td>
                                     <button onClick={() => setModal(s)}>Editar</button>{" "}
                                     <button onClick={() => setConfirmDelete(s)}>Eliminar</button>

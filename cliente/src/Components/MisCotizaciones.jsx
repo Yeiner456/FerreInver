@@ -19,10 +19,10 @@ export const MisCotizaciones = ({ onCerrar }) => {
     const fetchCotizaciones = async () => {
       try {
         const res = await fetch(
-          `http://localhost/FerreInver/server/cotizaciones?documento=${usuario.documento}`
+          `http://127.0.0.1:8000/api/cotizaciones?documento=${usuario.documento}`
         )
         const data = await res.json()
-        if (!data.success) throw new Error(data.mensaje)
+        if (!data.success) throw new Error(data.message)
         setCotizaciones(data.data)
       } catch  {
         setError('No se pudieron cargar las cotizaciones.')

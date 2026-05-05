@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './styles/tienda-productos.css';
 
-const API_BASE   = 'http://localhost/FerreInver/server';
-const IMG_BASE   = 'http://localhost/FerreInver/';
+const API_BASE = 'http://127.0.0.1:8000/api';
+const IMG_BASE = 'http://127.0.0.1:8000/';
 
 const MEDIOS_PAGO = ['Efectivo', 'Tarjeta Débito', 'Tarjeta Crédito', 'Transferencia', 'PSE', 'Nequi', 'Daviplata'];
 
-// ✅ Lee primero la sesión del login principal, si no busca la propia del carrito
+
 const getSession = () => {
   try {
     const usuarioPrincipal = sessionStorage.getItem('usuario');
@@ -37,21 +37,21 @@ const guardarCarrito = (sesion, items) => {
 
 // ─── Modal Login propio del carrito ──────────────────────────────────────────
 function ModalLogin({ onClose, onLoginExitoso }) {
-  const [form, setForm]       = useState({ documento: '', password: '' });
-  const [error, setError]     = useState('');
+  const [form, setForm] = useState({ correo: '', password: '' });
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
   const submit = async () => {
     setError('');
-    if (!form.documento || !form.password) { setError('Completa todos los campos.'); return; }
+    if (!form.correo || !form.password) { setError('Completa todos los campos.'); return; }
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ documento: form.documento, password: form.password }),
+        body: JSON.stringify({ correo: form.correo, password: form.password }),
       }).then(r => r.json());
 
       if (res.success) {
@@ -72,7 +72,7 @@ function ModalLogin({ onClose, onLoginExitoso }) {
           <svg viewBox="0 0 48 48" fill="none">
             <circle cx="24" cy="24" r="22" fill="#1E12A4" />
             <circle cx="24" cy="18" r="6" fill="white" />
-            <path d="M10 38c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+            <path d="M10 38c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" />
           </svg>
         </div>
         <h3>Inicia sesión para continuar</h3>
@@ -80,10 +80,10 @@ function ModalLogin({ onClose, onLoginExitoso }) {
         {error && <p className="tp-login-error">{error}</p>}
         <div className="tp-login-fields">
           <div className="tp-login-field">
-            <label>Documento</label>
+            <label>Correo electrónico</label>
             <input
-              type="number" name="documento" placeholder="Tu número de documento"
-              value={form.documento} onChange={handle}
+              type="email" name="correo" placeholder="Tu correo electrónico"
+              value={form.correo} onChange={handle}
               onKeyDown={e => e.key === 'Enter' && submit()} />
           </div>
           <div className="tp-login-field">
@@ -105,9 +105,9 @@ function ModalLogin({ onClose, onLoginExitoso }) {
 
 // ─── Modal Checkout ───────────────────────────────────────────────────────────
 function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
-  const [medioPago, setMedioPago]       = useState('Efectivo');
-  const [loading, setLoading]           = useState(false);
-  const [error, setError]               = useState('');
+  const [medioPago, setMedioPago] = useState('Efectivo');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [erroresStock, setErroresStock] = useState([]); // [{ nombre, pedido, disponible }]
   const total = items.reduce((s, it) => s + Number(it.precio) * it.cantidad, 0);
 
@@ -116,7 +116,6 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
     setErroresStock([]);
     setLoading(true);
     try {
-      // 1️⃣ Validar stock antes de enviar el pedido
       const stockRes = await fetch(`${API_BASE}/stocks`).then(r => r.json());
 
       if (stockRes.success) {
@@ -129,8 +128,8 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
             return it.cantidad > disponible;
           })
           .map(it => ({
-            nombre:     it.nombre,
-            pedido:     it.cantidad,
+            nombre: it.nombre,
+            pedido: it.cantidad,
             disponible: stockMap[it.id_producto] ?? 0,
           }));
 
@@ -141,7 +140,7 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
         }
       }
 
-      // 2️⃣ Stock OK → crear el pedido
+
       const res = await fetch(`${API_BASE}/pedidos/completo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -150,14 +149,13 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
           medio_pago: medioPago,
           items: items.map(it => ({
             id_producto: it.id_producto,
-            nombre:      it.nombre,
-            cantidad:    it.cantidad,
+            nombre: it.nombre,
+            cantidad: it.cantidad,
           })),
         }),
       }).then(r => r.json());
-
       if (res.success) {
-        onPedidoConfirmado(res.data.id_pedido, items);
+        onPedidoConfirmado(res.id_pedido, items);
       } else {
         // Manejar errores de stock que devuelva el servidor (segunda línea de defensa)
         if (res.stock_errors && res.stock_errors.length > 0) {
@@ -217,9 +215,9 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
           <div className="tp-stock-error">
             <div className="tp-stock-error-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="12"/>
-                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
             </div>
             <div className="tp-stock-error-body">
@@ -255,7 +253,7 @@ function ModalPedidoExitoso({ idPedido, onCerrar }) {
         <div className="tp-exito-icon">
           <svg viewBox="0 0 48 48" fill="none">
             <circle cx="24" cy="24" r="22" fill="#22bb48" />
-            <polyline points="13,25 21,33 36,16" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <polyline points="13,25 21,33 36,16" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
         <h3>Pedido registrado!</h3>
@@ -269,9 +267,9 @@ function ModalPedidoExitoso({ idPedido, onCerrar }) {
 // ─── Modal Detalle Producto ───────────────────────────────────────────────────
 function ModalProducto({ producto, stock, onClose, onAgregar }) {
   const [cantidad, setCantidad] = useState(1);
-  const precio         = Number(producto.precio);
+  const precio = Number(producto.precio);
   const precioOriginal = Math.round(precio * 1.3);
-  const pocasUnidades  = stock <= 5;
+  const pocasUnidades = stock <= 5;
   return (
     <div className="tp-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="tp-modal-detalle">
@@ -319,7 +317,7 @@ function ModalAgregado({ onIrCarrito, onSeguir }) {
         <div className="tp-exito-icon">
           <svg viewBox="0 0 48 48" fill="none">
             <circle cx="24" cy="24" r="22" fill="#22bb48" />
-            <polyline points="13,25 21,33 36,16" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <polyline points="13,25 21,33 36,16" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
         <h3>Producto anadido correctamente</h3>
@@ -332,7 +330,7 @@ function ModalAgregado({ onIrCarrito, onSeguir }) {
 }
 
 // ─── Carrito ──────────────────────────────────────────────────────────────────
-// ✅ Se eliminaron: botón "Cerrar sesion" y el bloque "Sesion activa"
+
 function Carrito({ items, stockMap, onCambiarCantidad, onCerrar, onFinalizarPedido }) {
   const total = items.reduce((s, it) => s + Number(it.precio) * it.cantidad, 0);
   return (
@@ -345,32 +343,32 @@ function Carrito({ items, stockMap, onCambiarCantidad, onCerrar, onFinalizarPedi
             {items.length === 0
               ? <p className="tp-carrito-vacio">Tu carrito esta vacio.</p>
               : items.map(it => {
-                  const stockDisponible = stockMap[it.id_producto] ?? 0;
-                  return (
-                    <div key={it.id_producto} className="tp-carrito-item">
-                      <div className="tp-carrito-item-img">
-                        {it.imagen
-                          ? <img src={IMG_BASE + it.imagen} alt={it.nombre} />
-                          : <div className="tp-carrito-item-img-empty" />}
-                      </div>
-                      <div className="tp-carrito-item-info">
-                        <p className="tp-carrito-item-nombre">{it.nombre}</p>
-                        <p className="tp-carrito-item-cat">${(Number(it.precio) * it.cantidad).toLocaleString('es-CO')}</p>
-                        <div className="tp-cantidad-ctrl tp-cantidad-ctrl--sm">
-                          <button onClick={() => onCambiarCantidad(it.id_producto, it.cantidad - 1)}>-</button>
-                          <span>{it.cantidad}</span>
-                          <button
-                            onClick={() => onCambiarCantidad(it.id_producto, it.cantidad + 1)}
-                            disabled={it.cantidad >= stockDisponible}
-                          >+</button>
-                        </div>
-                        {it.cantidad >= stockDisponible && (
-                          <p className="tp-carrito-stock-limite">Máximo disponible: {stockDisponible}</p>
-                        )}
-                      </div>
+                const stockDisponible = stockMap[it.id_producto] ?? 0;
+                return (
+                  <div key={it.id_producto} className="tp-carrito-item">
+                    <div className="tp-carrito-item-img">
+                      {it.imagen
+                        ? <img src={IMG_BASE + it.imagen} alt={it.nombre} />
+                        : <div className="tp-carrito-item-img-empty" />}
                     </div>
-                  );
-                })
+                    <div className="tp-carrito-item-info">
+                      <p className="tp-carrito-item-nombre">{it.nombre}</p>
+                      <p className="tp-carrito-item-cat">${(Number(it.precio) * it.cantidad).toLocaleString('es-CO')}</p>
+                      <div className="tp-cantidad-ctrl tp-cantidad-ctrl--sm">
+                        <button onClick={() => onCambiarCantidad(it.id_producto, it.cantidad - 1)}>-</button>
+                        <span>{it.cantidad}</span>
+                        <button
+                          onClick={() => onCambiarCantidad(it.id_producto, it.cantidad + 1)}
+                          disabled={it.cantidad >= stockDisponible}
+                        >+</button>
+                      </div>
+                      {it.cantidad >= stockDisponible && (
+                        <p className="tp-carrito-stock-limite">Máximo disponible: {stockDisponible}</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
             }
           </div>
           <div className="tp-carrito-resumen">
@@ -414,18 +412,17 @@ function TarjetaProducto({ producto, stock, onClick }) {
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 export const TiendaProductos = () => {
-  const [productos, setProductos]             = useState([]);
-  const [stockMap, setStockMap]               = useState({});   // id_producto → cantidad
-  const [loading, setLoading]                 = useState(true);
-  const [error, setError]                     = useState(null);
-  const [precioMin, setPrecioMin]             = useState('');
-  const [precioMax, setPrecioMax]             = useState('');
-  const [filtroAbierto, setFiltroAbierto]     = useState(false);
-  const [sesion, setSesion]                   = useState(getSession);
-  // ✅ Inicializa el carrito desde localStorage según la sesión activa
-  const [carrito, setCarrito]                 = useState(() => cargarCarrito(getSession()));
-  const [modal, setModal]                     = useState(null);
-  const [productoActivo, setProductoActivo]   = useState(null);
+  const [productos, setProductos] = useState([]);
+  const [stockMap, setStockMap] = useState({});   // id_producto → cantidad
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [precioMin, setPrecioMin] = useState('');
+  const [precioMax, setPrecioMax] = useState('');
+  const [filtroAbierto, setFiltroAbierto] = useState(false);
+  const [sesion, setSesion] = useState(getSession);
+  const [carrito, setCarrito] = useState(() => cargarCarrito(getSession()));
+  const [modal, setModal] = useState(null);
+  const [productoActivo, setProductoActivo] = useState(null);
   const [idPedidoExitoso, setIdPedidoExitoso] = useState(null);
 
   // Cargar productos y stocks en paralelo, mostrando solo activos con stock > 0
@@ -453,14 +450,14 @@ export const TiendaProductos = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // ✅ Sincroniza si el usuario inicia/cierra sesión desde otra pestaña
+
   useEffect(() => {
     const syncSesion = () => setSesion(getSession());
     window.addEventListener('storage', syncSesion);
     return () => window.removeEventListener('storage', syncSesion);
   }, []);
 
-  // ✅ Guarda el carrito en localStorage cada vez que cambia
+
   useEffect(() => {
     guardarCarrito(sesion, carrito);
   }, [carrito, sesion]);
@@ -487,7 +484,7 @@ export const TiendaProductos = () => {
     else setCarrito(prev => prev.map(it => it.id_producto === id ? { ...it, cantidad: n } : it));
   }, []);
 
-  // ✅ Re-lee sessionStorage por si el usuario acaba de iniciar sesión en la página principal
+
   const handleFinalizarPedido = () => {
     const sesionActual = getSession();
     if (!sesionActual) {
@@ -498,20 +495,20 @@ export const TiendaProductos = () => {
     }
   };
 
-  // ✅ Cuando el login es exitoso, carga el carrito guardado de ese cliente
+
   const handleLoginExitoso = (cliente) => {
     setSesion(cliente);
     setCarrito(cargarCarrito(cliente));
     setModal('checkout');
   };
 
-  // ✅ Al confirmar pedido, limpia carrito y descuenta stock localmente
+
   const handlePedidoConfirmado = (idPedido, itemsComprados) => {
     setIdPedidoExitoso(idPedido);
     if (sesion) localStorage.removeItem(CARRITO_KEY(sesion.documento));
     setCarrito([]);
 
-    // Restar stock en el mapa local y ocultar productos sin stock
+
     setStockMap(prev => {
       const nuevo = { ...prev };
       itemsComprados.forEach(it => {
@@ -539,7 +536,7 @@ export const TiendaProductos = () => {
 
             <button className="tp-btn-filtro" onClick={() => setFiltroAbierto(f => !f)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
               </svg>
               Filtrar
             </button>
@@ -569,7 +566,7 @@ export const TiendaProductos = () => {
       </div>
 
       {loading && <p className="tp-estado">Cargando productos...</p>}
-      {error   && <p className="tp-estado tp-estado--error">{error}</p>}
+      {error && <p className="tp-estado tp-estado--error">{error}</p>}
       {!loading && !error && (
         <>
           <p className="tp-conteo">
@@ -578,20 +575,20 @@ export const TiendaProductos = () => {
           {productosFiltrados.length === 0
             ? <p className="tp-estado">No hay productos con ese rango de precio.</p>
             : <div className="tp-grid">
-                {productosFiltrados.map(p => (
-                  <TarjetaProducto key={p.id_producto} producto={p} stock={stockMap[p.id_producto] ?? 0} onClick={prod => { setProductoActivo(prod); setModal('producto'); }} />
-                ))}
-              </div>
+              {productosFiltrados.map(p => (
+                <TarjetaProducto key={p.id_producto} producto={p} stock={stockMap[p.id_producto] ?? 0} onClick={prod => { setProductoActivo(prod); setModal('producto'); }} />
+              ))}
+            </div>
           }
         </>
       )}
 
-      {modal === 'producto'  && productoActivo && <ModalProducto producto={productoActivo} stock={stockMap[productoActivo.id_producto] ?? 0} onClose={() => setModal(null)} onAgregar={agregarAlCarrito} />}
-      {modal === 'agregado'  && <ModalAgregado onIrCarrito={() => setModal('carrito')} onSeguir={() => setModal(null)} />}
-      {modal === 'carrito'   && <Carrito items={carrito} stockMap={stockMap} onCambiarCantidad={cambiarCantidad} onCerrar={() => setModal(null)} onFinalizarPedido={handleFinalizarPedido} />}
-      {modal === 'login'     && <ModalLogin onClose={() => setModal('carrito')} onLoginExitoso={handleLoginExitoso} />}
-      {modal === 'checkout'  && <ModalCheckout items={carrito} cliente={sesion} onCerrar={() => setModal('carrito')} onPedidoConfirmado={handlePedidoConfirmado} />}
-      {modal === 'exitoso'   && <ModalPedidoExitoso idPedido={idPedidoExitoso} onCerrar={() => setModal(null)} />}
+      {modal === 'producto' && productoActivo && <ModalProducto producto={productoActivo} stock={stockMap[productoActivo.id_producto] ?? 0} onClose={() => setModal(null)} onAgregar={agregarAlCarrito} />}
+      {modal === 'agregado' && <ModalAgregado onIrCarrito={() => setModal('carrito')} onSeguir={() => setModal(null)} />}
+      {modal === 'carrito' && <Carrito items={carrito} stockMap={stockMap} onCambiarCantidad={cambiarCantidad} onCerrar={() => setModal(null)} onFinalizarPedido={handleFinalizarPedido} />}
+      {modal === 'login' && <ModalLogin onClose={() => setModal('carrito')} onLoginExitoso={handleLoginExitoso} />}
+      {modal === 'checkout' && <ModalCheckout items={carrito} cliente={sesion} onCerrar={() => setModal('carrito')} onPedidoConfirmado={handlePedidoConfirmado} />}
+      {modal === 'exitoso' && <ModalPedidoExitoso idPedido={idPedidoExitoso} onCerrar={() => setModal(null)} />}
     </section>
   );
 };

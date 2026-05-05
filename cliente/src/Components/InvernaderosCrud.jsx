@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/FerreInver/server";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 const api = {
     getInvernaderos: () =>
@@ -14,14 +14,14 @@ const api = {
         }).then((r) => r.json()),
 
     updateInvernadero: (id, data) =>
-        fetch(`${API_BASE}/invernaderos?id=${id}`, {
+        fetch(`${API_BASE}/invernaderos/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deactivateInvernadero: (id) =>
-        fetch(`${API_BASE}/invernaderos?id=${id}`, {
+        fetch(`${API_BASE}/invernaderos/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

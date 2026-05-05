@@ -20,10 +20,10 @@ export const MisPedidos = ({ onCerrar }) => {
     const fetchPedidos = async () => {
       try {
         const res = await fetch(
-          `http://localhost/FerreInver/server/pedidos?documento=${usuario.documento}`
+          `http://127.0.0.1:8000/api/pedidos?documento=${usuario.documento}`
         )
         const data = await res.json()
-        if (!data.success) throw new Error(data.mensaje)
+        if (!data.success) throw new Error(data.message)
         setPedidos(data.data)
       } catch {
         setError('No se pudieron cargar los pedidos.')
@@ -86,8 +86,10 @@ export const MisPedidos = ({ onCerrar }) => {
                   <span>📅 {new Date(p.fecha_hora).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                   <span>💳 {p.medio_pago}</span>
                 </div>
-                {p.productos && (
-                  <p className="registros-item-productos">{p.productos}</p>
+                {p.productos && p.productos.length > 0 && (
+                  <p className="registros-item-productos">
+                    {p.productos.map(prod => prod.descripcion || prod.nombre).join(', ')}
+                  </p>
                 )}
               </div>
             )

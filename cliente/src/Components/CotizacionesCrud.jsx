@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/FerreInver/server";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 const api = {
     getCotizaciones: () =>
@@ -17,14 +17,14 @@ const api = {
         }).then((r) => r.json()),
 
     updateCotizacion: (id, data) =>
-        fetch(`${API_BASE}/cotizaciones/?id=${id}`, {
+        fetch(`${API_BASE}/cotizaciones/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     rechazarCotizacion: (id) =>
-        fetch(`${API_BASE}/Cotizaciones/?id=${id}`, {
+        fetch(`${API_BASE}/Cotizaciones/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };
@@ -261,8 +261,8 @@ export default function CotizacionesCRUD() {
                     <tbody>
                         {cotizaciones.map((c) => (
                             <tr key={c.id_cotizacion}>
-                                <td>{c.cliente_nombre}</td>
-                                <td>{c.invernadero_nombre}</td>
+                                <td>{c.cliente?.nombre || "N/A"}</td>
+                                <td>{c.invernadero?.nombre || "N/A"}</td>
                                 <td>{Number(c.largo).toFixed(2)}</td>
                                 <td>{Number(c.ancho).toFixed(2)}</td>
                                 <td>{Number(c.metros_cuadrados).toFixed(2)}</td>

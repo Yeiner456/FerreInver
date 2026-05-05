@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/FerreInver/server";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 const MEDIOS_PAGO    = ["Efectivo", "Tarjeta Débito", "Tarjeta Crédito", "Transferencia", "PSE", "Nequi", "Daviplata"];
 const ESTADOS_PEDIDO = ["pendiente", "recibido", "listo para recibir", "cancelado"];
@@ -29,16 +29,17 @@ const api = {
         }).then((r) => r.json()),
 
     updatePedido: (id, data) =>
-        fetch(`${API_BASE}/pedidos?id=${id}`, {
+        fetch(`${API_BASE}/pedidos/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
-    cancelarPedido: (id) =>
-        fetch(`${API_BASE}/pedidos?id=${id}`, {
+    cancelPedido: (id) =>
+        fetch(`${API_BASE}/pedidos/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
+
 
     // Vista cliente: pedidos por documento
     getPedidosByCliente: (documento) =>
@@ -221,8 +222,8 @@ export default function PedidosCRUD() {
                     <tbody>
                         {pedidos.map((p) => (
                             <tr key={p.id_pedido}>
-                                <td>{p.nombre_cliente}</td>
-                                <td>{p.correo}</td>
+                                <td>{p.cliente?.nombre || "N/A"}</td>
+                                <td>{p.cliente?.correo || "N/A"}</td>
                                 <td>{p.fecha_hora}</td>
                                 <td>{p.medio_pago}</td>
                                 <td>{p.estado_pedido}</td>

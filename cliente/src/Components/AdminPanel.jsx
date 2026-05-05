@@ -11,6 +11,8 @@ import StockCrud from "./StockCrud";
 import TiposUsuariosCrud from "./TiposUsuariosCrud";
 import "../styles/AdminPanel.css"
 import ProductosPedidosCRUD from "./ProductosPedidosCrud";
+import NotificacionesCrud from "./NotificacionesCrud";
+
 
 const NAV_ITEMS = [
     { key: "clientes", label: "Clientes", component: ClientesCrud },
@@ -23,6 +25,7 @@ const NAV_ITEMS = [
     { key: "invernaderos", label: "Invernaderos", component: InvernaderoCRUD },
     { key: "cotizaciones", label: "Cotizaciones", component: CotizacionesCrud },
     { key: "productospedidos", label: "ProductosPedidos", component: ProductosPedidosCRUD  },
+    { key: "notificaciones", label: "Notificaciones", component: NotificacionesCrud  },
 ];
 
 export default function AdminPanel() {

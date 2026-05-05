@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-const API_BASE = "http://localhost/FerreInver/server";
-const IMG_BASE = "http://localhost/FerreInver/";
+const API_BASE = "http://127.0.0.1:8000/api";
+const IMG_BASE = "http://127.0.0.1:8000/";
 
 const api = {
     getProductos: () =>
@@ -15,15 +15,15 @@ const api = {
 
     // FormData no puede enviarse con PUT nativo → usamos POST + ?_method=PUT
     updateProducto: (id, formData) =>
-        fetch(`${API_BASE}/productos?id=${id}&_method=PUT`, {
-            method: "POST",
-            body: formData,
-        }).then((r) => r.json()),
+    fetch(`${API_BASE}/productos/${id}?_method=PUT`, {
+        method: "POST",
+        body: formData,
+    }).then((r) => r.json()),
 
-    deactivateProducto: (id) =>
-        fetch(`${API_BASE}/productos?id=${id}`, {
-            method: "DELETE",
-        }).then((r) => r.json()),
+deactivateProducto: (id) =>
+    fetch(`${API_BASE}/productos/${id}`, {
+        method: "DELETE",
+    }).then((r) => r.json()),
 };
 
 const emptyForm = { nombre: "", precio: "", descripcion: "" };

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://localhost/FerreInver/server";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 const api = {
     getClientes: () =>
@@ -17,14 +17,14 @@ const api = {
         }).then((r) => r.json()),
 
     updateCliente: (documento, data) =>
-        fetch(`${API_BASE}/clientes?documento=${documento}`, {
+        fetch(`${API_BASE}/clientes/${documento}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deactivateCliente: (documento) =>
-        fetch(`${API_BASE}/clientes?documento=${documento}`, {
+        fetch(`${API_BASE}/clientes/${documento}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };
@@ -288,7 +288,7 @@ export default function ClientesCRUD() {
                         {filtered.map((c) => (
                             <tr key={c.documento}>
                                 <td>{c.documento}</td>
-                                <td>{c.tipo_usuario}</td>
+                                <td>{c.tipo_usuario?.nombre ?? c.tipo_usuario}</td>
                                 <td>{c.nombre}</td>
                                 <td>{c.correo}</td>
                                 <td>{new Date(c.fecha_registro).toLocaleDateString("es-CO")}</td>
