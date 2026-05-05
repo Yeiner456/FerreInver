@@ -232,7 +232,6 @@ export default function NotificacionesCrud() {
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [mensaje, setMensaje] = useState(null);
     const [search, setSearch] = useState("");
-    const [filtroLeido, setFiltroLeido] = useState("todos");
 
     const load = useCallback(async () => {
         setLoading(true);
