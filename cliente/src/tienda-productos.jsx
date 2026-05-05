@@ -403,11 +403,11 @@ function TarjetaProducto({ producto, stock, onClick }) {
       </div>
       <div className="tp-tarjeta-body">
         <p className="tp-tarjeta-nombre">{producto.nombre}</p>
-        <p className="tp-tarjeta-precio">{Number(producto.precio).toLocaleString('es-CO')}</p>
+        <p className="tp-tarjeta-precio">${Number(producto.precio).toLocaleString('es-CO')}</p>
         <button className="tp-tarjeta-btn" onClick={e => { e.stopPropagation(); onClick(producto); }}>Ver producto</button>
       </div>
     </div>
-  );
+  );  
 }
 
 // ─── Componente principal ─────────────────────────────────────────────────────
