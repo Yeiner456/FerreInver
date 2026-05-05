@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pedido;
 use App\Models\Cliente;
 use App\Models\ProductoPedido;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -88,6 +89,33 @@ class PedidosController extends Controller
 
         DB::beginTransaction();
         try {
+            // Verificar stock suficiente y bloquearlo para evitar condiciones de carrera
+            $stockErrors = [];
+            $stocksAfectados = [];
+
+            foreach ($items as $item) {
+                $stock = Stock::where('id_producto', $item['id_producto'])->lockForUpdate()->first();
+
+                if (!$stock || $stock->cantidad < $item['cantidad']) {
+                    $stockErrors[] = [
+                        'nombre'     => $item['nombre'] ?? $item['descripcion'] ?? "Producto {$item['id_producto']}",
+                        'pedido'     => $item['cantidad'],
+                        'disponible' => $stock ? $stock->cantidad : 0,
+                    ];
+                } else {
+                    $stocksAfectados[] = ['stock' => $stock, 'cantidad' => $item['cantidad']];
+                }
+            }
+
+            if (!empty($stockErrors)) {
+                DB::rollBack();
+                return response()->json([
+                    'success'      => false,
+                    'message'      => 'Stock insuficiente para uno o más productos.',
+                    'stock_errors' => $stockErrors,
+                ], 409);
+            }
+
             $pedido = Pedido::create([
                 'id_cliente'    => (int) $id_cliente,
                 'medio_pago'    => $medio_pago,
@@ -101,6 +129,11 @@ class PedidosController extends Controller
                     'descripcion' => $item['descripcion'] ?? $item['nombre'] ?? '',
                     'cantidad'    => $item['cantidad'],
                 ]);
+            }
+
+            // Descontar el stock en la base de datos
+            foreach ($stocksAfectados as $entrada) {
+                $entrada['stock']->decrement('cantidad', $entrada['cantidad']);
             }
 
             DB::commit();
