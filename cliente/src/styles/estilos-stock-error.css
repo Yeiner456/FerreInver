@@ -43,3 +43,46 @@
   margin-top: 4px;
   margin-bottom: 0;
 }
+
+/* ── Badge de stock en tarjeta ── */
+.tp-stock-badge {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+.tp-stock-badge--bajo {
+  background: rgba(220, 38, 38, 0.82);
+}
+
+/* Asegura que el contenedor de imagen tenga position relative */
+.tp-tarjeta-img {
+  position: relative;
+}
+
+/* ── Stock en modal de detalle ── */
+.tp-modal-stock {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #16a34a;
+  margin: 4px 0 10px;
+}
+
+.tp-modal-stock--bajo {
+  color: #dc2626;
+}
+
+/* ── Aviso de límite en el carrito ── */
+.tp-carrito-stock-limite {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin: 2px 0 0;
+}
