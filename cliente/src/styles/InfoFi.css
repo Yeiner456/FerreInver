@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Raleway:wght@300;400;500&display=swap');
 
 .infofi {
-    opacity: 0;
+    opacity: 0.1;
     transform: translateY(40px);
     transition: opacity 0.8s ease, transform 0.8s ease;
     background: linear-gradient(135deg, #00185A 0%, #1E12A4 60%, #2F51AD 100%);
@@ -11,13 +11,12 @@
     overflow: hidden;
 }
 
-.infofi::before {
+.infofi::before {   
     content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
 }
-
 
 .infofi::after {
     position: absolute;
@@ -45,7 +44,6 @@
     position: relative;
     z-index: 1;
 }
-
 
 .infofi-container {
     display: flex;
@@ -89,7 +87,6 @@
     line-height: 1.85;
 }
 
-
 .infofi-stats {
     display: flex;
     gap: 2rem;
@@ -119,7 +116,11 @@
     line-height: 1.3;
 }
 
-.infofi-media { display: flex; align-items: center; justify-content: center; }
+.infofi-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .infofi-media-wrap {
     position: relative;
@@ -157,4 +158,179 @@
 .infofi-media-badge span {
     color: #22BB48;
     font-size: 0.7rem;
+}
+
+/* ── 1201px – 1600px ── */
+@media (min-width: 1201px) and (max-width: 1600px) {
+    .infofi {
+        padding: 5.5rem 3rem;
+    }
+
+    .infofi-inner {
+        max-width: 1060px;
+        gap: 4rem;
+    }
+
+    .corto-proceso {
+        height: 360px;
+    }
+}
+
+/* ── 1025px – 1200px ── */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .infofi {
+        padding: 5rem 2.5rem;
+    }
+
+    .infofi-inner {
+        max-width: 940px;
+        gap: 3rem;
+    }
+
+    .infofi-title {
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+    }
+
+    .corto-proceso {
+        height: 330px;
+    }
+
+    .stat-num {
+        font-size: 1.75rem;
+    }
+}
+
+/* ── 769px – 1024px ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .infofi {
+        padding: 4.5rem 2rem;
+    }
+
+    .infofi-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+        max-width: 100%;
+    }
+
+    .infofi-title {
+        font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+    }
+
+    .infofi-text {
+        font-size: 0.91rem;
+        line-height: 1.75;
+    }
+
+    .corto-proceso {
+        height: 290px;
+    }
+
+    .infofi-stats {
+        gap: 1.4rem;
+    }
+
+    .stat-num {
+        font-size: 1.6rem;
+    }
+
+    .stat-label {
+        font-size: 0.74rem;
+    }
+}
+
+/* ── 481px – 768px ── */
+@media (min-width: 481px) and (max-width: 768px) {
+    .infofi {
+        padding: 4rem 1.75rem;
+    }
+
+    .infofi-inner {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .infofi-title {
+        font-size: clamp(1.65rem, 5vw, 2.2rem);
+    }
+
+    .infofi-text {
+        font-size: 0.93rem;
+    }
+
+    .infofi-stats {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-num {
+        font-size: 1.8rem;
+    }
+
+    .corto-proceso {
+        height: 300px;
+        border-radius: 16px;
+    }
+
+    .infofi-media-badge {
+        font-size: 0.73rem;
+        padding: 7px 13px;
+        bottom: 14px;
+        left: 14px;
+    }
+}
+
+/* ── 320px – 480px ── */
+@media (min-width: 320px) and (max-width: 480px) {
+    .infofi {
+        padding: 3rem 1.25rem;
+    }
+
+    .infofi-inner {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .infofi-pill {
+        font-size: 0.65rem;
+        padding: 4px 12px;
+    }
+
+    .infofi-title {
+        font-size: clamp(1.45rem, 6.5vw, 1.9rem);
+    }
+
+    .infofi-text {
+        font-size: 0.88rem;
+        line-height: 1.75;
+    }
+
+    .infofi-stats {
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .infofi-stat {
+        min-width: calc(33% - 0.5rem);
+    }
+
+    .stat-num {
+        font-size: 1.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+    }
+
+    .corto-proceso {
+        height: 220px;
+        border-radius: 14px;
+    }
+
+    .infofi-media-badge {
+        font-size: 0.68rem;
+        padding: 6px 10px;
+        bottom: 10px;
+        left: 10px;
+        gap: 5px;
+    }
 }

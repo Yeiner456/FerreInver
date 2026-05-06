@@ -84,7 +84,7 @@
 .hero-overlay {
     position: absolute;
     top: 50%;
-    left: 5rem;
+    left: 7rem;
     transform: translateY(-50%);
     text-align: left;
     display: flex;
@@ -250,14 +250,203 @@
     100% { transform: scaleY(0); transform-origin: bottom; }
 }
 
-@media (max-width: 768px) {
+/* ── 1201px – 1600px ── */
+@media (min-width: 1201px) and (max-width: 1600px) {
     .hero-overlay {
-        left: 1.5rem;
-        width: 85%;
-        top: 45%;
+        left: 6rem;
+        width: 54%;
+        max-width: 640px;
     }
-    .hero-title { font-size: 2rem; }
-    .leftArrow, .rightArrow { width: 38px; height: 38px; font-size: 16px; }
-    .leftArrow { left: 12px; }
+
+    .hero-title {
+        font-size: clamp(2rem, 4.5vw, 3.5rem);
+    }
+
+    .hero-subtitle {
+        font-size: 1.05rem;
+    }
+}
+
+/* ── 1025px – 1200px ── */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .hero-overlay {
+        left: 6rem;
+        width: 58%;
+        gap: 1rem;
+    }
+
+    .hero-title {
+        font-size: clamp(1.9rem, 4vw, 3rem);
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        max-width: 400px;
+    }
+
+    .btn-cotizar {
+        padding: 13px 28px;
+        font-size: 0.95rem;
+    }
+
+    .leftArrow  { left: 20px; }
+    .rightArrow { right: 20px; }
+}
+
+/* ── 769px – 1024px ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .main-container {
+        height: 88vh;
+    }
+
+    .hero-overlay {
+        left: 5rem;
+        width: 65%;
+        gap: 1rem;
+        top: 48%;
+    }
+
+    .hero-title {
+        font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+    }
+
+    .hero-subtitle {
+        font-size: 0.96rem;
+        max-width: 380px;
+    }
+
+    .btn-cotizar {
+        padding: 12px 24px;
+        font-size: 0.92rem;
+    }
+
+    .leftArrow, .rightArrow {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+
+    .leftArrow  { left: 16px; }
+    .rightArrow { right: 16px; }
+
+    .hero-scroll-hint {
+        right: 1.5rem;
+        bottom: 20px;
+    }
+}
+
+/* ── 481px – 768px ── */
+@media (min-width: 481px) and (max-width: 768px) {
+    .main-container {
+        height: 85vh;
+    }
+
+    .hero-overlay {
+        left: 4.5rem;
+        width: 80%;
+        top: 46%;
+        gap: 0.9rem;
+    }
+
+    .hero-title {
+        font-size: clamp(1.6rem, 5vw, 2.2rem);
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+        max-width: 340px;
+    }
+
+    .btn-cotizar {
+        padding: 11px 22px;
+        font-size: 0.88rem;
+        border-radius: 10px;
+    }
+
+    .leftArrow, .rightArrow {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .leftArrow  { left: 12px; }
     .rightArrow { right: 12px; }
+
+    .hero-scroll-hint {
+        display: none;
+    }
+
+    .dots-container {
+        bottom: 18px;
+    }
+}
+
+/* ── 320px – 480px ── */
+@media (min-width: 320px) and (max-width: 480px) {
+    .main-container {
+        height: 80vh;
+    }
+
+    .hero-overlay {
+        left: 3.2rem;
+        width: 88%;
+        top: 46%;
+        gap: 0.75rem;
+    }
+
+    .hero-eyebrow {
+        font-size: 0.65rem;
+        padding: 4px 12px;
+        gap: 6px;
+    }
+
+    .hero-title {
+        font-size: clamp(1.35rem, 6.5vw, 1.85rem);
+        line-height: 1.15;
+    }
+
+    .hero-subtitle {
+        font-size: 0.82rem;
+        line-height: 1.55;
+        max-width: 280px;
+    }
+
+    .btn-cotizar {
+        padding: 10px 18px;
+        font-size: 0.82rem;
+        border-radius: 9px;
+        gap: 7px;
+        margin-top: 0.1rem;
+    }
+
+    .btn-cotizar::after {
+        font-size: 0.95rem;
+    }
+
+    .leftArrow, .rightArrow {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    .leftArrow  { left: 8px; }
+    .rightArrow { right: 8px; }
+
+    .hero-scroll-hint {
+        display: none;
+    }
+
+    .dots-container {
+        bottom: 14px;
+        gap: 6px;
+    }
+
+    .dot-container-item {
+        width: 7px;
+        height: 7px;
+    }
+
+    .dot-container-item.active {
+        width: 22px;
+    }
 }

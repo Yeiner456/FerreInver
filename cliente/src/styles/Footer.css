@@ -149,7 +149,6 @@ footer {
     max-width: 160px;
 }
 
-
 .footer-bottom {
     display: flex;
     align-items: center;
@@ -166,3 +165,212 @@ footer {
     color: rgba(255,255,255,0.38);
 }
 
+
+/* ════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ════════════════════════════════════════════ */
+
+/* ── 1201px – 1600px: layout amplio, ajuste de padding y max-width ── */
+@media (min-width: 1201px) and (max-width: 1600px) {
+    .footer-top {
+        max-width: 1400px;
+        padding: 4rem 4rem 3rem;
+        gap: 2.5rem;
+    }
+
+    .footer-bottom {
+        max-width: 1400px;
+        padding: 1.2rem 4rem;
+    }
+}
+
+/* ── 1025px – 1200px: grid de 4 columnas, espaciado compacto ── */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .footer-top {
+        grid-template-columns: 1.4fr 1fr 1fr 1fr;
+        gap: 2rem;
+        padding: 3.5rem 2.5rem 2.5rem;
+    }
+
+    .footer-bottom {
+        padding: 1.2rem 2.5rem;
+    }
+
+    .footer-brand-desc {
+        max-width: 240px;
+    }
+}
+
+/* ── 769px – 1024px: 2 columnas (brand + sena arriba, nav + contacto abajo) ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem 3rem;
+        padding: 3rem 2.5rem 2.5rem;
+    }
+
+    .footer-bottom {
+        padding: 1.2rem 2.5rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: center;
+    }
+
+    .footer-brand-desc {
+        max-width: 100%;
+    }
+
+    .footer-sena-col {
+        align-items: flex-start;
+    }
+}
+
+/* ── 481px – 768px: 2 columnas compactas o 1 columna según contenido ── */
+@media (min-width: 481px) and (max-width: 768px) {
+    .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem 2rem;
+        padding: 2.5rem 1.8rem 2rem;
+    }
+
+    /* Brand col ocupa todo el ancho superior */
+    .footer-brand-col {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 1.2rem 2rem;
+    }
+
+    .footer-brand-col .footer-logo {
+        width: 7.5rem;
+    }
+
+    .footer-brand-col .footer-brand-desc {
+        max-width: 300px;
+        flex: 1 1 200px;
+    }
+
+    .footer-brand-col .footer-social {
+        width: 100%;
+        margin-top: 0;
+    }
+
+    /* SENA col ocupa todo el ancho inferior */
+    .footer-sena-col {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .footer-sena-text {
+        max-width: none;
+    }
+
+    .footer-bottom {
+        padding: 1.2rem 1.8rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+        text-align: center;
+    }
+
+    .footer-heading {
+        font-size: 0.7rem;
+    }
+}
+
+/* ── 320px – 480px: columna única, diseño vertical ── */
+@media (min-width: 320px) and (max-width: 480px) {
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 2rem 1.25rem 1.5rem;
+    }
+
+    .footer-col {
+        gap: 0.75rem;
+    }
+
+    /* Brand */
+    .footer-logo {
+        width: 7rem;
+    }
+
+    .footer-brand-desc {
+        font-size: 0.85rem;
+        max-width: 100%;
+    }
+
+    .footer-social {
+        gap: 0.65rem;
+    }
+
+    .social-link {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+    }
+
+    .social-link svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Headings */
+    .footer-heading {
+        font-size: 0.68rem;
+        margin-bottom: 0.15rem;
+    }
+
+    /* Nav */
+    .footer-nav {
+        gap: 0.5rem;
+    }
+
+    .footer-nav a {
+        font-size: 0.88rem;
+    }
+
+    /* Contact */
+    .footer-contact {
+        gap: 0.7rem;
+    }
+
+    .footer-contact li {
+        font-size: 0.85rem;
+    }
+
+    /* SENA */
+    .footer-sena-col {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.9rem;
+    }
+
+    .logo-sena {
+        width: 54px;
+        height: 54px;
+        flex-shrink: 0;
+    }
+
+    .footer-sena-text {
+        font-size: 0.78rem;
+        max-width: none;
+    }
+
+    /* Bottom */
+    .footer-bottom {
+        padding: 1rem 1.25rem;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.3rem;
+    }
+
+    .footer-copy {
+        font-size: 0.75rem;
+    }
+}

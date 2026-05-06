@@ -10,7 +10,6 @@
     overflow: hidden;
 }
 
-
 .tipoinvernadero::before {
     content: '';
     position: absolute;
@@ -27,7 +26,6 @@
     opacity: 1;
     transform: translateY(0);
 }
-
 
 .tipoinvernadero-header {
     text-align: center;
@@ -78,7 +76,6 @@
     margin: 0 auto;
 }
 
-
 .invernadero-card {
     background: white;
     border-radius: 20px;
@@ -128,7 +125,6 @@
     border-radius: 100px;
 }
 
-
 .invernadero-info {
     padding: 1.8rem;
     display: flex;
@@ -174,4 +170,217 @@
 .invernadero-features li::before {
     content: '✓ ';
     color: #22BB48;
+}
+
+
+/* ════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ════════════════════════════════════════════ */
+
+/* ── 1201px – 1600px: ampliar max-width para pantallas grandes ── */
+@media (min-width: 1201px) and (max-width: 1600px) {
+    .tipoinvernadero {
+        padding: 6rem 3rem;
+    }
+
+    .tipoinvernadero-img {
+        max-width: 1200px;
+        gap: 2.5rem;
+    }
+
+    .invernadero-img-wrap {
+        height: 300px;
+    }
+}
+
+/* ── 1025px – 1200px: grid 2 columnas, ajuste de tamaños ── */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .tipoinvernadero {
+        padding: 5rem 2.5rem;
+    }
+
+    .tipoinvernadero-img {
+        max-width: 960px;
+        gap: 1.75rem;
+    }
+
+    .invernadero-img-wrap {
+        height: 260px;
+    }
+
+    .invernadero-info {
+        padding: 1.5rem;
+    }
+
+    .invernadero-info h3 {
+        font-size: 1.15rem;
+    }
+}
+
+/* ── 769px – 1024px: 2 columnas compactas, altura de imagen reducida ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .tipoinvernadero {
+        padding: 4.5rem 2rem;
+    }
+
+    .tipoinvernadero-header {
+        margin-bottom: 2.8rem;
+    }
+
+    .tipoinvernadero-img {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        max-width: 100%;
+    }
+
+    .invernadero-img-wrap {
+        height: 220px;
+    }
+
+    .invernadero-info {
+        padding: 1.4rem;
+        gap: 0.65rem;
+    }
+
+    .invernadero-info h3 {
+        font-size: 1.1rem;
+    }
+
+    .invernadero-info p {
+        font-size: 0.88rem;
+    }
+
+    .invernadero-features li {
+        font-size: 0.72rem;
+        padding: 3px 10px;
+    }
+
+    /* Desactivar hover lift en tablet para evitar layout shifts */
+    .invernadero-card:hover {
+        transform: translateY(-4px);
+    }
+}
+
+/* ── 481px – 768px: columna única, cards horizontales en pantallas medianas ── */
+@media (min-width: 481px) and (max-width: 768px) {
+    .tipoinvernadero {
+        padding: 4rem 1.5rem;
+    }
+
+    .tipoinvernadero-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .tipo-sub {
+        font-size: 0.95rem;
+    }
+
+    .tipoinvernadero-img {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 560px;
+    }
+
+    /* Cards en fila horizontal (imagen izq + info der) */
+    .invernadero-card {
+        flex-direction: row;
+        border-radius: 16px;
+    }
+
+    .invernadero-img-wrap {
+        width: 45%;
+        height: auto;
+        min-height: 200px;
+        flex-shrink: 0;
+    }
+
+    .invernadero-info {
+        padding: 1.4rem;
+        justify-content: center;
+    }
+
+    .invernadero-info h3 {
+        font-size: 1.1rem;
+    }
+
+    .invernadero-info p {
+        font-size: 0.88rem;
+        line-height: 1.65;
+    }
+
+    .invernadero-card:hover {
+        transform: translateY(-4px);
+    }
+}
+
+/* ── 320px – 480px: columna única, cards verticales compactas ── */
+@media (min-width: 320px) and (max-width: 480px) {
+    .tipoinvernadero {
+        padding: 3rem 1rem;
+    }
+
+    .tipoinvernadero::before {
+        width: 200px;
+        height: 200px;
+        bottom: -50px;
+        left: -50px;
+    }
+
+    .tipoinvernadero-header {
+        margin-bottom: 2rem;
+    }
+
+    .tipo-pill {
+        font-size: 0.68rem;
+        padding: 4px 13px;
+        margin-bottom: 0.75rem;
+    }
+
+    .tipo-sub {
+        font-size: 0.88rem;
+        padding: 0 0.5rem;
+    }
+
+    .tipoinvernadero-img {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        max-width: 100%;
+    }
+
+    .invernadero-card {
+        border-radius: 16px;
+    }
+
+    .invernadero-img-wrap {
+        height: 200px;
+    }
+
+    .invernadero-info {
+        padding: 1.2rem;
+        gap: 0.6rem;
+    }
+
+    .invernadero-info h3 {
+        font-size: 1.05rem;
+    }
+
+    .invernadero-info p {
+        font-size: 0.85rem;
+        line-height: 1.65;
+    }
+
+    .invernadero-features {
+        gap: 0.4rem;
+    }
+
+    .invernadero-features li {
+        font-size: 0.7rem;
+        padding: 3px 10px;
+    }
+
+    /* Sin hover lift en móvil */
+    .invernadero-card:hover {
+        transform: none;
+        box-shadow: 0 4px 24px rgba(0, 24, 90, 0.08);
+    }
 }
