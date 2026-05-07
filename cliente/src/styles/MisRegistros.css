@@ -237,3 +237,269 @@
   font-size: 15px;
   color: #00185A;
 }
+
+/* ================================================
+   RESPONSIVE — MisRegistros (MisPedidos / MisCotizaciones)
+   Breakpoints: 320–480 | 481–768 | 769–1024 | 1025–1200 | 1201–1600
+   ================================================ */
+
+/* ---------- 320px – 480px (móvil pequeño) ---------- */
+@media (max-width: 480px) {
+  .registros-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .registros-modal {
+    max-width: 100%;
+    width: 100%;
+    max-height: 88vh;
+    border-radius: 20px 20px 0 0;
+    border-top: 3px solid #DDCE00;
+    animation: modalSlideUp 0.22s ease;
+  }
+
+  @keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .registros-header {
+    padding: 16px 14px 12px;
+    gap: 10px;
+  }
+
+  .registros-header-icono {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .registros-header-icono svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .registros-titulo {
+    font-size: 16px;
+  }
+
+  .registros-subtitulo {
+    font-size: 11px;
+  }
+
+  .registros-cerrar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .registros-body {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .registros-item {
+    padding: 12px 13px;
+    gap: 7px;
+  }
+
+  .registros-item-id {
+    font-size: 13px;
+  }
+
+  .registros-item-badge {
+    font-size: 10.5px;
+    padding: 2px 8px;
+  }
+
+  .registros-item-invernadero {
+    font-size: 12.5px;
+  }
+
+  .registros-item-detalle {
+    font-size: 11.5px;
+    gap: 8px;
+  }
+
+  .registros-item-productos {
+    font-size: 11.5px;
+  }
+
+  .registros-item-total {
+    font-size: 12px;
+    padding-top: 7px;
+  }
+
+  .registros-item-total strong {
+    font-size: 14px;
+  }
+
+  .registros-vacio {
+    padding: 30px 0;
+  }
+
+  .registros-vacio svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .registros-vacio p {
+    font-size: 13px;
+  }
+}
+
+/* ---------- 481px – 768px (móvil grande / tablet pequeña) ---------- */
+@media (min-width: 481px) and (max-width: 768px) {
+  .registros-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .registros-modal {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .registros-header {
+    padding: 18px 18px 14px;
+    gap: 12px;
+  }
+
+  .registros-header-icono {
+    width: 40px;
+    height: 40px;
+  }
+
+  .registros-titulo {
+    font-size: 17px;
+  }
+
+  .registros-subtitulo {
+    font-size: 11.5px;
+  }
+
+  .registros-body {
+    padding: 14px;
+  }
+
+  .registros-item {
+    padding: 13px 14px;
+  }
+
+  .registros-item-id {
+    font-size: 13.5px;
+  }
+
+  .registros-item-detalle {
+    font-size: 12px;
+  }
+}
+
+/* ---------- 769px – 1024px (tablet / laptop pequeña) ---------- */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .registros-overlay {
+    padding: 16px;
+    align-items: center;
+  }
+
+  .registros-modal {
+    max-width: 480px;
+    max-height: 82vh;
+    border-radius: 20px;
+  }
+
+  .registros-header {
+    padding: 18px 18px 14px;
+  }
+
+  .registros-titulo {
+    font-size: 17.5px;
+  }
+
+  .registros-item {
+    padding: 13px 15px;
+  }
+}
+
+/* ---------- 1025px – 1200px (laptop) ---------- */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .registros-modal {
+    max-width: 500px;
+  }
+
+  /* Tamaños base — sin cambios mayores necesarios */
+}
+
+/* ---------- 1201px – 1600px (desktop estándar y grande) ---------- */
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .registros-modal {
+    max-width: 560px;
+    max-height: 78vh;
+  }
+
+  .registros-header {
+    padding: 22px 22px 18px;
+    gap: 16px;
+  }
+
+  .registros-header-icono {
+    width: 48px;
+    height: 48px;
+  }
+
+  .registros-header-icono svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .registros-titulo {
+    font-size: 19px;
+  }
+
+  .registros-subtitulo {
+    font-size: 12.5px;
+  }
+
+  .registros-body {
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .registros-item {
+    padding: 16px 18px;
+    gap: 9px;
+  }
+
+  .registros-item-id {
+    font-size: 14.5px;
+  }
+
+  .registros-item-badge {
+    font-size: 11.5px;
+    padding: 3px 11px;
+  }
+
+  .registros-item-invernadero {
+    font-size: 14px;
+  }
+
+  .registros-item-detalle {
+    font-size: 13px;
+    gap: 14px;
+  }
+
+  .registros-item-productos {
+    font-size: 13px;
+  }
+
+  .registros-item-total {
+    font-size: 13.5px;
+    padding-top: 9px;
+  }
+
+  .registros-item-total strong {
+    font-size: 16px;
+  }
+}

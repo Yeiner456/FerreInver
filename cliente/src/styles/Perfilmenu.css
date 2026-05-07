@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@400;500;600&display=swap');
 
 
@@ -329,4 +328,254 @@
 .perfil-btn-registro:hover {
   background: var(--pm-lemon);
   transform: translateY(-1px);
+}
+
+/* ================================================
+   RESPONSIVE — PerfilMenu
+   Breakpoints: 320–480 | 481–768 | 769–1024 | 1025–1200 | 1201–1600
+   ================================================ */
+
+/* ---------- 320px – 480px (móvil pequeño) ---------- */
+@media (max-width: 480px) {
+  .perfil-trigger {
+    width: 38px;
+    height: 38px;
+    border-width: 1.5px;
+  }
+
+  .perfil-iniciales {
+    font-size: 13px;
+  }
+
+  .perfil-icono-svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .perfil-estado-dot {
+    width: 8px;
+    height: 8px;
+    bottom: 1px;
+    right: 1px;
+  }
+
+  /* Dropdown ocupa casi todo el ancho en pantallas muy pequeñas */
+  .perfil-dropdown {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-width: unset;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+    border-top: 3px solid var(--pm-yellow);
+    /* Animación desde abajo */
+    animation: pmSlideUp 0.22s ease;
+  }
+
+  @keyframes pmSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .perfil-header {
+    padding: 20px 16px 14px;
+    gap: 10px;
+  }
+
+  .perfil-avatar-grande {
+    width: 44px;
+    height: 44px;
+    font-size: 17px;
+  }
+
+  .perfil-nombre {
+    font-size: 14px;
+  }
+
+  .perfil-correo {
+    font-size: 11px;
+  }
+
+  .perfil-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+
+  .perfil-dato {
+    padding: 7px 16px;
+  }
+
+  .perfil-dato-label {
+    font-size: 10px;
+  }
+
+  .perfil-dato-valor {
+    font-size: 12.5px;
+  }
+
+  .perfil-opcion {
+    padding: 12px 16px;
+    font-size: 13.5px;
+  }
+
+  .perfil-opcion svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* No sesión */
+  .perfil-no-sesion {
+    padding: 22px 18px 18px;
+  }
+
+  .perfil-icono-grande {
+    width: 52px;
+    height: 52px;
+  }
+
+  .perfil-icono-grande svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .perfil-no-sesion-texto {
+    font-size: 14px;
+  }
+
+  .perfil-no-sesion-sub {
+    font-size: 12px;
+  }
+
+  .perfil-btn-login,
+  .perfil-btn-registro {
+    padding: 10px;
+    font-size: 13px;
+  }
+}
+
+/* ---------- 481px – 768px (móvil grande / tablet pequeña) ---------- */
+@media (min-width: 481px) and (max-width: 768px) {
+  .perfil-trigger {
+    width: 40px;
+    height: 40px;
+  }
+
+  .perfil-iniciales {
+    font-size: 14px;
+  }
+
+  .perfil-dropdown {
+    min-width: 260px;
+    /* Sigue anclado al trigger pero con leve corrección */
+    left: auto;
+    right: 0;
+  }
+
+  .perfil-header {
+    padding: 18px 16px 12px;
+  }
+
+  .perfil-avatar-grande {
+    width: 46px;
+    height: 46px;
+    font-size: 18px;
+  }
+
+  .perfil-nombre {
+    font-size: 14.5px;
+  }
+
+  .perfil-correo {
+    font-size: 11px;
+  }
+
+  .perfil-opcion {
+    padding: 11px 16px;
+    font-size: 13.5px;
+  }
+
+  .perfil-btn-login,
+  .perfil-btn-registro {
+    font-size: 13.5px;
+  }
+}
+
+/* ---------- 769px – 1024px (tablet / laptop pequeña) ---------- */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .perfil-trigger {
+    width: 42px;
+    height: 42px;
+  }
+
+  .perfil-dropdown {
+    min-width: 252px;
+    left: 0;
+  }
+
+  .perfil-avatar-grande {
+    width: 48px;
+    height: 48px;
+    font-size: 19px;
+  }
+
+  .perfil-nombre {
+    font-size: 15px;
+  }
+
+  .perfil-opcion {
+    padding: 11px 16px;
+    font-size: 13.5px;
+  }
+}
+
+/* ---------- 1025px – 1200px (laptop) ---------- */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  /* Tamaños base — no se necesitan cambios mayores.
+     Solo aseguramos que el dropdown no se corte en viewports medianos */
+  .perfil-dropdown {
+    min-width: 255px;
+  }
+}
+
+/* ---------- 1201px – 1600px (desktop estándar y grande) ---------- */
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .perfil-trigger {
+    width: 46px;
+    height: 46px;
+  }
+
+  .perfil-iniciales {
+    font-size: 16px;
+  }
+
+  .perfil-dropdown {
+    min-width: 268px;
+  }
+
+  .perfil-avatar-grande {
+    width: 52px;
+    height: 52px;
+    font-size: 21px;
+  }
+
+  .perfil-nombre {
+    font-size: 15.5px;
+  }
+
+  .perfil-correo {
+    font-size: 12px;
+  }
+
+  .perfil-opcion {
+    font-size: 14.5px;
+    padding: 12px 18px;
+  }
+
+  .perfil-btn-login,
+  .perfil-btn-registro {
+    font-size: 14.5px;
+    padding: 12px;
+  }
 }

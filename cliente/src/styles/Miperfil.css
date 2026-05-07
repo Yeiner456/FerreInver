@@ -1,5 +1,3 @@
-
-
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@400;500;600&display=swap');
 
 
@@ -348,4 +346,211 @@
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.3px;
+}
+
+/* ================================================
+   RESPONSIVE — MiPerfil
+   Breakpoints: 320–480 | 481–768 | 769–1024 | 1025–1200 | 1201–1600
+   ================================================ */
+
+/* ---------- 320px – 480px (móvil pequeño) ---------- */
+@media (max-width: 480px) {
+  .miperfil-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .miperfil-card {
+    max-width: 100%;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    overflow-y: auto;
+    /* Animación desde abajo */
+    animation: cardSlideUp 0.25s ease;
+  }
+
+  @keyframes cardSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .miperfil-header {
+    padding: 28px 16px 24px;
+    gap: 8px;
+  }
+
+  .miperfil-volver {
+    top: 12px;
+    left: 12px;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .miperfil-avatar {
+    width: 68px;
+    height: 68px;
+    font-size: 24px;
+  }
+
+  .miperfil-titulo {
+    font-size: 19px;
+  }
+
+  .miperfil-estado {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+
+  .miperfil-body {
+    padding: 20px 16px 28px;
+    gap: 16px;
+  }
+
+  .miperfil-label {
+    font-size: 11px;
+  }
+
+  .miperfil-valor {
+    font-size: 14.5px;
+  }
+
+  .miperfil-btn-editar {
+    padding: 6px 11px;
+    font-size: 12px;
+  }
+
+  .miperfil-input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .miperfil-btn-guardar,
+  .miperfil-btn-cancelar {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .miperfil-toast {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+}
+
+/* ---------- 481px – 768px (móvil grande / tablet pequeña) ---------- */
+@media (min-width: 481px) and (max-width: 768px) {
+  .miperfil-overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .miperfil-card {
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+
+  .miperfil-header {
+    padding: 32px 20px 26px;
+  }
+
+  .miperfil-avatar {
+    width: 74px;
+    height: 74px;
+    font-size: 26px;
+  }
+
+  .miperfil-titulo {
+    font-size: 20px;
+  }
+
+  .miperfil-body {
+    padding: 22px 20px 30px;
+  }
+
+  .miperfil-valor {
+    font-size: 15px;
+  }
+}
+
+/* ---------- 769px – 1024px (tablet / laptop pequeña) ---------- */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .miperfil-overlay {
+    padding: 16px;
+    align-items: center;
+  }
+
+  .miperfil-card {
+    max-width: 480px;
+  }
+
+  .miperfil-header {
+    padding: 34px 24px 28px;
+  }
+
+  .miperfil-avatar {
+    width: 78px;
+    height: 78px;
+    font-size: 28px;
+  }
+
+  .miperfil-titulo {
+    font-size: 21px;
+  }
+}
+
+/* ---------- 1025px – 1200px (laptop) ---------- */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .miperfil-card {
+    max-width: 500px;
+  }
+
+  /* Tamaños base — solo afinar max-width */
+}
+
+/* ---------- 1201px – 1600px (desktop estándar y grande) ---------- */
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .miperfil-card {
+    max-width: 540px;
+  }
+
+  .miperfil-header {
+    padding: 40px 28px 34px;
+    gap: 12px;
+  }
+
+  .miperfil-avatar {
+    width: 88px;
+    height: 88px;
+    font-size: 32px;
+  }
+
+  .miperfil-titulo {
+    font-size: 23px;
+  }
+
+  .miperfil-body {
+    padding: 32px 28px 36px;
+    gap: 22px;
+  }
+
+  .miperfil-label {
+    font-size: 12px;
+  }
+
+  .miperfil-valor {
+    font-size: 16px;
+  }
+
+  .miperfil-input {
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+
+  .miperfil-btn-guardar,
+  .miperfil-btn-cancelar {
+    padding: 11px;
+    font-size: 14.5px;
+  }
 }
