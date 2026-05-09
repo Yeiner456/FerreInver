@@ -31,8 +31,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 2px solid rgba(253, 238, 24, 0.4);   /* amarillo marca, semitransparente */
-  background: rgba(0, 47, 177, 0.25);           /* klein semitransparente */
+  border: 2px solid rgba(253, 238, 24, 0.4);
+  background: rgba(0, 47, 177, 0.25);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -85,22 +85,24 @@
 .perfil-dropdown {
   position: absolute;
   top: calc(100% + 14px);
-  left: 0;
+  right: 0;
+  left: auto;
   min-width: 252px;
   background: var(--pm-white);
   border-radius: 14px;
-  border-top: 3px solid var(--pm-yellow);        /* acento amarillo arriba */
+  border-top: 3px solid var(--pm-yellow);
   box-shadow:
     0 10px 36px rgba(0, 24, 90, 0.14),
     0 2px 8px rgba(0, 24, 90, 0.08);
   overflow: hidden;
   z-index: 999;
-  animation: pmFadeIn 0.18s ease;
+  transform-origin: top center;
+  animation: pmFadeIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes pmFadeIn {
-  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0)    scale(1); }
+  from { opacity: 0; clip-path: inset(0 0 100% 0 round 14px); }
+  to   { opacity: 1; clip-path: inset(0 0 0%   0 round 14px); }
 }
 
 
@@ -359,24 +361,35 @@
     right: 1px;
   }
 
-  /* Dropdown ocupa casi todo el ancho en pantallas muy pequeñas */
+  /* Overlay oscuro detrás del dropdown */
+  .perfil-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 24, 90, 0.45);
+    z-index: 998;
+    animation: pmFadeIn 0.18s ease;
+  }
+
+  /* Dropdown centrado desde abajo */
   .perfil-dropdown {
     position: fixed;
     top: auto;
     bottom: 0;
-    left: 0;
-    right: 0;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
     min-width: unset;
-    width: 100%;
+    width: 88%;
+    max-width: 320px;
     border-radius: 20px 20px 0 0;
     border-top: 3px solid var(--pm-yellow);
-    /* Animación desde abajo */
+    z-index: 999;
     animation: pmSlideUp 0.22s ease;
   }
 
   @keyframes pmSlideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateX(-50%) translateY(24px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
   }
 
   .perfil-header {
@@ -468,9 +481,8 @@
 
   .perfil-dropdown {
     min-width: 260px;
-    /* Sigue anclado al trigger pero con leve corrección */
-    left: auto;
     right: 0;
+    left: auto;
   }
 
   .perfil-header {
@@ -511,7 +523,8 @@
 
   .perfil-dropdown {
     min-width: 252px;
-    left: 0;
+    right: 0;
+    left: auto;
   }
 
   .perfil-avatar-grande {
@@ -532,8 +545,6 @@
 
 /* ---------- 1025px – 1200px (laptop) ---------- */
 @media (min-width: 1025px) and (max-width: 1200px) {
-  /* Tamaños base — no se necesitan cambios mayores.
-     Solo aseguramos que el dropdown no se corte en viewports medianos */
   .perfil-dropdown {
     min-width: 255px;
   }

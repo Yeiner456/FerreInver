@@ -5,7 +5,7 @@ import Login from './auth/Login'
 import Register from './auth/Register'
 import { RecuperarPassword } from './auth/RecuperarPassword'
 import AdminPanel from './Components/AdminPanel'
-import { MiPerfil } from './Components/Miperfil'
+import { MiPerfil } from './Components/MiPerfil'
 
 import { Nav } from './Nav'
 import { HeroSection } from './heroSection'
@@ -16,7 +16,7 @@ import { InfoFi } from './InfoFi'
 import { TipoInvernadero } from './TipoInvernadero'
 import { TiendaProductos } from "./tienda-productos"
 import { Contactanos } from "./Components/Contactanos" 
-import './Styles/ProjectApp.css'
+import './styles/ProjectApp.css'
 import CotizacionPublica from './CotizacionesPublicas'
 
 const RutaPorRol = ({ children, rolRequerido }) => {

@@ -10,6 +10,7 @@ export const PerfilMenu = ({ onAbrirPerfil, onAbrirLogin, onAbrirPedidos, onAbri
   const usuarioStr = sessionStorage.getItem('usuario')
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
 
+  // Cerrar al hacer click fuera
   useEffect(() => {
     const handleClickFuera = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -19,6 +20,17 @@ export const PerfilMenu = ({ onAbrirPerfil, onAbrirLogin, onAbrirPedidos, onAbri
     document.addEventListener('mousedown', handleClickFuera)
     return () => document.removeEventListener('mousedown', handleClickFuera)
   }, [])
+
+  // Bloquear scroll del body en móvil cuando el menú está abierto
+  useEffect(() => {
+    const esMobil = window.innerWidth <= 480
+    if (esMobil) {
+      document.body.style.overflow = abierto ? 'hidden' : ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [abierto])
 
   const cerrarSesion = () => {
     sessionStorage.removeItem('usuario')
@@ -54,6 +66,14 @@ export const PerfilMenu = ({ onAbrirPerfil, onAbrirLogin, onAbrirPedidos, onAbri
           <span className={`perfil-estado-dot ${esActivo ? 'activo' : 'inactivo'}`} />
         )}
       </button>
+
+      {/* Overlay oscuro en móvil — cierra el menú al tocarlo */}
+      {abierto && window.innerWidth <= 480 && (
+        <div
+          className="perfil-overlay"
+          onClick={() => setAbierto(false)}
+        />
+      )}
 
       {/* Dropdown */}
       {abierto && (

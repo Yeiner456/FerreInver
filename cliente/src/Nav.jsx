@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import './styles/Nav.css'
 import { Link, useLocation } from 'react-router-dom'
-import { PerfilMenu } from './Components/PerfilMenu'
-import { MiPerfil } from './Components/Miperfil'
+import { PerfilMenu } from './Components/Perfilmenu'
+import { MiPerfil } from './Components/MiPerfil'
 import { MisPedidos } from './Components/MisPedidos'
 import { MisCotizaciones } from './Components/MisCotizaciones'
 import { Login } from './auth/Login'
@@ -30,8 +30,10 @@ export const Nav = () => {
 
   /* ── Cerrar menú al cambiar de ruta ── */
   useEffect(() => {
-    setMenuAbierto(false)
-  }, [location.pathname])
+    if (!menuAbierto) return
+    const timeoutId = window.setTimeout(() => setMenuAbierto(false), 0)
+    return () => window.clearTimeout(timeoutId)
+  }, [location.pathname, menuAbierto])
 
   /* ── Clase "scrolled" en la nav ── */
   useEffect(() => {
