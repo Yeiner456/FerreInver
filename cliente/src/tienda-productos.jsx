@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './styles/tienda-productos.css';
-import { MisPedidos } from './Components/MisPedidos'; // ← ajusta la ruta según tu estructura
-
+import { MisPedidos } from './Components/MisPedidos'; 
 const API_BASE = 'http://127.0.0.1:8000/api';
 const IMG_BASE = 'http://127.0.0.1:8000/';
 
@@ -508,6 +507,16 @@ export const TiendaProductos = () => {
               </svg>
               Filtrar
             </button>
+            {sesion && (
+              <button className="tp-btn-pedidos" onClick={() => setModal('misPedidos')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+                Mis pedidos
+              </button>
+            )}
             <button className="tp-btn-carrito" onClick={() => setModal('carrito')}>
               Carrito
               {totalItems > 0 && <span className="tp-carrito-badge">{totalItems}</span>}
