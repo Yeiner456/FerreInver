@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './styles/tienda-productos.css';
+import { MisPedidos } from './Components/MisPedidos'; // ← ajusta la ruta según tu estructura
 
 const API_BASE = 'http://127.0.0.1:8000/api';
 const IMG_BASE = 'http://127.0.0.1:8000/';
@@ -108,7 +109,7 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
   const [medioPago, setMedioPago] = useState('Efectivo');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [erroresStock, setErroresStock] = useState([]); // [{ nombre, pedido, disponible }]
+  const [erroresStock, setErroresStock] = useState([]);
   const total = items.reduce((s, it) => s + Number(it.precio) * it.cantidad, 0);
 
   const confirmar = async () => {
@@ -140,7 +141,6 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
         }
       }
 
-
       const res = await fetch(`${API_BASE}/pedidos/completo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -154,10 +154,10 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
           })),
         }),
       }).then(r => r.json());
+
       if (res.success) {
         onPedidoConfirmado(res.id_pedido, items);
       } else {
-        // Manejar errores de stock que devuelva el servidor (segunda línea de defensa)
         if (res.stock_errors && res.stock_errors.length > 0) {
           setErroresStock(res.stock_errors);
         } else {
@@ -207,10 +207,8 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
           </div>
         </div>
 
-        {/* ── Error genérico ── */}
         {error && <p className="tp-login-error">{error}</p>}
 
-        {/* ── Errores de stock insuficiente ── */}
         {erroresStock.length > 0 && (
           <div className="tp-stock-error">
             <div className="tp-stock-error-icon">
@@ -240,25 +238,6 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
           {loading ? 'Procesando...' : 'Confirmar pedido'}
         </button>
         <button className="tp-btn-seguir" onClick={onCerrar}>Volver al carrito</button>
-      </div>
-    </div>
-  );
-}
-
-// ─── Modal Pedido Exitoso ─────────────────────────────────────────────────────
-function ModalPedidoExitoso({ idPedido, onCerrar }) {
-  return (
-    <div className="tp-overlay">
-      <div className="tp-modal-exito">
-        <div className="tp-exito-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="22" fill="#22bb48" />
-            <polyline points="13,25 21,33 36,16" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-        <h3>Pedido registrado!</h3>
-        <p>Tu pedido <strong style={{ color: '#22bb48' }}>#{idPedido}</strong> fue creado exitosamente.<br />Ferreinver se pondra en contacto contigo pronto.</p>
-        <button className="tp-btn-agregar" onClick={onCerrar}>Seguir comprando</button>
       </div>
     </div>
   );
@@ -330,7 +309,6 @@ function ModalAgregado({ onIrCarrito, onSeguir }) {
 }
 
 // ─── Carrito ──────────────────────────────────────────────────────────────────
-
 function Carrito({ items, stockMap, onCambiarCantidad, onCerrar, onFinalizarPedido }) {
   const total = items.reduce((s, it) => s + Number(it.precio) * it.cantidad, 0);
   return (
@@ -407,13 +385,13 @@ function TarjetaProducto({ producto, stock, onClick }) {
         <button className="tp-tarjeta-btn" onClick={e => { e.stopPropagation(); onClick(producto); }}>Ver producto</button>
       </div>
     </div>
-  );  
+  );
 }
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 export const TiendaProductos = () => {
   const [productos, setProductos] = useState([]);
-  const [stockMap, setStockMap] = useState({});   // id_producto → cantidad
+  const [stockMap, setStockMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [precioMin, setPrecioMin] = useState('');
@@ -423,9 +401,7 @@ export const TiendaProductos = () => {
   const [carrito, setCarrito] = useState(() => cargarCarrito(getSession()));
   const [modal, setModal] = useState(null);
   const [productoActivo, setProductoActivo] = useState(null);
-  const [idPedidoExitoso, setIdPedidoExitoso] = useState(null);
 
-  // Cargar productos y stocks en paralelo, mostrando solo activos con stock > 0
   useEffect(() => {
     Promise.all([
       fetch(`${API_BASE}/productos`).then(r => r.json()),
@@ -434,7 +410,6 @@ export const TiendaProductos = () => {
       .then(([prodRes, stockRes]) => {
         if (!prodRes.success) { setError('No se pudieron cargar los productos.'); return; }
 
-        // Mapa id_producto → cantidad disponible
         const mapa = {};
         if (stockRes.success) {
           stockRes.data.forEach(s => { mapa[s.id_producto] = Number(s.cantidad); });
@@ -450,13 +425,11 @@ export const TiendaProductos = () => {
       .finally(() => setLoading(false));
   }, []);
 
-
   useEffect(() => {
     const syncSesion = () => setSesion(getSession());
     window.addEventListener('storage', syncSesion);
     return () => window.removeEventListener('storage', syncSesion);
   }, []);
-
 
   useEffect(() => {
     guardarCarrito(sesion, carrito);
@@ -484,7 +457,6 @@ export const TiendaProductos = () => {
     else setCarrito(prev => prev.map(it => it.id_producto === id ? { ...it, cantidad: n } : it));
   }, []);
 
-
   const handleFinalizarPedido = () => {
     const sesionActual = getSession();
     if (!sesionActual) {
@@ -495,19 +467,16 @@ export const TiendaProductos = () => {
     }
   };
 
-
   const handleLoginExitoso = (cliente) => {
     setSesion(cliente);
     setCarrito(cargarCarrito(cliente));
     setModal('checkout');
   };
 
-
+  // ── Al confirmar pedido: limpia carrito, actualiza stock y abre MisPedidos ──
   const handlePedidoConfirmado = (idPedido, itemsComprados) => {
-    setIdPedidoExitoso(idPedido);
     if (sesion) localStorage.removeItem(CARRITO_KEY(sesion.documento));
     setCarrito([]);
-
 
     setStockMap(prev => {
       const nuevo = { ...prev };
@@ -522,7 +491,7 @@ export const TiendaProductos = () => {
       return nuevoStock > 0;
     }));
 
-    setModal('exitoso');
+    setModal('misPedidos'); // ← abre MisPedidos en lugar del modal de éxito
   };
 
   const totalItems = carrito.reduce((s, it) => s + it.cantidad, 0);
@@ -533,7 +502,6 @@ export const TiendaProductos = () => {
         <div className="tp-header-inner">
           <h1 className="tp-titulo">Productos</h1>
           <div className="tp-header-actions">
-
             <button className="tp-btn-filtro" onClick={() => setFiltroAbierto(f => !f)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
@@ -588,7 +556,9 @@ export const TiendaProductos = () => {
       {modal === 'carrito' && <Carrito items={carrito} stockMap={stockMap} onCambiarCantidad={cambiarCantidad} onCerrar={() => setModal(null)} onFinalizarPedido={handleFinalizarPedido} />}
       {modal === 'login' && <ModalLogin onClose={() => setModal('carrito')} onLoginExitoso={handleLoginExitoso} />}
       {modal === 'checkout' && <ModalCheckout items={carrito} cliente={sesion} onCerrar={() => setModal('carrito')} onPedidoConfirmado={handlePedidoConfirmado} />}
-      {modal === 'exitoso' && <ModalPedidoExitoso idPedido={idPedidoExitoso} onCerrar={() => setModal(null)} />}
+
+      {/* ── Al confirmar el pedido se muestra MisPedidos centrado en pantalla ── */}
+      {modal === 'misPedidos' && <MisPedidos onCerrar={() => setModal(null)} />}
     </section>
   );
 };
