@@ -227,7 +227,7 @@ export default function ProductosPedidosCRUD() {
                     <tbody>
                         {registros.map((r) => (
                             <tr key={r.id}>
-                                <td>{r.nombre_producto}</td>
+                                <td>{r.producto.nombre}</td>
                                 <td>#{r.id_pedido}</td>
                                 <td>{r.descripcion}</td>
                                 <td>{r.cantidad}</td>

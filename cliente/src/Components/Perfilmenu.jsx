@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Perfilmenu.css'
 
@@ -67,13 +68,16 @@ export const PerfilMenu = ({ onAbrirPerfil, onAbrirLogin, onAbrirPedidos, onAbri
         )}
       </button>
 
-      {/* Overlay oscuro en móvil — cierra el menú al tocarlo */}
-      {abierto && window.innerWidth <= 480 && (
-        <div
-          className="perfil-overlay"
-          onClick={() => setAbierto(false)}
-        />
-      )}
+      {/* Overlay oscuro en móvil — renderizado fuera del contenedor relativo */}
+      {abierto && window.innerWidth <= 480 &&
+        ReactDOM.createPortal(
+          <div
+            className="perfil-overlay"
+            onClick={() => setAbierto(false)}
+          />,
+          document.body
+        )
+      }
 
       {/* Dropdown */}
       {abierto && (

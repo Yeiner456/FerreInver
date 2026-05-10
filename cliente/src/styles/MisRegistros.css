@@ -1,7 +1,7 @@
 /* ================================================
    MIS PEDIDOS / MIS COTIZACIONES — Estilos modal
    Colores marca: Navy / Klein / Amarillo / Verde
-   Tipografía: DM Sans / Raleway
+   Tipografia: DM Sans / Raleway
    ================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Raleway:wght@400;500;600&display=swap');
@@ -88,7 +88,7 @@
   color: rgba(255,255,255,0.65);
 }
 
-/* Botón cerrar */
+/* Boton cerrar */
 .registros-cerrar {
   margin-left: auto;
   background: rgba(255,255,255,0.12);
@@ -223,13 +223,22 @@
   line-height: 1.4;
 }
 
+/* ---- Footer del item: total + boton en la misma fila ---- */
+.registros-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .registros-item-total {
   font-family: 'Raleway', sans-serif;
   font-size: 13px;
   color: #444;
-  border-top: 1px solid #eee;
-  padding-top: 8px;
-  margin-top: 2px;
 }
 
 .registros-item-total strong {
@@ -238,12 +247,262 @@
   color: #00185A;
 }
 
+/* ---- Boton descargar PDF ---- */
+.registros-btn-descargar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #002FB1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s, opacity 0.18s;
+  white-space: nowrap;
+}
+
+.registros-btn-descargar svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.registros-btn-descargar:hover:not(:disabled) {
+  background: #00185A;
+  transform: translateY(-1px);
+}
+
+.registros-btn-descargar:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.registros-btn-descargar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Spinner animado */
+.registros-btn-spinner {
+  animation: spinBtn 0.8s linear infinite;
+}
+
+@keyframes spinBtn {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ---- Ticket offscreen (invisible, solo para captura html2canvas) ---- */
+.ticket-offscreen {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ---- Ticket PDF ---- */
+.ticket-wrapper {
+  width: 480px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+
+.ticket-header {
+  background: linear-gradient(135deg, #00185A 0%, #002FB1 100%);
+  padding: 28px 32px 24px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.ticket-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ticket-empresa {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.ticket-titulo {
+  margin: 4px 0 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.ticket-fecha {
+  margin: 8px 0 0;
+  opacity: 0.8;
+  font-size: 13px;
+}
+
+.ticket-estado {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 20px;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.ticket-seccion {
+  padding: 20px 32px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ticket-seccion--gris {
+  background: #fafafa;
+}
+
+.ticket-label {
+  margin: 0 0 6px;
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ticket-nombre {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #00185A;
+}
+
+.ticket-doc {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.ticket-invernadero-nombre {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #00185A;
+}
+
+.ticket-dimensiones {
+  display: flex;
+  gap: 12px;
+}
+
+.ticket-dim-card {
+  flex: 1;
+  background: #f4f7fb;
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.ticket-dim-label {
+  margin: 0;
+  font-size: 11px;
+  color: #888;
+}
+
+.ticket-dim-value {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #002FB1;
+}
+
+.ticket-total-row {
+  padding: 20px 32px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-total-label {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.ticket-total-value {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #00185A;
+}
+
+.ticket-footer-strip {
+  background: #f4f7fb;
+  padding: 12px 32px;
+  text-align: center;
+}
+
+.ticket-footer-strip p {
+  margin: 0;
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 0.5px;
+}
+
+/* ---- Pedidos: meta-datos (medio pago / estado) ---- */
+.ticket-pedido-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* ---- Pedidos: lista de productos ---- */
+.ticket-productos-lista {
+  margin-top: 4px;
+}
+
+.ticket-producto-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+  color: #444;
+}
+
+.ticket-producto-fila:last-child {
+  border-bottom: none;
+}
+
+.ticket-producto-nombre {
+  font-family: 'Raleway', sans-serif;
+  color: #333;
+}
+
+.ticket-producto-cantidad {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  color: #002FB1;
+  font-size: 13px;
+}
+
+/* Cuando el footer solo tiene el boton (sin total), alinear a la derecha */
+.registros-item-footer:has(> .registros-btn-descargar:only-child) {
+  justify-content: flex-end;
+}
+
 /* ================================================
-   RESPONSIVE — MisRegistros (MisPedidos / MisCotizaciones)
-   Breakpoints: 320–480 | 481–768 | 769–1024 | 1025–1200 | 1201–1600
+   RESPONSIVE
    ================================================ */
 
-/* ---------- 320px – 480px (móvil pequeño) ---------- */
+/* ---------- 320px - 480px (movil pequeno) ---------- */
 @media (max-width: 480px) {
   .registros-overlay {
     padding: 0;
@@ -281,13 +540,8 @@
     height: 18px;
   }
 
-  .registros-titulo {
-    font-size: 16px;
-  }
-
-  .registros-subtitulo {
-    font-size: 11px;
-  }
+  .registros-titulo { font-size: 16px; }
+  .registros-subtitulo { font-size: 11px; }
 
   .registros-cerrar {
     width: 30px;
@@ -304,52 +558,30 @@
     gap: 7px;
   }
 
-  .registros-item-id {
-    font-size: 13px;
-  }
+  .registros-item-id { font-size: 13px; }
 
   .registros-item-badge {
     font-size: 10.5px;
     padding: 2px 8px;
   }
 
-  .registros-item-invernadero {
-    font-size: 12.5px;
-  }
+  .registros-item-invernadero { font-size: 12.5px; }
+  .registros-item-detalle { font-size: 11.5px; gap: 8px; }
+  .registros-item-productos { font-size: 11.5px; }
+  .registros-item-total { font-size: 12px; }
+  .registros-item-total strong { font-size: 14px; }
 
-  .registros-item-detalle {
-    font-size: 11.5px;
-    gap: 8px;
-  }
-
-  .registros-item-productos {
-    font-size: 11.5px;
-  }
-
-  .registros-item-total {
+  .registros-btn-descargar {
     font-size: 12px;
-    padding-top: 7px;
+    padding: 6px 12px;
   }
 
-  .registros-item-total strong {
-    font-size: 14px;
-  }
-
-  .registros-vacio {
-    padding: 30px 0;
-  }
-
-  .registros-vacio svg {
-    width: 40px;
-    height: 40px;
-  }
-
-  .registros-vacio p {
-    font-size: 13px;
-  }
+  .registros-vacio { padding: 30px 0; }
+  .registros-vacio svg { width: 40px; height: 40px; }
+  .registros-vacio p { font-size: 13px; }
 }
 
-/* ---------- 481px – 768px (móvil grande / tablet pequeña) ---------- */
+/* ---------- 481px - 768px (movil grande / tablet pequena) ---------- */
 @media (min-width: 481px) and (max-width: 768px) {
   .registros-overlay {
     padding: 0;
@@ -372,32 +604,16 @@
     height: 40px;
   }
 
-  .registros-titulo {
-    font-size: 17px;
-  }
+  .registros-titulo { font-size: 17px; }
+  .registros-subtitulo { font-size: 11.5px; }
+  .registros-body { padding: 14px; }
 
-  .registros-subtitulo {
-    font-size: 11.5px;
-  }
-
-  .registros-body {
-    padding: 14px;
-  }
-
-  .registros-item {
-    padding: 13px 14px;
-  }
-
-  .registros-item-id {
-    font-size: 13.5px;
-  }
-
-  .registros-item-detalle {
-    font-size: 12px;
-  }
+  .registros-item { padding: 13px 14px; }
+  .registros-item-id { font-size: 13.5px; }
+  .registros-item-detalle { font-size: 12px; }
 }
 
-/* ---------- 769px – 1024px (tablet / laptop pequeña) ---------- */
+/* ---------- 769px - 1024px (tablet / laptop pequena) ---------- */
 @media (min-width: 769px) and (max-width: 1024px) {
   .registros-overlay {
     padding: 16px;
@@ -410,29 +626,17 @@
     border-radius: 20px;
   }
 
-  .registros-header {
-    padding: 18px 18px 14px;
-  }
-
-  .registros-titulo {
-    font-size: 17.5px;
-  }
-
-  .registros-item {
-    padding: 13px 15px;
-  }
+  .registros-header { padding: 18px 18px 14px; }
+  .registros-titulo { font-size: 17.5px; }
+  .registros-item { padding: 13px 15px; }
 }
 
-/* ---------- 1025px – 1200px (laptop) ---------- */
+/* ---------- 1025px - 1200px (laptop) ---------- */
 @media (min-width: 1025px) and (max-width: 1200px) {
-  .registros-modal {
-    max-width: 500px;
-  }
-
-  /* Tamaños base — sin cambios mayores necesarios */
+  .registros-modal { max-width: 500px; }
 }
 
-/* ---------- 1201px – 1600px (desktop estándar y grande) ---------- */
+/* ---------- 1201px - 1600px (desktop estandar y grande) ---------- */
 @media (min-width: 1201px) and (max-width: 1600px) {
   .registros-modal {
     max-width: 560px;
@@ -454,13 +658,8 @@
     height: 24px;
   }
 
-  .registros-titulo {
-    font-size: 19px;
-  }
-
-  .registros-subtitulo {
-    font-size: 12.5px;
-  }
+  .registros-titulo { font-size: 19px; }
+  .registros-subtitulo { font-size: 12.5px; }
 
   .registros-body {
     padding: 18px;
@@ -472,34 +671,21 @@
     gap: 9px;
   }
 
-  .registros-item-id {
-    font-size: 14.5px;
-  }
+  .registros-item-id { font-size: 14.5px; }
 
   .registros-item-badge {
     font-size: 11.5px;
     padding: 3px 11px;
   }
 
-  .registros-item-invernadero {
-    font-size: 14px;
-  }
+  .registros-item-invernadero { font-size: 14px; }
+  .registros-item-detalle { font-size: 13px; gap: 14px; }
+  .registros-item-productos { font-size: 13px; }
+  .registros-item-total { font-size: 13.5px; }
+  .registros-item-total strong { font-size: 16px; }
 
-  .registros-item-detalle {
+  .registros-btn-descargar {
     font-size: 13px;
-    gap: 14px;
-  }
-
-  .registros-item-productos {
-    font-size: 13px;
-  }
-
-  .registros-item-total {
-    font-size: 13.5px;
-    padding-top: 9px;
-  }
-
-  .registros-item-total strong {
-    font-size: 16px;
+    padding: 8px 16px;
   }
 }

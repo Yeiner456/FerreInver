@@ -87,6 +87,7 @@
   top: calc(100% + 14px);
   right: 0;
   left: auto;
+  transform: none;
   min-width: 252px;
   background: var(--pm-white);
   border-radius: 14px;
