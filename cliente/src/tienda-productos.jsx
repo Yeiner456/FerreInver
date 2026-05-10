@@ -174,8 +174,8 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
         <h3 className="tp-checkout-titulo">Resumen del pedido</h3>
         <div className="tp-checkout-cliente">
           <span className="tp-checkout-label">Cliente</span>
-          <span className="tp-checkout-val">{cliente.nombre}</span>
-          <span className="tp-checkout-doc">Doc. {cliente.documento}</span>
+          <span className="tp-checkout-val">{cliente?.nombre}</span>
+          <span className="tp-checkout-doc">Doc. {cliente?.documento}</span>
         </div>
         <div className="tp-checkout-items">
           {items.map(it => (
