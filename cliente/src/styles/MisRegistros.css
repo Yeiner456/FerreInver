@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1100;
   padding: 16px;
   animation: overlayIn 0.2s ease;
 }
@@ -506,14 +506,14 @@
 @media (max-width: 480px) {
   .registros-overlay {
     padding: 0;
-    align-items: flex-end;
+    align-items: flex-end;  /* ← igual que 481-768px */
   }
 
   .registros-modal {
     max-width: 100%;
     width: 100%;
     max-height: 88vh;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px 20px 0 0;  /* ← igual que 481-768px */
     border-top: 3px solid #DDCE00;
     animation: modalSlideUp 0.22s ease;
   }
@@ -523,6 +523,7 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
+  /* ... resto de propiedades de tamaño igual que antes ... */
   .registros-header {
     padding: 16px 14px 12px;
     gap: 10px;

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './styles/tienda-productos.css';
-import { MisPedidos } from './Components/MisPedidos'; 
+import { MisPedidos } from './Components/MisPedidos';
+import { Login } from './auth/Login'; // ← ajusta la ruta si es necesario, ej: '../pages/Login' o './Login'
+
 const API_BASE = 'http://127.0.0.1:8000/api';
 const IMG_BASE = 'http://127.0.0.1:8000/';
 
@@ -34,74 +36,6 @@ const guardarCarrito = (sesion, items) => {
   if (!sesion) return;
   localStorage.setItem(CARRITO_KEY(sesion.documento), JSON.stringify(items));
 };
-
-// ─── Modal Login propio del carrito ──────────────────────────────────────────
-function ModalLogin({ onClose, onLoginExitoso }) {
-  const [form, setForm] = useState({ correo: '', password: '' });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-
-  const submit = async () => {
-    setError('');
-    if (!form.correo || !form.password) { setError('Completa todos los campos.'); return; }
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo: form.correo, password: form.password }),
-      }).then(r => r.json());
-
-      if (res.success) {
-        sessionStorage.setItem('ferreinver_cliente', JSON.stringify(res.cliente));
-        onLoginExitoso(res.cliente);
-      } else {
-        setError(res.message);
-      }
-    } catch { setError('No se pudo conectar con el servidor.'); }
-    finally { setLoading(false); }
-  };
-
-  return (
-    <div className="tp-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="tp-modal-exito tp-modal-login">
-        <button className="tp-modal-close" onClick={onClose}>x</button>
-        <div className="tp-login-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="22" fill="#1E12A4" />
-            <circle cx="24" cy="18" r="6" fill="white" />
-            <path d="M10 38c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-          </svg>
-        </div>
-        <h3>Inicia sesión para continuar</h3>
-        <p>Necesitas una cuenta para realizar pedidos en Ferreinver.</p>
-        {error && <p className="tp-login-error">{error}</p>}
-        <div className="tp-login-fields">
-          <div className="tp-login-field">
-            <label>Correo electrónico</label>
-            <input
-              type="email" name="correo" placeholder="Tu correo electrónico"
-              value={form.correo} onChange={handle}
-              onKeyDown={e => e.key === 'Enter' && submit()} />
-          </div>
-          <div className="tp-login-field">
-            <label>Contraseña</label>
-            <input
-              type="password" name="password" placeholder="Tu contraseña"
-              value={form.password} onChange={handle}
-              onKeyDown={e => e.key === 'Enter' && submit()} />
-          </div>
-        </div>
-        <button className="tp-btn-agregar" onClick={submit} disabled={loading}>
-          {loading ? 'Verificando...' : 'Iniciar sesión'}
-        </button>
-        <button className="tp-btn-seguir" onClick={onClose}>Cancelar</button>
-      </div>
-    </div>
-  );
-}
 
 // ─── Modal Checkout ───────────────────────────────────────────────────────────
 function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
@@ -466,11 +400,19 @@ export const TiendaProductos = () => {
     }
   };
 
-  const handleLoginExitoso = (cliente) => {
-    setSesion(cliente);
-    setCarrito(cargarCarrito(cliente));
-    setModal('checkout');
-  };
+  // ── Cuando el Login existente llama onCerrar, revisamos si ya hay sesión ──
+  const handleCerrarLogin = useCallback(() => {
+    const sesionActual = getSession();
+    if (sesionActual) {
+      // El usuario se acaba de loguear → cargar su carrito y continuar al checkout
+      setSesion(sesionActual);
+      setCarrito(cargarCarrito(sesionActual));
+      setModal('checkout');
+    } else {
+      // Cerró el modal sin loguearse → volver al carrito
+      setModal('carrito');
+    }
+  }, []);
 
   // ── Al confirmar pedido: limpia carrito, actualiza stock y abre MisPedidos ──
   const handlePedidoConfirmado = (idPedido, itemsComprados) => {
@@ -490,7 +432,7 @@ export const TiendaProductos = () => {
       return nuevoStock > 0;
     }));
 
-    setModal('misPedidos'); // ← abre MisPedidos en lugar del modal de éxito
+    setModal('misPedidos');
   };
 
   const totalItems = carrito.reduce((s, it) => s + it.cantidad, 0);
@@ -560,14 +502,46 @@ export const TiendaProductos = () => {
         </>
       )}
 
-      {modal === 'producto' && productoActivo && <ModalProducto producto={productoActivo} stock={stockMap[productoActivo.id_producto] ?? 0} onClose={() => setModal(null)} onAgregar={agregarAlCarrito} />}
-      {modal === 'agregado' && <ModalAgregado onIrCarrito={() => setModal('carrito')} onSeguir={() => setModal(null)} />}
-      {modal === 'carrito' && <Carrito items={carrito} stockMap={stockMap} onCambiarCantidad={cambiarCantidad} onCerrar={() => setModal(null)} onFinalizarPedido={handleFinalizarPedido} />}
-      {modal === 'login' && <ModalLogin onClose={() => setModal('carrito')} onLoginExitoso={handleLoginExitoso} />}
-      {modal === 'checkout' && <ModalCheckout items={carrito} cliente={sesion} onCerrar={() => setModal('carrito')} onPedidoConfirmado={handlePedidoConfirmado} />}
+      {modal === 'producto' && productoActivo && (
+        <ModalProducto
+          producto={productoActivo}
+          stock={stockMap[productoActivo.id_producto] ?? 0}
+          onClose={() => setModal(null)}
+          onAgregar={agregarAlCarrito}
+        />
+      )}
+      {modal === 'agregado' && (
+        <ModalAgregado
+          onIrCarrito={() => setModal('carrito')}
+          onSeguir={() => setModal(null)}
+        />
+      )}
+      {modal === 'carrito' && (
+        <Carrito
+          items={carrito}
+          stockMap={stockMap}
+          onCambiarCantidad={cambiarCantidad}
+          onCerrar={() => setModal(null)}
+          onFinalizarPedido={handleFinalizarPedido}
+        />
+      )}
 
-      {/* ── Al confirmar el pedido se muestra MisPedidos centrado en pantalla ── */}
-      {modal === 'misPedidos' && <MisPedidos onCerrar={() => setModal(null)} />}
+      {/* ── Login existente usado como modal ── */}
+      {modal === 'login' && (
+        <Login onCerrar={handleCerrarLogin} />
+      )}
+
+      {modal === 'checkout' && (
+        <ModalCheckout
+          items={carrito}
+          cliente={sesion}
+          onCerrar={() => setModal('carrito')}
+          onPedidoConfirmado={handlePedidoConfirmado}
+        />
+      )}
+      {modal === 'misPedidos' && (
+        <MisPedidos onCerrar={() => setModal(null)} />
+      )}
     </section>
   );
 };

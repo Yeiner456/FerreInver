@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "../src/styles/CotizacionesPublicas.css";
+import { MisCotizaciones } from "./Components/MisCotizaciones"; // ← ajusta la ruta si es necesario
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
@@ -13,7 +14,6 @@ const api = {
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 };
-
 
 const PASOS = ["El invernadero", "Dimensiones", "Resumen"];
 
@@ -102,12 +102,11 @@ export default function CotizacionPublica() {
     const [enviando, setEnviando] = useState(false);
     const [exito, setExito] = useState(false);
     const [errorGeneral, setErrorGeneral] = useState(null);
-
+    const [verMisCotizaciones, setVerMisCotizaciones] = useState(false);
 
     const [usuarioSesion, setUsuarioSesion] = useState(null);
 
     useEffect(() => {
-
         const raw = sessionStorage.getItem("usuario");
         if (raw) {
             const user = JSON.parse(raw);
@@ -152,7 +151,6 @@ export default function CotizacionPublica() {
 
     const validarPaso = () => {
         const e = {};
-        
         if (paso === 0 && !form.invernadero_id) e.invernadero_id = "Seleccione un invernadero para continuar.";
         if (paso === 1) {
             if (!form.largo || isNaN(form.largo) || Number(form.largo) <= 0)
@@ -199,40 +197,56 @@ export default function CotizacionPublica() {
 
     if (exito) {
         return (
-            <div className="exito-wrapper">
-                <div className="exito-icono">
-                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                        <path d="M8 18L15 25L28 12" stroke="#1D9E75" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </div>
-                <h2 className="exito-titulo">¡Cotización enviada!</h2>
-                <p className="exito-descripcion">
-                    Tu solicitud fue registrada exitosamente. Nuestro equipo la revisará y te contactará pronto.
-                </p>
-                <div className="exito-resumen">
-                    <div className="exito-resumen__grid">
-                        
-                        <span className="exito-resumen__label">Cliente</span>
-                        <span className="exito-resumen__valor">{usuarioSesion?.nombre}</span>
-                        <span className="exito-resumen__label">Invernadero</span>
-                        <span className="exito-resumen__valor">{invernaderoSeleccionado?.nombre}</span>
-                        <span className="exito-resumen__label">Dimensiones</span>
-                        <span className="exito-resumen__valor">{form.largo} m × {form.ancho} m</span>
-                        <span className="exito-resumen__label">Total estimado</span>
-                        <span className="exito-resumen__valor exito-resumen__valor--total">{formatCOP(form.total)}</span>
+            <>
+                {/* ── Modal MisCotizaciones si el usuario lo abre ── */}
+                {verMisCotizaciones && (
+                    <MisCotizaciones onCerrar={() => setVerMisCotizaciones(false)} />
+                )}
+
+                <div className="exito-wrapper">
+                    <div className="exito-icono">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                            <path d="M8 18L15 25L28 12" stroke="#1D9E75" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
                     </div>
+                    <h2 className="exito-titulo">¡Cotización enviada!</h2>
+                    <p className="exito-descripcion">
+                        Tu solicitud fue registrada exitosamente. Nuestro equipo la revisará y te contactará pronto.
+                    </p>
+                    <div className="exito-resumen">
+                        <div className="exito-resumen__grid">
+                            <span className="exito-resumen__label">Cliente</span>
+                            <span className="exito-resumen__valor">{usuarioSesion?.nombre}</span>
+                            <span className="exito-resumen__label">Invernadero</span>
+                            <span className="exito-resumen__valor">{invernaderoSeleccionado?.nombre}</span>
+                            <span className="exito-resumen__label">Dimensiones</span>
+                            <span className="exito-resumen__valor">{form.largo} m × {form.ancho} m</span>
+                            <span className="exito-resumen__label">Total estimado</span>
+                            <span className="exito-resumen__valor exito-resumen__valor--total">{formatCOP(form.total)}</span>
+                        </div>
+                    </div>
+
+                    {/* ── Botón principal: ver mis cotizaciones ── */}
+                    <button
+                        className="btn btn--enviar"
+                        onClick={() => setVerMisCotizaciones(true)}
+                    >
+                        Ver mis cotizaciones
+                    </button>
+
+                    {/* ── Botón secundario: hacer otra ── */}
+                    <button
+                        className="btn btn--repetir"
+                        onClick={() => {
+                            setForm({ ...emptyForm, cliente_id: usuarioSesion?.documento ?? "" });
+                            setPaso(0);
+                            setExito(false);
+                        }}
+                    >
+                        Hacer otra cotización
+                    </button>
                 </div>
-                <button
-                    className="btn btn--repetir"
-                    onClick={() => {
-                        setForm({ ...emptyForm, cliente_id: usuarioSesion?.documento ?? "" });
-                        setPaso(0);
-                        setExito(false);
-                    }}
-                >
-                    Hacer otra cotización
-                </button>
-            </div>
+            </>
         );
     }
 
@@ -248,7 +262,6 @@ export default function CotizacionPublica() {
                     </div>
                     <h1 className="cotizacion-header__title">Solicitar cotización</h1>
                 </div>
-                
                 <p className="cotizacion-header__subtitle">
                     Hola, <strong>{usuarioSesion?.nombre}</strong>. Completa los datos para recibir tu estimado personalizado.
                 </p>
@@ -261,7 +274,6 @@ export default function CotizacionPublica() {
                     <div className="alerta-error">{errorGeneral}</div>
                 )}
 
-                
                 {paso === 0 && (
                     <div>
                         <h3 className="paso-titulo">¿Qué invernadero te interesa?</h3>
@@ -351,7 +363,6 @@ export default function CotizacionPublica() {
                         <h3 className="paso-titulo">Revisa tu cotización</h3>
                         <div className="resumen-tabla">
                             {[
-                                
                                 { label: "Cliente", value: usuarioSesion?.nombre },
                                 { label: "Invernadero", value: invernaderoSeleccionado?.nombre },
                                 { label: "Largo", value: `${form.largo} m` },
@@ -377,10 +388,17 @@ export default function CotizacionPublica() {
             </div>
 
             <div className="cotizacion-nav">
-                <button className="btn btn--anterior" onClick={anterior} disabled={paso === 0}>
-                    ← Anterior
-                </button>
+                {/* ── "Anterior" solo visible desde el paso 1 en adelante ── */}
+                {paso > 0 ? (
+                    <button className="btn btn--anterior" onClick={anterior}>
+                        ← Anterior
+                    </button>
+                ) : (
+                    <span /> /* espacio vacío para mantener el layout flex */
+                )}
+
                 <span className="cotizacion-nav__contador">Paso {paso + 1} de {PASOS.length}</span>
+
                 {paso < PASOS.length - 1 ? (
                     <button className="btn btn--siguiente" onClick={siguiente}>
                         Siguiente →

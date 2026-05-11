@@ -85,9 +85,8 @@
 .perfil-dropdown {
   position: absolute;
   top: calc(100% + 14px);
-  right: 0;
-  left: auto;
-  transform: none;
+  left: 0;
+  right: auto;
   min-width: 252px;
   background: var(--pm-white);
   border-radius: 14px;
@@ -97,7 +96,7 @@
     0 2px 8px rgba(0, 24, 90, 0.08);
   overflow: hidden;
   z-index: 999;
-  transform-origin: top center;
+  transform-origin: top left;
   animation: pmFadeIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -362,35 +361,40 @@
     right: 1px;
   }
 
-  /* Overlay oscuro detrás del dropdown */
+  /* Overlay sutil — sin blur, solo oscurece ligeramente */
   .perfil-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 24, 90, 0.45);
+    background: rgba(0, 0, 0, 0.25);
     z-index: 998;
-    animation: pmFadeIn 0.18s ease;
+    animation: pmOverlayIn 0.2s ease;
   }
 
-  /* Dropdown centrado desde abajo */
+  @keyframes pmOverlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Móvil: centrado en pantalla como modal */
   .perfil-dropdown {
     position: fixed;
-    top: auto;
-    bottom: 0;
+    top: 50%;
     left: 50%;
     right: auto;
-    transform: translateX(-50%);
+    bottom: auto;
+    transform: translate(-50%, -50%);
     min-width: unset;
     width: 88%;
     max-width: 320px;
-    border-radius: 20px 20px 0 0;
+    border-radius: 16px;
     border-top: 3px solid var(--pm-yellow);
     z-index: 999;
-    animation: pmSlideUp 0.22s ease;
+    animation: pmPopIn 0.22s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  @keyframes pmSlideUp {
-    from { opacity: 0; transform: translateX(-50%) translateY(24px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @keyframes pmPopIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.93); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   }
 
   .perfil-header {
@@ -480,10 +484,12 @@
     font-size: 14px;
   }
 
+  /* ← FIX: botón está a la derecha del nav, abrir hacia la izquierda */
   .perfil-dropdown {
     min-width: 260px;
-    right: 0;
     left: auto;
+    right: 0;
+    transform-origin: top right;
   }
 
   .perfil-header {
@@ -522,10 +528,12 @@
     height: 42px;
   }
 
+  /* ← FIX: botón está a la derecha del nav, abrir hacia la izquierda */
   .perfil-dropdown {
     min-width: 252px;
-    right: 0;
     left: auto;
+    right: 0;
+    transform-origin: top right;
   }
 
   .perfil-avatar-grande {
@@ -548,6 +556,9 @@
 @media (min-width: 1025px) and (max-width: 1200px) {
   .perfil-dropdown {
     min-width: 255px;
+    left: 0;
+    right: auto;
+    transform-origin: top left;
   }
 }
 
@@ -564,6 +575,9 @@
 
   .perfil-dropdown {
     min-width: 268px;
+    left: 0;
+    right: auto;
+    transform-origin: top left;
   }
 
   .perfil-avatar-grande {
