@@ -17,7 +17,7 @@ export const Nav = () => {
   const location = useLocation()
   const navRef = useRef(null)
 
-  const usuarioStr = sessionStorage.getItem("usuario")
+  const usuarioStr = sessionStorage.getItem('usuario')
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
 
   /* ── Abrir login desde navegación programática ── */
@@ -30,10 +30,8 @@ export const Nav = () => {
 
   /* ── Cerrar menú al cambiar de ruta ── */
   useEffect(() => {
-    if (!menuAbierto) return
-    const timeoutId = window.setTimeout(() => setMenuAbierto(false), 0)
-    return () => window.clearTimeout(timeoutId)
-  }, [location.pathname, menuAbierto])
+    setMenuAbierto(false)
+  }, [location.pathname])
 
   /* ── Clase "scrolled" en la nav ── */
   useEffect(() => {
@@ -42,7 +40,7 @@ export const Nav = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  /* ── Bloquear scroll del body cuando el menú está abierto ── */
+  /* ── Bloquear scroll del body cuando el menú drawer está abierto ── */
   useEffect(() => {
     document.body.style.overflow = menuAbierto ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
@@ -60,16 +58,22 @@ export const Nav = () => {
 
   return (
     <>
-      {/* Overlay oscuro en mobile */}
+      {/* Overlay oscuro del drawer (mobile/tablet) */}
       <div
         className={`nav-overlay ${menuAbierto ? 'active' : ''}`}
         onClick={cerrarMenu}
         aria-hidden="true"
       />
 
+      {/*
+        Orden visual en móvil (controlado por CSS order):
+          order -1 → hamburger (izquierda)
+          order  0 → logo (centro, absolute)
+          order  3 → PerfilMenu (derecha)
+      */}
       <nav ref={navRef} className={scrolled ? 'scrolled' : ''}>
 
-        {/* Botón hamburger (visible solo en mobile/tablet) */}
+        {/* Hamburger — visible solo en mobile/tablet via CSS */}
         <button
           className={`hamburger ${menuAbierto ? 'open' : ''}`}
           onClick={toggleMenu}
@@ -81,37 +85,34 @@ export const Nav = () => {
           <span />
           <span />
         </button>
-        <PerfilMenu
-          onAbrirPerfil={() => setMostrarPerfil(true)}
-          onAbrirLogin={() => setMostrarLogin(true)}
-          onAbrirPedidos={() => setMostrarPedidos(true)}
-          onAbrirCotizaciones={() => setMostrarCotizaciones(true)}
-        />
-        <img className='logo' src="/img/logo.webp" alt="logo" />
 
+        {/* Logo — centrado en mobile vía CSS absolute */}
+        <img className="logo" src="/img/logo.webp" alt="logo" />
+
+        {/* Links — drawer en mobile, inline en desktop */}
         <ul
           id="nav-links"
           className={`nav-links ${menuAbierto ? 'open' : ''}`}
         >
-          <li className='links'>
+          <li className="links">
             <Link className="inicio" to="/inicio" onClick={cerrarMenu}>Inicio</Link>
           </li>
-          <li className='links'>
+          <li className="links">
             <Link className="productos" to="/tienda-productos" onClick={cerrarMenu}>Productos</Link>
           </li>
-          <li className='links'>
+          <li className="links">
             <Link className="contactanos" to="/contactanos" onClick={cerrarMenu}>Contáctanos</Link>
           </li>
-          <li className='links'>
+          <li className="links">
             <Link className="quienes-somos" to="/quienes-somos" onClick={cerrarMenu}>¿Quiénes somos?</Link>
           </li>
 
           {!usuario && (
             <>
-              <li className='links'>
+              <li className="links">
                 <Link className="registro" to="/register" onClick={cerrarMenu}>Registrarte</Link>
               </li>
-              <li className='links'>
+              <li className="links">
                 <button
                   className="iniciar-sesion"
                   onClick={() => { setMostrarLogin(true); cerrarMenu() }}
@@ -123,25 +124,38 @@ export const Nav = () => {
           )}
 
           {usuario && (
-            <li className='links bienvenida'>
+            <li className="links bienvenida">
               Bienvenido, {usuario.nombre}
             </li>
           )}
 
-          {usuario && usuario.tipo_usuario === "admin" && (
-            <li className='links'>
+          {usuario?.tipo_usuario === 'admin' && (
+            <li className="links">
               <Link className="admin-panel" to="/admin" onClick={cerrarMenu}>Panel Admin</Link>
             </li>
           )}
         </ul>
 
-        {/* PerfilMenu siempre visible a la derecha */}
+        {/*
+          PerfilMenu al final del DOM del nav.
+          CSS lo posiciona a la derecha en todas las resoluciones:
+            desktop  → margin-left: auto (empuja al extremo derecho)
+            mobile   → order: 3, ocupa el slot derecho del flex
+        */}
+        <div className="nav-perfil-wrapper">
+          <PerfilMenu
+            onAbrirPerfil={() => setMostrarPerfil(true)}
+            onAbrirLogin={() => setMostrarLogin(true)}
+            onAbrirPedidos={() => setMostrarPedidos(true)}
+            onAbrirCotizaciones={() => setMostrarCotizaciones(true)}
+          />
+        </div>
 
       </nav>
 
-      {mostrarPerfil && <MiPerfil onCerrar={() => setMostrarPerfil(false)} />}
-      {mostrarLogin && <Login onCerrar={() => setMostrarLogin(false)} />}
-      {mostrarPedidos && <MisPedidos onCerrar={() => setMostrarPedidos(false)} />}
+      {mostrarPerfil       && <MiPerfil        onCerrar={() => setMostrarPerfil(false)} />}
+      {mostrarLogin        && <Login           onCerrar={() => setMostrarLogin(false)} />}
+      {mostrarPedidos      && <MisPedidos      onCerrar={() => setMostrarPedidos(false)} />}
       {mostrarCotizaciones && <MisCotizaciones onCerrar={() => setMostrarCotizaciones(false)} />}
     </>
   )
