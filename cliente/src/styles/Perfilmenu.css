@@ -333,12 +333,49 @@
 }
 
 /* ================================================
+   Overlay base — necesario para que el JS pueda
+   insertarlo en cualquier breakpoint sin estilos huérfanos
+   ================================================ */
+.perfil-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 998;
+  animation: pmOverlayIn 0.2s ease;
+}
+
+@keyframes pmOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Animación modal centrado — declarada globalmente para máxima compatibilidad */
+@keyframes pmPopIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.93); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ================================================
    RESPONSIVE — PerfilMenu
    Breakpoints: 320–480 | 481–768 | 769–1024 | 1025–1200 | 1201–1600
    ================================================ */
 
 /* ---------- 320px – 480px (móvil pequeño) ---------- */
 @media (max-width: 480px) {
+  /*
+   * FIX: Se elimina transform:scale() del trigger en móvil.
+   * transform en un ancestro rompe position:fixed en los hijos
+   * (crea un nuevo containing block). Se usa box-shadow para
+   * el efecto visual sin afectar el stacking context.
+   */
+  .perfil-trigger:hover,
+  .perfil-trigger.activo {
+    transform: none;
+    box-shadow:
+      0 0 0 4px rgba(221, 206, 0, 0.28),
+      0 0 0 2px var(--pm-yellow);
+  }
+
   .perfil-trigger {
     width: 38px;
     height: 38px;
@@ -361,20 +398,6 @@
     right: 1px;
   }
 
-  /* Overlay sutil — sin blur, solo oscurece ligeramente */
-  .perfil-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.25);
-    z-index: 998;
-    animation: pmOverlayIn 0.2s ease;
-  }
-
-  @keyframes pmOverlayIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
   /* Móvil: centrado en pantalla como modal */
   .perfil-dropdown {
     position: fixed;
@@ -389,12 +412,8 @@
     border-radius: 16px;
     border-top: 3px solid var(--pm-yellow);
     z-index: 999;
+    /* Se usa pmPopIn (declarado globalmente arriba) */
     animation: pmPopIn 0.22s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  @keyframes pmPopIn {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(0.93); }
-    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   }
 
   .perfil-header {

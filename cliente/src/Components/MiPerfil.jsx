@@ -87,7 +87,7 @@ export const MiPerfil = ({ onCerrar }) => {
 
   return (
     // Overlay — clic fuera cierra el modal
-    <div className="miperfil-overlay" onClick={onCerrar}>
+    <div className="miperfil-overlay" onClick={onCerrar} style={{ zIndex: 2000 }}>
 
       {/* Card — detener propagación para no cerrar al hacer clic dentro */}
       <div className="miperfil-card" onClick={(e) => e.stopPropagation()}>

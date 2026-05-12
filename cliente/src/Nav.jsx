@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import ReactDOM from 'react-dom'
 import './styles/Nav.css'
 import { Link, useLocation } from 'react-router-dom'
 import { PerfilMenu } from './Components/Perfilmenu'
@@ -20,33 +21,28 @@ export const Nav = () => {
   const usuarioStr = sessionStorage.getItem('usuario')
   const usuario = usuarioStr ? JSON.parse(usuarioStr) : null
 
-  /* ── Abrir login desde navegación programática ── */
   useEffect(() => {
     if (location.state?.abrirLogin) {
       setTimeout(() => setMostrarLogin(true), 0)
       window.history.replaceState({}, '')
     }
-  }, [location.state])
+  }, [location.state?.abrirLogin])
 
-  /* ── Cerrar menú al cambiar de ruta ── */
   useEffect(() => {
     setMenuAbierto(false)
   }, [location.pathname])
 
-  /* ── Clase "scrolled" en la nav ── */
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  /* ── Bloquear scroll del body cuando el menú drawer está abierto ── */
   useEffect(() => {
     document.body.style.overflow = menuAbierto ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [menuAbierto])
 
-  /* ── Cerrar menú con tecla Escape ── */
   useEffect(() => {
     const handleKey = (e) => { if (e.key === 'Escape') setMenuAbierto(false) }
     window.addEventListener('keydown', handleKey)
@@ -58,22 +54,14 @@ export const Nav = () => {
 
   return (
     <>
-      {/* Overlay oscuro del drawer (mobile/tablet) */}
       <div
         className={`nav-overlay ${menuAbierto ? 'active' : ''}`}
         onClick={cerrarMenu}
         aria-hidden="true"
       />
 
-      {/*
-        Orden visual en móvil (controlado por CSS order):
-          order -1 → hamburger (izquierda)
-          order  0 → logo (centro, absolute)
-          order  3 → PerfilMenu (derecha)
-      */}
       <nav ref={navRef} className={scrolled ? 'scrolled' : ''}>
 
-        {/* Hamburger — visible solo en mobile/tablet via CSS */}
         <button
           className={`hamburger ${menuAbierto ? 'open' : ''}`}
           onClick={toggleMenu}
@@ -86,14 +74,9 @@ export const Nav = () => {
           <span />
         </button>
 
-        {/* Logo — centrado en mobile vía CSS absolute */}
         <img className="logo" src="/img/logo.webp" alt="logo" />
 
-        {/* Links — drawer en mobile, inline en desktop */}
-        <ul
-          id="nav-links"
-          className={`nav-links ${menuAbierto ? 'open' : ''}`}
-        >
+        <ul id="nav-links" className={`nav-links ${menuAbierto ? 'open' : ''}`}>
           <li className="links">
             <Link className="inicio" to="/inicio" onClick={cerrarMenu}>Inicio</Link>
           </li>
@@ -136,12 +119,6 @@ export const Nav = () => {
           )}
         </ul>
 
-        {/*
-          PerfilMenu al final del DOM del nav.
-          CSS lo posiciona a la derecha en todas las resoluciones:
-            desktop  → margin-left: auto (empuja al extremo derecho)
-            mobile   → order: 3, ocupa el slot derecho del flex
-        */}
         <div className="nav-perfil-wrapper">
           <PerfilMenu
             onAbrirPerfil={() => setMostrarPerfil(true)}
@@ -153,10 +130,15 @@ export const Nav = () => {
 
       </nav>
 
-      {mostrarPerfil       && <MiPerfil        onCerrar={() => setMostrarPerfil(false)} />}
-      {mostrarLogin        && <Login           onCerrar={() => setMostrarLogin(false)} />}
-      {mostrarPedidos      && <MisPedidos      onCerrar={() => setMostrarPedidos(false)} />}
-      {mostrarCotizaciones && <MisCotizaciones onCerrar={() => setMostrarCotizaciones(false)} />}
+      {ReactDOM.createPortal(
+        <>
+          {mostrarPerfil       && <MiPerfil        onCerrar={() => setMostrarPerfil(false)} />}
+          {mostrarLogin        && <Login           onCerrar={() => setMostrarLogin(false)} />}
+          {mostrarPedidos      && <MisPedidos      onCerrar={() => setMostrarPedidos(false)} />}
+          {mostrarCotizaciones && <MisCotizaciones onCerrar={() => setMostrarCotizaciones(false)} />}
+        </>,
+        document.body
+      )}
     </>
   )
 }

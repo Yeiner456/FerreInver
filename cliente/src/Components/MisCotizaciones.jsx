@@ -183,7 +183,7 @@ export const MisCotizaciones = ({ onCerrar }) => {
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val)
 
   return (
-    <div className="registros-overlay" onClick={onCerrar}>
+    <div className="registros-overlay" onClick={onCerrar} style={{ zIndex: 2000 }}>
       <div className="registros-modal" onClick={(e) => e.stopPropagation()}>
 
         <div className="registros-header">
