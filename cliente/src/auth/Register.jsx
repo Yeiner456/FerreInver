@@ -2,6 +2,39 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 
+/*Modal de exito*/
+const SuccessModal = ({ onLogin, onClose }) => (
+  <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+      <button className="modal-close" onClick={onClose}>✕</button>
+
+      <div className="modal-icon-wrapper">
+        <div className="modal-icon-ring" />
+        <div className="modal-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" width="32" height="32">
+            <path
+              d="M5 13l4 4L19 7"
+              stroke="#fff"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <h2 className="modal-title">¡Cuenta creada correctamente!</h2>
+      <p className="modal-subtitle">
+        Ya puedes iniciar sesión y comenzar a usar tu cuenta.
+      </p>
+
+      <button className="modal-btn-primary" onClick={onLogin}>
+        Iniciar sesión
+      </button>
+    </div>
+  </div>
+);
+
 export const Register = () => {
   const navigate = useNavigate();
 
@@ -14,6 +47,7 @@ export const Register = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -45,8 +79,7 @@ export const Register = () => {
       const data = await response.json();
 
       if (data.success) {
-        alert("✅ Cuenta creada correctamente. Ahora puedes iniciar sesión.");
-        navigate("/inicio");
+        setShowModal(true);
       } else {
         setError(data.mensaje || "Error al crear la cuenta");
       }
@@ -60,9 +93,17 @@ export const Register = () => {
 
   return (
     <div className="register-page-wrapper">
+
+      {showModal && (
+        <SuccessModal
+          onLogin={() => navigate("/inicio", { state: { abrirLogin: true } })}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+
       <div className="card">
 
-        {/* ── Botón volver ── */}
+        {/*botomn volver */}
         <button className="volver-btn" onClick={() => navigate(-1)}>
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
             <path d="M19 12H5M5 12l7 7M5 12l7-7"
