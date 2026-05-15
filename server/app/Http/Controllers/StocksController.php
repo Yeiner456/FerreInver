@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Stock;
 use App\Models\Producto;
+use App\Http\Requests\Stocks\CreateStockRequest;
+use App\Http\Requests\Stocks\UpdateStockRequest;
 use Illuminate\Http\Request;
 
 class StocksController extends Controller
@@ -22,60 +24,37 @@ class StocksController extends Controller
     }
 
     // POST /api/stocks
-    public function create(Request $request)
+    public function create(CreateStockRequest $request)
     {
-        $id_producto = $request->input('id_producto', '');
-        $cantidad    = $request->input('cantidad', '');
-
-        if ($id_producto === '' || $cantidad === '')
-            return response()->json(['success' => false, 'message' => 'Todos los campos son obligatorios.'], 400);
-
-        if (!is_numeric($id_producto) || $id_producto <= 0)
-            return response()->json(['success' => false, 'message' => 'Producto inválido.'], 400);
-
-        if (!is_numeric($cantidad) || $cantidad < 0 || floor($cantidad) != $cantidad)
-            return response()->json(['success' => false, 'message' => 'La cantidad debe ser un entero mayor o igual a 0.'], 400);
-
-        if (!Producto::find($id_producto))
-            return response()->json(['success' => false, 'message' => 'El producto no existe.'], 404);
-
-        if (Stock::where('id_producto', $id_producto)->exists())
+        if (Stock::where('id_producto', $request->id_producto)->exists())
             return response()->json(['success' => false, 'message' => 'Ya existe un registro de stock para este producto.'], 409);
 
-        Stock::create(['id_producto' => (int) $id_producto, 'cantidad' => (int) $cantidad]);
+        Stock::create([
+            'id_producto' => (int) $request->id_producto,
+            'cantidad'    => (int) $request->cantidad,
+        ]);
 
         return response()->json(['success' => true, 'message' => 'Stock registrado exitosamente.'], 201);
     }
 
     // PUT /api/stocks/{id}
-    public function update(Request $request, $id)
+    public function update(UpdateStockRequest $request, $id)
     {
         if (!is_numeric($id))
             return response()->json(['success' => false, 'message' => 'ID inválido.'], 400);
 
-        $id_producto = $request->input('id_producto', '');
-        $cantidad    = $request->input('cantidad', '');
-
-        if ($id_producto === '' || $cantidad === '')
-            return response()->json(['success' => false, 'message' => 'Todos los campos son obligatorios.'], 400);
-
-        if (!is_numeric($id_producto) || $id_producto <= 0)
-            return response()->json(['success' => false, 'message' => 'Producto inválido.'], 400);
-
-        if (!is_numeric($cantidad) || $cantidad < 0 || floor($cantidad) != $cantidad)
-            return response()->json(['success' => false, 'message' => 'La cantidad debe ser un entero mayor o igual a 0.'], 400);
-
         $stock = Stock::find($id);
+
         if (!$stock)
             return response()->json(['success' => false, 'message' => 'El stock no existe.'], 404);
 
-        if (!Producto::find($id_producto))
-            return response()->json(['success' => false, 'message' => 'El producto no existe.'], 404);
-
-        if (Stock::where('id_producto', $id_producto)->where('id_stock', '!=', $id)->exists())
+        if (Stock::where('id_producto', $request->id_producto)->where('id_stock', '!=', $id)->exists())
             return response()->json(['success' => false, 'message' => 'Ya existe otro registro de stock para este producto.'], 409);
 
-        $stock->update(['id_producto' => (int) $id_producto, 'cantidad' => (int) $cantidad]);
+        $stock->update([
+            'id_producto' => (int) $request->id_producto,
+            'cantidad'    => (int) $request->cantidad,
+        ]);
 
         return response()->json(['success' => true, 'message' => 'Stock actualizado exitosamente.']);
     }
@@ -87,6 +66,7 @@ class StocksController extends Controller
             return response()->json(['success' => false, 'message' => 'ID inválido.'], 400);
 
         $stock = Stock::find($id);
+
         if (!$stock)
             return response()->json(['success' => false, 'message' => 'El stock no existe.'], 404);
 

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notificacion;
-use Illuminate\Http\Request;
+use App\Http\Requests\Notificaciones\StoreNotificacionRequest;
+use App\Http\Requests\Notificaciones\UpdateNotificacionRequest;
 
 class NotificacionController extends Controller
 {
@@ -28,66 +29,21 @@ class NotificacionController extends Controller
     }
 
     // POST /api/notificaciones
-    public function create(Request $request)
+    public function create(StoreNotificacionRequest $request)
     {
-        $documento_cliente = trim($request->input('documento_cliente', ''));
-        $titulo            = trim($request->input('titulo', ''));
-        $mensaje           = trim($request->input('mensaje', ''));
-        $tipo              = trim($request->input('tipo', ''));
-
-        foreach (compact('documento_cliente', 'titulo', 'mensaje', 'tipo') as $campo => $valor) {
-            if (empty($valor))
-                return response()->json(['success' => false, 'message' => "El campo '$campo' es obligatorio."], 400);
-        }
-
-        if (!is_numeric($documento_cliente) || $documento_cliente <= 0)
-            return response()->json(['success' => false, 'message' => 'Documento del cliente inválido.'], 400);
-
-        if (strlen($titulo) > 100)
-            return response()->json(['success' => false, 'message' => 'El título no puede superar los 100 caracteres.'], 400);
-
-        if (strlen($tipo) > 50)
-            return response()->json(['success' => false, 'message' => 'El tipo no puede superar los 50 caracteres.'], 400);
-
-        Notificacion::create([
-            'documento_cliente' => $documento_cliente,
-            'titulo'            => $titulo,
-            'mensaje'           => $mensaje,
-            'tipo'              => $tipo,
-        ]);
+        Notificacion::create($request->validated());
 
         return response()->json(['success' => true, 'message' => 'Notificación creada exitosamente.'], 201);
     }
 
     // PUT /api/notificaciones/{id}
-    public function update(Request $request, $id)
+    public function update(UpdateNotificacionRequest $request, $id)
     {
-        if (!is_numeric($id))
-            return response()->json(['success' => false, 'message' => 'ID inválido.'], 400);
-
-        $titulo  = trim($request->input('titulo', ''));
-        $mensaje = trim($request->input('mensaje', ''));
-        $tipo    = trim($request->input('tipo', ''));
-
-        if (!$titulo || !$mensaje || !$tipo)
-            return response()->json(['success' => false, 'message' => 'Todos los campos obligatorios deben estar llenos.'], 400);
-
-        if (strlen($titulo) > 100)
-            return response()->json(['success' => false, 'message' => 'El título no puede superar los 100 caracteres.'], 400);
-
-        if (strlen($tipo) > 50)
-            return response()->json(['success' => false, 'message' => 'El tipo no puede superar los 50 caracteres.'], 400);
-
         $notificacion = Notificacion::find($id);
-
         if (!$notificacion)
             return response()->json(['success' => false, 'message' => 'Notificación no encontrada.'], 404);
 
-        $notificacion->update([
-            'titulo'  => $titulo,
-            'mensaje' => $mensaje,
-            'tipo'    => $tipo,
-        ]);
+        $notificacion->update($request->validated());
 
         return response()->json(['success' => true, 'message' => 'Notificación actualizada exitosamente.']);
     }
@@ -95,11 +51,7 @@ class NotificacionController extends Controller
     // PATCH /api/notificaciones/{id}/marcar-leida
     public function marcarLeida($id)
     {
-        if (!is_numeric($id))
-            return response()->json(['success' => false, 'message' => 'ID inválido.'], 400);
-
         $notificacion = Notificacion::find($id);
-
         if (!$notificacion)
             return response()->json(['success' => false, 'message' => 'Notificación no encontrada.'], 404);
 
@@ -130,11 +82,7 @@ class NotificacionController extends Controller
     // DELETE /api/notificaciones/{id}
     public function destroy($id)
     {
-        if (!is_numeric($id))
-            return response()->json(['success' => false, 'message' => 'ID inválido.'], 400);
-
         $notificacion = Notificacion::find($id);
-
         if (!$notificacion)
             return response()->json(['success' => false, 'message' => 'Notificación no encontrada.'], 404);
 

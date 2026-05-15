@@ -3,26 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\EnviarCodigoRequest;
+use App\Http\Requests\Auth\VerificarCodigoRequest;
+use App\Http\Requests\Auth\CambiarPasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
-class AuthController
+class AuthController extends Controller
 {
     // POST /api/auth/login
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $correo   = trim($request->input('correo', ''));
-        $password = trim($request->input('password', ''));
-
-        if (empty($correo) || empty($password))
-            return response()->json(['success' => false, 'message' => 'Correo y contraseña son obligatorios.'], 400);
-
-        if (!filter_var($correo, FILTER_VALIDATE_EMAIL))
-            return response()->json(['success' => false, 'message' => 'El correo no es válido.'], 400);
-
-        $cliente = Cliente::with('tipoUsuario')->where('correo', $correo)->first();
+        $cliente = Cliente::with('tipoUsuario')
+            ->where('correo', $request->correo)
+            ->first();
 
         if (!$cliente)
             return response()->json(['success' => false, 'message' => 'Correo o contraseña incorrectos.'], 401);
@@ -30,7 +27,7 @@ class AuthController
         if ($cliente->estado_inicio_sesion === 'inactivo')
             return response()->json(['success' => false, 'message' => 'Tu cuenta está inactiva. Contacta al administrador.'], 403);
 
-        if (!Hash::check($password, $cliente->password_hash))
+        if (!Hash::check($request->password, $cliente->password_hash))
             return response()->json(['success' => false, 'message' => 'Correo o contraseña incorrectos.'], 401);
 
         return response()->json([
@@ -47,56 +44,25 @@ class AuthController
     }
 
     // POST /api/auth/register
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $documento = trim($request->input('documento', ''));
-        $nombre    = trim($request->input('nombre', ''));
-        $correo    = trim($request->input('correo', ''));
-        $password  = trim($request->input('password', ''));
-
-        if (empty($documento) || empty($nombre) || empty($correo) || empty($password))
-            return response()->json(['success' => false, 'message' => 'Todos los campos son obligatorios.'], 400);
-
-        if (!is_numeric($documento) || $documento < 100000 || $documento > 999999999999999)
-            return response()->json(['success' => false, 'message' => 'El documento debe tener entre 6 y 15 dígitos.'], 400);
-
-        if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,}$/u", $nombre))
-            return response()->json(['success' => false, 'message' => 'El nombre solo puede contener letras y debe tener al menos 3 caracteres.'], 400);
-
-        if (!filter_var($correo, FILTER_VALIDATE_EMAIL))
-            return response()->json(['success' => false, 'message' => 'El correo electrónico no es válido.'], 400);
-
-        if (strlen($password) < 8)
-            return response()->json(['success' => false, 'message' => 'La contraseña debe tener al menos 8 caracteres.'], 400);
-
-        if (Cliente::where('correo', $correo)->exists())
-            return response()->json(['success' => false, 'message' => 'Este correo ya está registrado.'], 409);
-
-        if (Cliente::find($documento))
+        if (Cliente::find($request->documento))
             return response()->json(['success' => false, 'message' => 'Este documento ya está registrado.'], 409);
 
         Cliente::create([
-            'documento'    => (int) $documento,
-            'nombre'       => $nombre,
-            'correo'       => $correo,
-            'password_hash' => Hash::make($password),
+            'documento'     => (int) $request->documento,
+            'nombre'        => $request->nombre,
+            'correo'        => $request->correo,
+            'password_hash' => Hash::make($request->password),
         ]);
 
         return response()->json(['success' => true, 'message' => 'Cuenta creada correctamente.'], 201);
     }
 
     // POST /api/auth/enviar-codigo
-    public function enviarCodigo(Request $request)
+    public function enviarCodigo(EnviarCodigoRequest $request)
     {
-        $correo = trim($request->input('correo', ''));
-
-        if (empty($correo))
-            return response()->json(['success' => false, 'message' => 'El correo es obligatorio.'], 400);
-
-        if (!filter_var($correo, FILTER_VALIDATE_EMAIL))
-            return response()->json(['success' => false, 'message' => 'El correo no es válido.'], 400);
-
-        $cliente = Cliente::where('correo', $correo)->first();
+        $cliente = Cliente::where('correo', $request->correo)->first();
 
         if (!$cliente)
             return response()->json(['success' => false, 'message' => 'No existe una cuenta con ese correo.'], 404);
@@ -110,8 +76,8 @@ class AuthController
         ]);
 
         try {
-            Mail::send([], [], function ($mail) use ($correo, $codigo) {
-                $mail->to($correo)
+            Mail::send([], [], function ($mail) use ($request, $codigo) {
+                $mail->to($request->correo)
                     ->subject('Código de recuperación - Ferreinver')
                     ->html("
                         <div style='font-family: DM Sans, sans-serif; max-width: 400px; margin: auto; padding: 30px; border-radius: 12px; border: 1px solid #e0e0e0;'>
@@ -131,20 +97,14 @@ class AuthController
     }
 
     // POST /api/auth/verificar-codigo
-    public function verificarCodigo(Request $request)
+    public function verificarCodigo(VerificarCodigoRequest $request)
     {
-        $correo = trim($request->input('correo', ''));
-        $codigo = trim($request->input('codigo', ''));
-
-        if (empty($correo) || empty($codigo))
-            return response()->json(['success' => false, 'message' => 'Correo y código son obligatorios.'], 400);
-
-        $cliente = Cliente::where('correo', $correo)->first();
+        $cliente = Cliente::where('correo', $request->correo)->first();
 
         if (!$cliente)
             return response()->json(['success' => false, 'message' => 'Correo no encontrado.'], 404);
 
-        if ($cliente->codigo_recuperacion !== $codigo)
+        if ($cliente->codigo_recuperacion !== $request->codigo)
             return response()->json(['success' => false, 'message' => 'Código incorrecto.'], 400);
 
         if (Carbon::now()->gt($cliente->codigo_expiracion))
@@ -154,28 +114,18 @@ class AuthController
     }
 
     // POST /api/auth/cambiar-password
-    public function cambiarPassword(Request $request)
+    public function cambiarPassword(CambiarPasswordRequest $request)
     {
-        $correo          = trim($request->input('correo', ''));
-        $codigo          = trim($request->input('codigo', ''));
-        $nueva_password  = trim($request->input('nueva_password', ''));
+        $cliente = Cliente::where('correo', $request->correo)->first();
 
-        if (empty($correo) || empty($codigo) || empty($nueva_password))
-            return response()->json(['success' => false, 'message' => 'Todos los campos son obligatorios.'], 400);
-
-        if (strlen($nueva_password) < 8)
-            return response()->json(['success' => false, 'message' => 'La contraseña debe tener al menos 8 caracteres.'], 400);
-
-        $cliente = Cliente::where('correo', $correo)->first();
-
-        if (!$cliente || $cliente->codigo_recuperacion !== $codigo)
+        if (!$cliente || $cliente->codigo_recuperacion !== $request->codigo)
             return response()->json(['success' => false, 'message' => 'Código inválido.'], 400);
 
         if (Carbon::now()->gt($cliente->codigo_expiracion))
             return response()->json(['success' => false, 'message' => 'El código ha expirado.'], 400);
 
         $cliente->update([
-            'password_hash'       => Hash::make($nueva_password),
+            'password_hash'       => Hash::make($request->nueva_password),
             'codigo_recuperacion' => null,
             'codigo_expiracion'   => null,
         ]);
