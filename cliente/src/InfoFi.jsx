@@ -53,7 +53,7 @@ export const InfoFi = () => {
           <div className="infofi-media-wrap">
             <video
               className="corto-proceso"
-              src="./public/img/corto-proceso.mp4"
+              src="/img/corto-proceso.mp4"
               autoPlay muted loop playsInline
             />
             <div className="infofi-media-badge">

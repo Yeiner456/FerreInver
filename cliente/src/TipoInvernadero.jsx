@@ -28,7 +28,7 @@ export const TipoInvernadero = () => {
 
         <div className='invernadero-card invernadero-metalico'>
           <div className="invernadero-img-wrap">
-            <img src="./public/img/invernadero-metalico.webp" alt="Invernadero metálico" />
+            <img src="/img/invernadero-metalico.webp" alt="Invernadero metálico" />
             <div className="invernadero-tag">Más popular</div>
           </div>
           <div className="invernadero-info">
@@ -45,7 +45,7 @@ export const TipoInvernadero = () => {
 
         <div className='invernadero-card invernadero-tipocapilla'>
           <div className="invernadero-img-wrap">
-            <img src="./public/img/invernadero-tipocapilla.webp" alt="Invernadero tipo capilla" />
+            <img src="/img/invernadero-tipocapilla.webp" alt="Invernadero tipo capilla" />
           </div>
           <div className="invernadero-info">
             <h3>Tipo Capilla</h3>

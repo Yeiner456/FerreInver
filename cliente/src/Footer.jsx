@@ -56,7 +56,7 @@ export const Footer = () => {
        
         <div className="footer-col footer-sena-col">
           <h4 className="footer-heading">Avalado por</h4>
-          <img className="logo-sena" src="./public/img/logo-sena.webp" alt="Logo Sena" />
+          <img className="logo-sena" src="/img/logo-sena.webp" alt="Logo Sena" />
           <p className="footer-sena-text">Proyecto desarrollado con apoyo del SENA</p>
         </div>
 
