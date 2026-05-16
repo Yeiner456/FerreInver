@@ -1,5 +1,5 @@
 import React from 'react'
-import './Styles/QuienesSomos.css'
+import './Styles/Quienessomos.css'
 
 export const QuienesSomos = () => {
   return (
