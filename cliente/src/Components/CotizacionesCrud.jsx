@@ -4,16 +4,21 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getCotizaciones: () =>
-        fetch(`${API_URL}/cotizaciones`).then((r) => r.json()),
+        fetch(`${API_URL}/cotizaciones`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     getSelects: () =>
-        fetch(`${API_URL}/cotizaciones?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/cotizaciones?selects=1`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createCotizacion: (data) =>
         fetch(`${API_URL}/cotizaciones`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateCotizacion: (id, data) =>
@@ -21,11 +26,13 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     rechazarCotizacion: (id) =>
         fetch(`${API_URL}/cotizaciones/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

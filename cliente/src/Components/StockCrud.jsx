@@ -4,16 +4,21 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getStocks: () =>
-        fetch(`${API_URL}/stocks`).then((r) => r.json()),
+        fetch(`${API_URL}/stocks`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     getProductos: () =>
-        fetch(`${API_URL}/stocks?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/stocks?selects=1`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createStock: (data) =>
         fetch(`${API_URL}/stocks`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateStock: (id, data) =>
@@ -21,11 +26,13 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     deleteStock: (id) =>
         fetch(`${API_URL}/stocks/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

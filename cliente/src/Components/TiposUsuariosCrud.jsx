@@ -4,13 +4,16 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getTipos: () =>
-        fetch(`${API_URL}/tipos-usuarios`).then((r) => r.json()),
+        fetch(`${API_URL}/tipos-usuarios`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createTipo: (data) =>
         fetch(`${API_URL}/tipos-usuarios`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateTipo: (id, data) =>
@@ -18,11 +21,13 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     deleteTipo: (id) =>
         fetch(`${API_URL}/tipos-usuarios/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

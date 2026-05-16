@@ -166,7 +166,9 @@ export const MisCotizaciones = ({ onCerrar }) => {
   useEffect(() => {
     const fetchCotizaciones = async () => {
       try {
-        const res  = await fetch(`${API_URL}/cotizaciones?documento=${usuario.documento}`)
+        const res  = await fetch(`${API_URL}/cotizaciones?documento=${usuario.documento}`, {
+          credentials: 'include',
+        })
         const data = await res.json()
         if (!data.success) throw new Error(data.message)
         setCotizaciones(data.data)

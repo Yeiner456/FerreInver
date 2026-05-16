@@ -36,6 +36,7 @@ export const Login = ({ onCerrar }) => {
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
+        credentials: 'include',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo: email, password }),
       });

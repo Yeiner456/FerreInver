@@ -21,6 +21,7 @@ export const RecuperarPassword = () => {
     try {
       const res = await fetch(`${API_URL}/auth/enviar-codigo`, {
         method: "POST",
+        credentials: 'include',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo }),
       });
@@ -37,6 +38,7 @@ export const RecuperarPassword = () => {
     try {
       const res = await fetch(`${API_URL}/auth/verificar-codigo`, {
         method: "POST",
+        credentials: 'include',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, codigo }),
       });
@@ -55,6 +57,7 @@ export const RecuperarPassword = () => {
     try {
       const res = await fetch(`${API_URL}/auth/cambiar-password`, {
         method: "POST",
+        credentials: 'include',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, codigo, nueva_password: nuevaPassword }),
       });

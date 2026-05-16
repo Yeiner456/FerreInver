@@ -183,7 +183,9 @@ export const MisPedidos = ({ onCerrar }) => {
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
-        const res  = await fetch(`${API_URL}/pedidos?documento=${usuario.documento}`)
+        const res  = await fetch(`${API_URL}/pedidos?documento=${usuario.documento}`, {
+          credentials: 'include',
+        })
         const data = await res.json()
         if (!data.success) throw new Error(data.message)
 

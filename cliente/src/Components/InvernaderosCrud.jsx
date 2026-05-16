@@ -4,13 +4,16 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getInvernaderos: () =>
-        fetch(`${API_URL}/invernaderos`).then((r) => r.json()),
+        fetch(`${API_URL}/invernaderos`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createInvernadero: (data) =>
         fetch(`${API_URL}/invernaderos`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateInvernadero: (id, data) =>
@@ -18,11 +21,13 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     deactivateInvernadero: (id) =>
         fetch(`${API_URL}/invernaderos/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

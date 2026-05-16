@@ -4,16 +4,21 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getClientes: () =>
-        fetch(`${API_URL}/clientes`).then((r) => r.json()),
+        fetch(`${API_URL}/clientes`,{
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     getTiposUsuario: () =>
-        fetch(`${API_URL}/clientes/tipos`).then((r) => r.json()),
+        fetch(`${API_URL}/clientes/tipos`,{
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createCliente: (data) =>
         fetch(`${API_URL}/clientes`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateCliente: (documento, data) => {
@@ -29,12 +34,14 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
+            credentials: 'include',
         }).then((r) => r.json())
     },
 
     deactivateCliente: (documento) =>
         fetch(`${API_URL}/clientes/${documento}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

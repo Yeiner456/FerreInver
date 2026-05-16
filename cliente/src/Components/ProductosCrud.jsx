@@ -5,23 +5,28 @@ const IMG_BASE = import.meta.env.VITE_IMG_URL
 
 const api = {
     getProductos: () =>
-        fetch(`${API_URL}/productos`).then((r) => r.json()),
+        fetch(`${API_URL}/productos`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createProducto: (formData) =>
         fetch(`${API_URL}/productos`, {
             method: "POST",
             body: formData,
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateProducto: (id, formData) =>
         fetch(`${API_URL}/productos/${id}`, {
             method: "POST",
             body: formData,
+            credentials: 'include',
         }).then((r) => r.json()),
 
     deactivateProducto: (id) =>
         fetch(`${API_URL}/productos/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

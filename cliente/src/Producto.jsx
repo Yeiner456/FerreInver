@@ -48,7 +48,9 @@ export const Producto = () => {
   const [productoActivo, setProductoActivo] = useState(null)
 
   useEffect(() => {
-    fetch(`${API_URL}/productos`)
+    fetch(`${API_URL}/productos`,{
+      credentials: 'include',
+    })
       .then(res => {
         if (!res.ok) throw new Error('Error al cargar productos')
         return res.json()

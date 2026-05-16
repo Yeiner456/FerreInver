@@ -5,18 +5,22 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getNotificaciones: () =>
-        fetch(`${API_URL}/notificaciones`).then((r) => r.json()),
+        fetch(`${API_URL}/notificaciones`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createNotificacion: (data) =>
         fetch(`${API_URL}/notificaciones`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateNotificacion: (id, data) =>
         fetch(`${API_URL}/notificaciones/${id}`, {
             method: "PUT",
+            credentials: 'include',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
@@ -24,11 +28,13 @@ const api = {
     marcarLeida: (id) =>
         fetch(`${API_URL}/notificaciones/${id}/marcar-leida`, {
             method: "PATCH",
+            credentials: 'include',
         }).then((r) => r.json()),
 
     deleteNotificacion: (id) =>
         fetch(`${API_URL}/notificaciones/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

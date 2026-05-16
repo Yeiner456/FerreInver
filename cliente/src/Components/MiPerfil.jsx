@@ -62,6 +62,7 @@ export const MiPerfil = ({ onCerrar }) => {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre: trimmed }),
+        credentials: 'include',
       })
       const data = await res.json()
       if (!data.success) throw new Error(data.message || 'Error desconocido')

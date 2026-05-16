@@ -6,13 +6,16 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getProveedores: () =>
-        fetch(`${API_URL}/proveedores`).then((r) => r.json()),
+        fetch(`${API_URL}/proveedores`,{
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createProveedor: (data) =>
         fetch(`${API_URL}/proveedores`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateProveedor: (nit, data) =>
@@ -20,11 +23,13 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     deactivateProveedor: (nit) =>
         fetch(`${API_URL}/proveedores/${nit}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

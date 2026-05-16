@@ -50,7 +50,9 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
     setErroresStock([]);
     setLoading(true);
     try {
-      const stockRes = await fetch(`${API_URL}/stocks`).then(r => r.json());
+      const stockRes = await fetch(`${API_URL}/stocks`, {
+        credentials: 'include',
+      }).then(r => r.json());
 
       if (stockRes.success) {
         const stockMap = {};
@@ -77,6 +79,7 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
       const res = await fetch(`${API_URL}/pedidos/completo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           id_cliente: cliente.documento,
           medio_pago: medioPago,
@@ -337,8 +340,12 @@ export const TiendaProductos = () => {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API_URL}/productos`).then(r => r.json()),
-      fetch(`${API_URL}/stocks`).then(r => r.json()),
+      fetch(`${API_URL}/productos`, {
+        credentials: 'include',
+      }).then(r => r.json()),
+      fetch(`${API_URL}/stocks`, {
+        credentials: 'include',
+      }).then(r => r.json()),
     ])
       .then(([prodRes, stockRes]) => {
         if (!prodRes.success) { setError('No se pudieron cargar los productos.'); return; }

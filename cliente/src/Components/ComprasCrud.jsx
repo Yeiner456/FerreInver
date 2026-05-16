@@ -7,16 +7,22 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getCompras: () =>
-        fetch(`${API_URL}/compras`).then((r) => r.json()),
+        fetch(`${API_URL}/compras`,{
+            credentials: 'include',
+        }
+        ).then((r) => r.json()),
 
     getSelects: () =>
-        fetch(`${API_URL}/compras/selects`).then((r) => r.json()),
+        fetch(`${API_URL}/compras/selects`,{
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createCompra: (data) =>
         fetch(`${API_URL}/compras`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateCompra: (id, data) =>
@@ -24,11 +30,13 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     deleteCompra: (id) =>
         fetch(`${API_URL}/compras/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

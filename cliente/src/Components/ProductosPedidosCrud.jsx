@@ -6,16 +6,21 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getProductosPedidos: () =>
-        fetch(`${API_URL}/productos-pedidos`).then((r) => r.json()),
+        fetch(`${API_URL}/productos-pedidos`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     getSelects: () =>
-        fetch(`${API_URL}/productos-pedidos?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/productos-pedidos?selects=1`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createProductoPedido: (data) =>
         fetch(`${API_URL}/productos-pedidos`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updateProductoPedido: (id, data) =>
@@ -23,11 +28,13 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     deleteProductoPedido: (id) =>
         fetch(`${API_URL}/productos-pedidos/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 

@@ -7,16 +7,21 @@ const ESTADOS_PEDIDO = ["pendiente", "recibido", "listo para recibir", "cancelad
 
 const api = {
     getPedidos: () =>
-        fetch(`${API_URL}/pedidos`).then((r) => r.json()),
+        fetch(`${API_URL}/pedidos`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     getClientes: () =>
-        fetch(`${API_URL}/pedidos?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/pedidos?selects=1`, {
+            credentials: 'include',
+        }).then((r) => r.json()),
 
     createPedido: (data) =>
         fetch(`${API_URL}/pedidos`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     updatePedido: (id, data) =>
@@ -24,11 +29,13 @@ const api = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
+            credentials: 'include',
         }).then((r) => r.json()),
 
     cancelPedido: (id) =>
         fetch(`${API_URL}/pedidos/${id}`, {
             method: "DELETE",
+            credentials: 'include',
         }).then((r) => r.json()),
 };
 
