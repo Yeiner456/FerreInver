@@ -46,7 +46,7 @@ Route::delete('/clientes/{documento}',               [ClientesController::class,
 // ─────────────────────────────────────────────────────────────────
 Route::get   ('/productos',      [ProductosController::class, 'index']);
 Route::post  ('/productos',      [ProductosController::class, 'create']);
-Route::post  ('/productos/{id}', [ProductosController::class, 'update']);     // FormData usa POST + ?_method=PUT
+Route::match(['POST', 'PUT'], '/productos/{id}', [ProductosController::class, 'update']);  
 Route::delete('/productos/{id}', [ProductosController::class, 'deactivate']);
 
 // ─────────────────────────────────────────────────────────────────

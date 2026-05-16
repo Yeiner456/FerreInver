@@ -54,7 +54,6 @@ function StockModal({ stock, onClose, onSave }) {
 
     useEffect(() => {
         api.getProductos().then((res) => {
-            // El controller devuelve { success, data: { productos: [...] } }
             if (res.success) setProductos(res.data.productos);
         });
     }, []);
@@ -79,38 +78,44 @@ function StockModal({ stock, onClose, onSave }) {
     };
 
     return (
-        <div>
-            <h2>{isEdit ? "Editar Stock" : "Nuevo Stock"}</h2>
-            {errors.general && <p>{errors.general}</p>}
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
 
-            {isEdit && (
+                <h2>{isEdit ? "Editar Stock" : "Nuevo Stock"}</h2>
+                {errors.general && <p style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.general}</p>}
+
+                {isEdit && (
+                    <div>
+                        <label>ID Stock (No editable)</label><br />
+                        <input type="text" value={stock.id_stock} disabled /><br /><br />
+                    </div>
+                )}
+
                 <div>
-                    <label>ID Stock (No editable)</label><br />
-                    <input type="text" value={stock.id_stock} disabled /><br /><br />
+                    <label>Producto</label><br />
+                    <select name="id_producto" value={form.id_producto} onChange={handle}>
+                        <option value="">-- Seleccione un producto --</option>
+                        {productos.map((p) => (
+                            <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
+                        ))}
+                    </select><br />
+                    {errors.id_producto && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.id_producto}</span>}
+                </div><br />
+
+                <div>
+                    <label>Cantidad en Stock</label><br />
+                    <input name="cantidad" type="number" value={form.cantidad} onChange={handle} min="0" step="1" /><br />
+                    {errors.cantidad && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.cantidad}</span>}
+                </div><br />
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
                 </div>
-            )}
 
-            <div>
-                <label>Producto</label><br />
-                <select name="id_producto" value={form.id_producto} onChange={handle}>
-                    <option value="">-- Seleccione un producto --</option>
-                    {productos.map((p) => (
-                        <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
-                    ))}
-                </select><br />
-                {errors.id_producto && <span>{errors.id_producto}</span>}
-            </div><br />
-
-            <div>
-                <label>Cantidad en Stock</label><br />
-                <input name="cantidad" type="number" value={form.cantidad} onChange={handle} min="0" step="1" /><br />
-                {errors.cantidad && <span>{errors.cantidad}</span>}
-            </div><br />
-
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
+            </div>
         </div>
     );
 }
@@ -208,12 +213,17 @@ export default function StocksCRUD() {
             )}
 
             {confirmDelete && (
-                <div>
-                    <p>
-                        ¿Eliminar stock ID <strong>{confirmDelete.id_stock}</strong> ({confirmDelete.nombre_producto})?
-                    </p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id_stock)}>Sí, eliminar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmDelete(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Eliminar stock?</h2>
+                        <p style={{ color: "var(--text)", fontSize: 13, marginBottom: 8 }}>
+                            Vas a eliminar el stock ID <strong>{confirmDelete.id_stock}</strong>.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmDelete(null)}>Cancelar</button>
+                            <button onClick={() => handleDelete(confirmDelete.id_stock)}>Sí, eliminar</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

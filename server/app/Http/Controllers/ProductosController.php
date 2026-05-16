@@ -65,6 +65,7 @@ class ProductosController extends Controller
             'precio'      => (int) $data['precio'],
             'descripcion' => $data['descripcion'] ?? 'Producto de ferreinver disponible',
             'imagen'      => $imagenUrl,
+            'estado_producto' => $request->input('estado_producto', $producto->estado_producto),
         ]);
 
         return response()->json(['success' => true, 'message' => 'Producto actualizado exitosamente.']);

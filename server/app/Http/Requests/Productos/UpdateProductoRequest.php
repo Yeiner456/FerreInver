@@ -20,6 +20,7 @@ class UpdateProductoRequest extends FormRequest
             'precio'      => ['required', 'numeric', 'gt:0', 'integer'],
             'descripcion' => ['nullable', 'string', 'max:100'],
             'imagen'      => ['nullable', 'file', 'mimes:jpeg,png,webp,gif', 'max:2048'],
+            'estado_producto' => ['sometimes', 'in:activo,inactivo'],
         ];
     }
 

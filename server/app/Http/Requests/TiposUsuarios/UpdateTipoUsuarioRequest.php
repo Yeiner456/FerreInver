@@ -18,7 +18,7 @@ class UpdateTipoUsuarioRequest extends FormRequest
         $id = $this->route('id');
 
         return [
-            'nombre' => ['required', 'string', 'max:30', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', "unique:tipo_de_usuarios,nombre,{$id},id_tipo_de_usuario"],
+            'nombre' => ['required', 'string', 'max:30', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', "unique:tipos_usuarios,nombre,{$id},id_tipo_de_usuario"],
             'estado' => ['required', 'in:activo,inactivo'],
         ];
     }

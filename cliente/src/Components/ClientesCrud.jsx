@@ -16,12 +16,21 @@ const api = {
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
-    updateCliente: (documento, data) =>
-        fetch(`${API_URL}/clientes/${documento}`, {
+    updateCliente: (documento, data) => {
+        const payload = {
+            id_tipo_de_usuario: Number(data.id_tipo_de_usuario),
+            nombre: data.nombre,
+            correo: data.correo,
+            estado: data.estado_inicio_sesion,
+            password: data.password || undefined,
+            confirmar_password: data.confirmar_password || undefined,
+        }
+        return fetch(`${API_URL}/clientes/${documento}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        }).then((r) => r.json()),
+            body: JSON.stringify(payload),
+        }).then((r) => r.json())
+    },
 
     deactivateCliente: (documento) =>
         fetch(`${API_URL}/clientes/${documento}`, {
@@ -83,11 +92,11 @@ function ClienteModal({ cliente, tipos, onClose, onSave }) {
         isEdit
             ? {
                 ...cliente,
-                
+
                 id_tipo_de_usuario: String(cliente.id_tipo_de_usuario),
                 password: "",
                 confirmar_password: "",
-              }
+            }
             : emptyForm
     );
     const [errors, setErrors] = useState({});
@@ -114,86 +123,77 @@ function ClienteModal({ cliente, tipos, onClose, onSave }) {
     };
 
     return (
-        <div>
-            <h2>{isEdit ? "Editar Cliente" : "Nuevo Cliente"}</h2>
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
+                <h2>{isEdit ? "Editar Cliente" : "Nuevo Cliente"}</h2>
 
-            {errors.general && <p>{errors.general}</p>}
+                {errors.general && <p className="modal-error">{errors.general}</p>}
 
-            {!isEdit && (
-                <div>
-                    <label>Documento</label><br />
-                    <input name="documento" type="number" value={form.documento} onChange={handle} /><br />
-                    {errors.documento && <span>{errors.documento}</span>}
+                {!isEdit && (
+                    <div className="modal-field">
+                        <label>Documento</label>
+                        <input name="documento" type="number" value={form.documento} onChange={handle} />
+                        {errors.documento && <span className="modal-error">{errors.documento}</span>}
+                    </div>
+                )}
+
+                <div className="modal-field">
+                    <label>Tipo de Usuario</label>
+                    <select name="id_tipo_de_usuario" value={form.id_tipo_de_usuario} onChange={handle}>
+                        <option value="">Seleccionar...</option>
+                        {tipos.map((t) => (
+                            <option key={t.id_tipo_de_usuario} value={String(t.id_tipo_de_usuario)}>
+                                {t.nombre}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.id_tipo_de_usuario && <span className="modal-error">{errors.id_tipo_de_usuario}</span>}
                 </div>
-            )}
 
-            <div>
-                <label>Tipo de Usuario</label><br />
-                <select name="id_tipo_de_usuario" value={form.id_tipo_de_usuario} onChange={handle}>
-                    <option value="">Seleccionar...</option>
-                    {/* Forzar string en value para que coincida con el estado */}
-                    {tipos.map((t) => (
-                        <option key={t.id_tipo_de_usuario} value={String(t.id_tipo_de_usuario)}>
-                            {t.nombre}
-                        </option>
-                    ))}
-                </select><br />
-                {errors.id_tipo_de_usuario && <span>{errors.id_tipo_de_usuario}</span>}
+                <div className="modal-field">
+                    <label>Nombre Completo</label>
+                    <input name="nombre" type="text" value={form.nombre} onChange={handle} />
+                    {errors.nombre && <span className="modal-error">{errors.nombre}</span>}
+                </div>
+
+                <div className="modal-field">
+                    <label>Correo Electrónico</label>
+                    <input name="correo" type="email" value={form.correo} onChange={handle} />
+                    {errors.correo && <span className="modal-error">{errors.correo}</span>}
+                </div>
+
+                <div className="modal-field">
+                    <label>Estado</label>
+                    <select name="estado" value={form.estado} onChange={handle}>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                </div>
+
+                <hr className="modal-divider" />
+                <p className="modal-hint">
+                    {isEdit ? "Deja vacío para no cambiar la contraseña" : "Crea la contraseña"}
+                </p>
+
+                <div className="modal-field">
+                    <label>Contraseña</label>
+                    <input name="password" type="password" value={form.password} onChange={handle} autoComplete="new-password" />
+                    {errors.password && <span className="modal-error">{errors.password}</span>}
+                </div>
+
+                <div className="modal-field">
+                    <label>Confirmar Contraseña</label>
+                    <input name="confirmar_password" type="password" value={form.confirmar_password} onChange={handle} autoComplete="new-password" />
+                    {errors.confirmar_password && <span className="modal-error">{errors.confirmar_password}</span>}
+                </div>
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
+                </div>
             </div>
-
-            <div>
-                <label>Nombre Completo</label><br />
-                <input name="nombre" type="text" value={form.nombre} onChange={handle} /><br />
-                {errors.nombre && <span>{errors.nombre}</span>}
-            </div>
-
-            <div>
-                <label>Correo Electrónico</label><br />
-                <input name="correo" type="email" value={form.correo} onChange={handle} /><br />
-                {errors.correo && <span>{errors.correo}</span>}
-            </div>
-
-            <div>
-                <label>Estado</label><br />
-                <select name="estado" value={form.estado} onChange={handle}>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select>
-            </div>
-
-            <hr />
-            <p>{isEdit ? "Deja vacío para no cambiar la contraseña" : "Crea la contraseña"}</p>
-
-            <div>
-                <label>Contraseña</label><br />
-                {/* autoComplete="new-password" evita que el navegador autorellene */}
-                <input
-                    name="password"
-                    type="password"
-                    value={form.password}
-                    onChange={handle}
-                    autoComplete="new-password"
-                /><br />
-                {errors.password && <span>{errors.password}</span>}
-            </div>
-
-            <div>
-                <label>Confirmar Contraseña</label><br />
-                <input
-                    name="confirmar_password"
-                    type="password"
-                    value={form.confirmar_password}
-                    onChange={handle}
-                    autoComplete="new-password"
-                /><br />
-                {errors.confirmar_password && <span>{errors.confirmar_password}</span>}
-            </div>
-
-            <br />
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
         </div>
     );
 }
@@ -316,14 +316,20 @@ export default function ClientesCRUD() {
             )}
 
             {confirmDeactivate && (
-                <div>
-                    <p>
-                        ¿Desactivar a <strong>{confirmDeactivate.nombre}</strong>?
-                        <br />
-                        <small>El cliente no podrá iniciar sesión.</small>
-                    </p>
-                    <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDeactivate(confirmDeactivate.documento)}>Sí, desactivar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmDeactivate(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Desactivar cliente?</h2>
+                        <p className="modal-confirm-text">
+                            Vas a desactivar a <strong>{confirmDeactivate.nombre}</strong>.
+                        </p>
+                        <p className="modal-confirm-sub">El cliente no podrá iniciar sesión.</p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>
+                            <button onClick={() => handleDeactivate(confirmDeactivate.documento)}>
+                                Sí, desactivar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

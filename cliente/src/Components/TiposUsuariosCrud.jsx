@@ -14,14 +14,14 @@ const api = {
         }).then((r) => r.json()),
 
     updateTipo: (id, data) =>
-        fetch(`${API_URL}/tipos-usuarios?id=${id}`, {
+        fetch(`${API_URL}/tipos-usuarios/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteTipo: (id) =>
-        fetch(`${API_URL}/tipos-usuarios?id=${id}`, {
+        fetch(`${API_URL}/tipos-usuarios/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };
@@ -33,14 +33,12 @@ const emptyForm = {
 
 function validate(form) {
     const errors = {};
-
     if (!form.nombre || !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.nombre))
         errors.nombre = "Solo letras y espacios.";
     if (form.nombre.length > 30)
         errors.nombre = "Máximo 30 caracteres.";
     if (!form.estado)
         errors.estado = "El estado es obligatorio.";
-
     return errors;
 }
 
@@ -71,46 +69,48 @@ function TipoModal({ tipo, onClose, onSave }) {
     };
 
     return (
-        <div>
-            <h2>{isEdit ? "Editar Tipo de Usuario" : "Nuevo Tipo de Usuario"}</h2>
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
 
-            {errors.general && <p>{errors.general}</p>}
+                <h2>{isEdit ? "Editar Tipo de Usuario" : "Nuevo Tipo de Usuario"}</h2>
+                {errors.general && <p style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.general}</p>}
 
-            {isEdit && (
+                {isEdit && (
+                    <div>
+                        <label>ID (No editable)</label><br />
+                        <input type="text" value={tipo.id_tipo_de_usuario} disabled /><br /><br />
+                    </div>
+                )}
+
                 <div>
-                    <label>ID (No editable)</label><br />
-                    <input type="text" value={tipo.id_tipo_de_usuario} disabled /><br /><br />
+                    <label>Nombre</label><br />
+                    <input
+                        name="nombre"
+                        type="text"
+                        value={form.nombre}
+                        onChange={handle}
+                        maxLength={30}
+                    /><br />
+                    {errors.nombre && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.nombre}</span>}
+                </div><br />
+
+                <div>
+                    <label>Estado</label><br />
+                    <select name="estado" value={form.estado} onChange={handle}>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select><br />
+                    {errors.estado && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.estado}</span>}
+                </div><br />
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
                 </div>
-            )}
 
-            <div>
-                <label>Nombre</label><br />
-                <input
-                    name="nombre"
-                    type="text"
-                    value={form.nombre}
-                    onChange={handle}
-                    maxLength={30}
-                /><br />
-                {errors.nombre && <span>{errors.nombre}</span>}
             </div>
-
-            <br />
-
-            <div>
-                <label>Estado</label><br />
-                <select name="estado" value={form.estado} onChange={handle}>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select><br />
-                {errors.estado && <span>{errors.estado}</span>}
-            </div>
-
-            <br />
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
         </div>
     );
 }
@@ -134,9 +134,7 @@ export default function TiposUsuariosCRUD() {
         }
     }, []);
 
-    useEffect(() => {
-        loadTipos();
-    }, [loadTipos]);
+    useEffect(() => { loadTipos(); }, [loadTipos]);
 
     const handleSave = (message) => {
         setModal(null);
@@ -167,7 +165,6 @@ export default function TiposUsuariosCRUD() {
             )}
 
             <button onClick={() => setModal("create")}>+ Nuevo Tipo de Usuario</button>
-
             <br /><br />
 
             {loading ? (
@@ -207,12 +204,17 @@ export default function TiposUsuariosCRUD() {
             )}
 
             {confirmDelete && (
-                <div>
-                    <p>
-                        ¿Eliminar el tipo <strong>{confirmDelete.nombre}</strong>?
-                    </p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id_tipo_de_usuario)}>Sí, eliminar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmDelete(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Eliminar tipo de usuario?</h2>
+                        <p style={{ color: "var(--text)", fontSize: 13, marginBottom: 8 }}>
+                            Vas a eliminar el tipo <strong>{confirmDelete.nombre}</strong>.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmDelete(null)}>Cancelar</button>
+                            <button onClick={() => handleDelete(confirmDelete.id_tipo_de_usuario)}>Sí, eliminar</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

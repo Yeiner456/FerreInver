@@ -107,83 +107,89 @@ function CotizacionModal({ cotizacion, onClose, onSave }) {
     };
 
     return (
-        <div>
-            <h2>{isEdit ? "Editar Cotización" : "Nueva Cotización"}</h2>
-            {errors.general && <p>{errors.general}</p>}
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
 
-            {isEdit && (
+                <h2>{isEdit ? "Editar Cotización" : "Nueva Cotización"}</h2>
+                {errors.general && <p style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.general}</p>}
+
+                {isEdit && (
+                    <div>
+                        <label>ID (No editable)</label><br />
+                        <input type="text" value={cotizacion.id_cotizacion} disabled /><br /><br />
+                    </div>
+                )}
+
                 <div>
-                    <label>ID (No editable)</label><br />
-                    <input type="text" value={cotizacion.id_cotizacion} disabled /><br /><br />
+                    <label>Cliente</label><br />
+                    <select name="cliente_id" value={form.cliente_id} onChange={handle}>
+                        <option value="">-- Seleccione un cliente --</option>
+                        {selects.clientes.map((cl) => (
+                            <option key={cl.documento} value={cl.documento}>
+                                {cl.nombre} (Doc: {cl.documento})
+                            </option>
+                        ))}
+                    </select><br />
+                    {errors.cliente_id && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.cliente_id}</span>}
+                </div><br />
+
+                <div>
+                    <label>Invernadero</label><br />
+                    <select name="invernadero_id" value={form.invernadero_id} onChange={handle}>
+                        <option value="">-- Seleccione un invernadero --</option>
+                        {selects.invernaderos.map((inv) => (
+                            <option key={inv.id_invernadero} value={inv.id_invernadero}>
+                                {inv.nombre} ($ {Number(inv.precio_m2).toLocaleString("es-CO", { minimumFractionDigits: 2 })}/m²)
+                            </option>
+                        ))}
+                    </select><br />
+                    {errors.invernadero_id && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.invernadero_id}</span>}
+                </div><br />
+
+                <div>
+                    <label>Largo (metros)</label><br />
+                    <input name="largo" type="number" value={form.largo} onChange={handle} min="0.01" step="0.01" /><br />
+                    {errors.largo && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.largo}</span>}
+                </div><br />
+
+                <div>
+                    <label>Ancho (metros)</label><br />
+                    <input name="ancho" type="number" value={form.ancho} onChange={handle} min="0.01" step="0.01" /><br />
+                    {errors.ancho && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.ancho}</span>}
+                </div><br />
+
+                <div>
+                    <label>Metros Cuadrados (calculado automáticamente)</label><br />
+                    <input type="number" value={form.metros_cuadrados} readOnly /><br />
+                </div><br />
+
+                <div>
+                    <label>Valor por m² (según invernadero)</label><br />
+                    <input type="number" value={form.valor_m2} readOnly /><br />
+                </div><br />
+
+                <div>
+                    <label>Total ($)</label><br />
+                    <input type="number" value={form.total} readOnly /><br />
+                </div><br />
+
+                <div>
+                    <label>Estado</label><br />
+                    <select name="estado" value={form.estado} onChange={handle}>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="aprobada">Aprobada</option>
+                        <option value="rechazada">Rechazada</option>
+                    </select>
+                </div><br />
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
                 </div>
-            )}
 
-            <div>
-                <label>Cliente</label><br />
-                <select name="cliente_id" value={form.cliente_id} onChange={handle}>
-                    <option value="">-- Seleccione un cliente --</option>
-                    {selects.clientes.map((cl) => (
-                        <option key={cl.documento} value={cl.documento}>
-                            {cl.nombre} (Doc: {cl.documento})
-                        </option>
-                    ))}
-                </select><br />
-                {errors.cliente_id && <span>{errors.cliente_id}</span>}
-            </div><br />
-
-            <div>
-                <label>Invernadero</label><br />
-                <select name="invernadero_id" value={form.invernadero_id} onChange={handle}>
-                    <option value="">-- Seleccione un invernadero --</option>
-                    {selects.invernaderos.map((inv) => (
-                        <option key={inv.id_invernadero} value={inv.id_invernadero}>
-                            {inv.nombre} ($ {Number(inv.precio_m2).toLocaleString("es-CO", { minimumFractionDigits: 2 })}/m²)
-                        </option>
-                    ))}
-                </select><br />
-                {errors.invernadero_id && <span>{errors.invernadero_id}</span>}
-            </div><br />
-
-            <div>
-                <label>Largo (metros)</label><br />
-                <input name="largo" type="number" value={form.largo} onChange={handle} min="0.01" step="0.01" /><br />
-                {errors.largo && <span>{errors.largo}</span>}
-            </div><br />
-
-            <div>
-                <label>Ancho (metros)</label><br />
-                <input name="ancho" type="number" value={form.ancho} onChange={handle} min="0.01" step="0.01" /><br />
-                {errors.ancho && <span>{errors.ancho}</span>}
-            </div><br />
-
-            <div>
-                <label>Metros Cuadrados (calculado automáticamente)</label><br />
-                <input type="number" value={form.metros_cuadrados} readOnly /><br />
-            </div><br />
-
-            <div>
-                <label>Valor por m² (según invernadero)</label><br />
-                <input type="number" value={form.valor_m2} readOnly /><br />
-            </div><br />
-
-            <div>
-                <label>Total ($)</label><br />
-                <input type="number" value={form.total} readOnly /><br />
-            </div><br />
-
-            <div>
-                <label>Estado</label><br />
-                <select name="estado" value={form.estado} onChange={handle}>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="aprobada">Aprobada</option>
-                    <option value="rechazada">Rechazada</option>
-                </select>
-            </div><br />
-
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
+            </div>
         </div>
     );
 }
@@ -194,6 +200,7 @@ export default function CotizacionesCRUD() {
     const [modal, setModal] = useState(null);
     const [mensaje, setMensaje] = useState(null);
     const [confirmRechazar, setConfirmRechazar] = useState(null);
+    const [filtroFecha, setFiltroFecha] = useState("");
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -227,6 +234,10 @@ export default function CotizacionesCRUD() {
         }
     };
 
+    const cotizacionesFiltradas = filtroFecha
+        ? cotizaciones.filter((c) => c.fecha?.startsWith(filtroFecha))
+        : cotizaciones;
+
     return (
         <div>
             <h1>Cotizaciones</h1>
@@ -238,10 +249,23 @@ export default function CotizacionesCRUD() {
             <button onClick={() => setModal("create")}>+ Nueva Cotización</button>
             <br /><br />
 
+            <div>
+                <label>Filtrar por fecha: </label>
+                <input
+                    type="date"
+                    value={filtroFecha}
+                    onChange={(e) => setFiltroFecha(e.target.value)}
+                />
+                {filtroFecha && (
+                    <button onClick={() => setFiltroFecha("")}>✕ Limpiar</button>
+                )}
+            </div>
+            <br />
+
             {loading ? (
                 <p>Cargando...</p>
-            ) : cotizaciones.length === 0 ? (
-                <p>No hay cotizaciones registradas.</p>
+            ) : cotizacionesFiltradas.length === 0 ? (
+                <p>{filtroFecha ? "No hay cotizaciones en esa fecha." : "No hay cotizaciones registradas."}</p>
             ) : (
                 <table border="1" cellPadding="8">
                     <thead>
@@ -259,7 +283,7 @@ export default function CotizacionesCRUD() {
                         </tr>
                     </thead>
                     <tbody>
-                        {cotizaciones.map((c) => (
+                        {cotizacionesFiltradas.map((c) => (
                             <tr key={c.id_cotizacion}>
                                 <td>{c.cliente?.nombre || "N/A"}</td>
                                 <td>{c.invernadero?.nombre || "N/A"}</td>
@@ -294,15 +318,21 @@ export default function CotizacionesCRUD() {
             )}
 
             {confirmRechazar && (
-                <div>
-                    <p>
-                        ¿Rechazar cotización de{" "}
-                        <strong>{confirmRechazar.cliente_nombre}</strong>?
-                        <br />
-                        <small>El estado cambiará a "rechazada" y no podrá revertirse desde aquí.</small>
-                    </p>
-                    <button onClick={() => setConfirmRechazar(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleRechazar(confirmRechazar.id_cotizacion)}>Sí, rechazar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmRechazar(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Rechazar cotización?</h2>
+                        <p style={{ color: "var(--text)", fontSize: 13, marginBottom: 6 }}>
+                            Vas a rechazar la cotización de{" "}
+                            <strong>{confirmRechazar.cliente?.nombre || "este cliente"}</strong>.
+                        </p>
+                        <p style={{ color: "var(--muted)", fontSize: 12, marginBottom: 8 }}>
+                            El estado cambiará a "rechazada" y no podrá revertirse desde aquí.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmRechazar(null)}>Cancelar</button>
+                            <button onClick={() => handleRechazar(confirmRechazar.id_cotizacion)}>Sí, rechazar</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

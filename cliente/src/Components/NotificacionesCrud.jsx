@@ -76,8 +76,6 @@ function validate(form) {
     return errors;
 }
 
-/* ================= MODAL ================= */
-
 function NotificacionModal({ notificacion, onClose, onSave }) {
     const isEdit = !!notificacion;
 
@@ -120,8 +118,8 @@ function NotificacionModal({ notificacion, onClose, onSave }) {
     };
 
     return (
-        <div className="nc-overlay">
-            <div className="nc-modal">
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
                 <div className="nc-modal-header">
                     <h2 className="nc-modal-title">
                         {isEdit ? "✏️ Editar Notificación" : "🔔 Nueva Notificación"}
@@ -204,12 +202,10 @@ function NotificacionModal({ notificacion, onClose, onSave }) {
     );
 }
 
-/* ================= CONFIRM DELETE ================= */
-
 function ConfirmModal({ notificacion, onClose, onConfirm }) {
     return (
-        <div className="nc-overlay">
-            <div className="nc-modal nc-modal--small">
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box" style={{ maxWidth: 380 }}>
                 <div className="nc-modal-header">
                     <h2 className="nc-modal-title">🗑️ Eliminar Notificación</h2>
                     <button className="nc-modal-close" onClick={onClose}>✕</button>
@@ -217,7 +213,7 @@ function ConfirmModal({ notificacion, onClose, onConfirm }) {
                 <p className="nc-confirm-text">
                     ¿Eliminar <strong>"{notificacion.titulo}"</strong>?
                 </p>
-                <div className="nc-modal-footer">
+                <div className="modal-footer">
                     <button className="nc-btn-secondary" onClick={onClose}>Cancelar</button>
                     <button className="nc-btn-primary nc-btn-primary--danger" onClick={onConfirm}>
                         Sí, eliminar
@@ -228,8 +224,6 @@ function ConfirmModal({ notificacion, onClose, onConfirm }) {
     );
 }
 
-/* ================= CRUD ================= */
-
 export default function NotificacionesCrud() {
     const [notificaciones, setNotificaciones] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -237,6 +231,7 @@ export default function NotificacionesCrud() {
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [mensaje, setMensaje] = useState(null);
     const [search, setSearch] = useState("");
+    const [filtroFecha, setFiltroFecha] = useState("");
     const [marcando, setMarcando] = useState(null);
 
     const load = useCallback(async () => {
@@ -297,14 +292,16 @@ export default function NotificacionesCrud() {
         }
     };
 
-    const filtradas = notificaciones.filter((n) => {
-        const q = search.toLowerCase();
-        return (
-            n.titulo.toLowerCase().includes(q) ||
-            n.mensaje.toLowerCase().includes(q) ||
-            (n.cliente?.nombre ?? "").toLowerCase().includes(q)
-        );
-    });
+    const filtradas = notificaciones
+        .filter((n) => {
+            const q = search.toLowerCase();
+            return (
+                n.titulo.toLowerCase().includes(q) ||
+                n.mensaje.toLowerCase().includes(q) ||
+                (n.cliente?.nombre ?? "").toLowerCase().includes(q)
+            );
+        })
+        .filter((n) => filtroFecha ? n.fecha?.startsWith(filtroFecha) : true);
 
     const noLeidas = notificaciones.filter((n) => !n.leido).length;
 
@@ -336,12 +333,25 @@ export default function NotificacionesCrud() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
+                <input
+                    type="date"
+                    value={filtroFecha}
+                    onChange={(e) => setFiltroFecha(e.target.value)}
+                    style={{ marginLeft: 8 }}
+                />
+                {filtroFecha && (
+                    <button onClick={() => setFiltroFecha("")} style={{ marginLeft: 4 }}>
+                        ✕ Limpiar fecha
+                    </button>
+                )}
             </div>
 
             {loading ? (
                 <div className="nc-empty-state">Cargando...</div>
             ) : filtradas.length === 0 ? (
-                <div className="nc-empty-state">No hay notificaciones.</div>
+                <div className="nc-empty-state">
+                    {filtroFecha ? "No hay notificaciones en esa fecha." : "No hay notificaciones."}
+                </div>
             ) : (
                 <div className="nc-table-wrapper">
                     <table className="nc-table">
@@ -369,30 +379,20 @@ export default function NotificacionesCrud() {
                                                 {TIPO_LABELS[n.tipo] ?? n.tipo}
                                             </span>
                                         </td>
-
                                         <td className={`nc-td nc-td-titulo nc-td-titulo--${leida ? "leido" : "noleido"}`}>
                                             {n.titulo}
                                         </td>
-
-                                        <td className="nc-td nc-td-mensaje">
-                                            {n.mensaje}
-                                        </td>
-
+                                        <td className="nc-td nc-td-mensaje">{n.mensaje}</td>
                                         <td className="nc-td">
                                             <div className="nc-cliente-nombre">{n.cliente?.nombre ?? "—"}</div>
                                             <div className="nc-cliente-doc">{n.documento_cliente}</div>
                                         </td>
-
-                                        <td className="nc-td nc-fecha">
-                                            {formatFecha(n.fecha)}
-                                        </td>
-
+                                        <td className="nc-td nc-fecha">{formatFecha(n.fecha)}</td>
                                         <td className="nc-td">
                                             <span className={`nc-estado-badge nc-estado--${leida ? "leida" : "noleida"}`}>
                                                 {leida ? "✓ Leída" : "● Sin leer"}
                                             </span>
                                         </td>
-
                                         <td className="nc-td nc-td-acciones">
                                             {!leida && (
                                                 <button

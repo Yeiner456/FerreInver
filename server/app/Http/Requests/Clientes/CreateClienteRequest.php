@@ -17,7 +17,7 @@ class CreateClienteRequest extends FormRequest
     {
         return [
             'documento'          => ['required', 'numeric', 'digits_between:1,11'],
-            'id_tipo_de_usuario' => ['required', 'integer', 'min:1', 'exists:tipo_usuarios,id'],
+            'id_tipo_de_usuario' => ['required', 'integer', 'min:1', 'exists:tipos_usuarios,id_tipo_de_usuario'],
             'nombre'             => ['required', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', 'max:30'],
             'correo'             => ['required', 'email', 'max:50', 'unique:clientes,correo'],
             'password'           => ['required', 'string', 'min:6', 'regex:/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/', 'same:confirmar_password'],

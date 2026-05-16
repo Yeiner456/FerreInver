@@ -16,14 +16,14 @@ const api = {
         }).then((r) => r.json()),
 
     updateProveedor: (nit, data) =>
-        fetch(`${API_URL}/proveedores?nit=${nit}`, {
+        fetch(`${API_URL}/proveedores/${nit}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deactivateProveedor: (nit) =>
-        fetch(`${API_URL}/proveedores?nit=${nit}`, {
+        fetch(`${API_URL}/proveedores/${nit}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };
@@ -117,54 +117,60 @@ function ProveedorModal({ proveedor, onClose, onSave }) {
     };
 
     return (
-        <div>
-            <h2>{isEdit ? "Editar Proveedor" : "Nuevo Proveedor"}</h2>
-            {errors.general && <p>{errors.general}</p>}
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
 
-            {isEdit ? (
+                <h2>{isEdit ? "Editar Proveedor" : "Nuevo Proveedor"}</h2>
+                {errors.general && <p style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.general}</p>}
+
+                {isEdit ? (
+                    <div>
+                        <label>NIT (No editable)</label><br />
+                        <input type="text" value={proveedor.nit_proveedor} disabled /><br /><br />
+                    </div>
+                ) : (
+                    <div>
+                        <label>NIT del Proveedor</label><br />
+                        <input name="nit" type="number" value={form.nit} onChange={handle} min="1" placeholder="maximo 10 digitos" /><br />
+                        {errors.nit && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.nit}</span>}
+                    </div>
+                )}
+                <br />
+
                 <div>
-                    <label>NIT (No editable)</label><br />
-                    <input type="text" value={proveedor.nit_proveedor} disabled /><br /><br />
-                </div>
-            ) : (
+                    <label>Correo Electrónico</label><br />
+                    <input name="correo" type="email" value={form.correo} onChange={handle} maxLength={80} /><br />
+                    {errors.correo && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.correo}</span>}
+                </div><br />
+
                 <div>
-                    <label>NIT del Proveedor</label><br />
-                    <input name="nit" type="number" value={form.nit} onChange={handle} min="1" /><br />
-                    {errors.nit && <span>{errors.nit}</span>}
+                    <label>Dirección</label><br />
+                    <input name="direccion" type="text" value={form.direccion} onChange={handle} maxLength={80} /><br />
+                    {errors.direccion && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.direccion}</span>}
+                </div><br />
+
+                <div>
+                    <label>Teléfono</label><br />
+                    <input name="telefono" type="text" value={form.telefono} onChange={handle} maxLength={20} placeholder="Ej: 3001234567" /><br />
+                    {errors.telefono && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.telefono}</span>}
+                </div><br />
+
+                <div>
+                    <label>Estado</label><br />
+                    <select name="estado" value={form.estado} onChange={handle}>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                </div><br />
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
                 </div>
-            )}
-            <br />
 
-            <div>
-                <label>Correo Electrónico</label><br />
-                <input name="correo" type="email" value={form.correo} onChange={handle} maxLength={80} /><br />
-                {errors.correo && <span>{errors.correo}</span>}
-            </div><br />
-
-            <div>
-                <label>Dirección</label><br />
-                <input name="direccion" type="text" value={form.direccion} onChange={handle} maxLength={80} /><br />
-                {errors.direccion && <span>{errors.direccion}</span>}
-            </div><br />
-
-            <div>
-                <label>Teléfono</label><br />
-                <input name="telefono" type="text" value={form.telefono} onChange={handle} maxLength={20} placeholder="Ej: 3001234567" /><br />
-                {errors.telefono && <span>{errors.telefono}</span>}
-            </div><br />
-
-            <div>
-                <label>Estado</label><br />
-                <select name="estado" value={form.estado} onChange={handle}>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select>
-            </div><br />
-
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
+            </div>
         </div>
     );
 }
@@ -267,14 +273,20 @@ export default function ProveedoresCRUD() {
             )}
 
             {confirmDeactivate && (
-                <div>
-                    <p>
-                        ¿Desactivar proveedor({confirmDeactivate.correo})?
-                        <br />
-                        <small>El proveedor no aparecerá disponible para nuevas compras.</small>
-                    </p>
-                    <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDeactivate(confirmDeactivate.nit_proveedor)}>Sí, desactivar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmDeactivate(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Desactivar proveedor?</h2>
+                        <p style={{ color: "var(--text)", fontSize: 13, marginBottom: 6 }}>
+                            Vas a desactivar al proveedor <strong>{confirmDeactivate.correo}</strong>.
+                        </p>
+                        <p style={{ color: "var(--muted)", fontSize: 12, marginBottom: 8 }}>
+                            El proveedor no aparecerá disponible para nuevas compras.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>
+                            <button onClick={() => handleDeactivate(confirmDeactivate.nit_proveedor)}>Sí, desactivar</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

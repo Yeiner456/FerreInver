@@ -13,20 +13,19 @@ const api = {
             body: formData,
         }).then((r) => r.json()),
 
-    // FormData no puede enviarse con PUT nativo → usamos POST + ?_method=PUT
     updateProducto: (id, formData) =>
-    fetch(`${API_URL}/productos/${id}?_method=PUT`, {
-        method: "POST",
-        body: formData,
-    }).then((r) => r.json()),
+        fetch(`${API_URL}/productos/${id}`, {
+            method: "POST",
+            body: formData,
+        }).then((r) => r.json()),
 
-deactivateProducto: (id) =>
-    fetch(`${API_URL}/productos/${id}`, {
-        method: "DELETE",
-    }).then((r) => r.json()),
+    deactivateProducto: (id) =>
+        fetch(`${API_URL}/productos/${id}`, {
+            method: "DELETE",
+        }).then((r) => r.json()),
 };
 
-const emptyForm = { nombre: "", precio: "", descripcion: "" };
+const emptyForm = { nombre: "", precio: "", descripcion: "", estado_producto: "" };
 
 function validate(form) {
     const errors = {};
@@ -45,7 +44,7 @@ function ProductoModal({ producto, onClose, onSave }) {
     const isEdit = !!producto;
     const [form, setForm] = useState(
         isEdit
-            ? { nombre: producto.nombre, precio: producto.precio, descripcion: producto.descripcion }
+            ? { nombre: producto.nombre, precio: producto.precio, descripcion: producto.descripcion, estado_producto: producto.estado_producto }
             : emptyForm
     );
     const [errors, setErrors] = useState({});
@@ -80,6 +79,7 @@ function ProductoModal({ producto, onClose, onSave }) {
             fd.append("nombre", form.nombre);
             fd.append("precio", form.precio);
             fd.append("descripcion", form.descripcion);
+            fd.append("estado_producto", form.estado_producto);
             if (imagenFile) fd.append("imagen", imagenFile);
 
             const res = isEdit
@@ -96,66 +96,82 @@ function ProductoModal({ producto, onClose, onSave }) {
     };
 
     return (
-        <div style={{ border: "1px solid #ccc", padding: 16, marginTop: 12, maxWidth: 420 }}>
-            <h2>{isEdit ? "Editar Producto" : "Nuevo Producto"}</h2>
-            {errors.general && <p style={{ color: "red" }}>{errors.general}</p>}
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
 
-            {isEdit && (
-                <div>
-                    <label>ID (No editable)</label><br />
-                    <input type="text" value={producto.id_producto} disabled /><br /><br />
-                </div>
-            )}
+                <h2>{isEdit ? "Editar Producto" : "Nuevo Producto"}</h2>
+                {errors.general && <p style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.general}</p>}
 
-            <div>
-                <label>Nombre del Producto</label><br />
-                <input name="nombre" type="text" value={form.nombre} onChange={handle} maxLength={30} /><br />
-                {errors.nombre && <span style={{ color: "red" }}>{errors.nombre}</span>}
-            </div><br />
-
-            <div>
-                <label>Precio</label><br />
-                <input name="precio" type="number" value={form.precio} onChange={handle} min="1" step="1" /><br />
-                {errors.precio && <span style={{ color: "red" }}>{errors.precio}</span>}
-            </div><br />
-
-            <div>
-                <label>Descripción (opcional)</label><br />
-                <textarea name="descripcion" value={form.descripcion} onChange={handle} maxLength={100} rows={3} /><br />
-                {errors.descripcion && <span style={{ color: "red" }}>{errors.descripcion}</span>}
-            </div><br />
-
-            <div>
-                <label>Imagen del Producto (opcional)</label><br />
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,image/gif"
-                    onChange={handleImagen}
-                /><br />
-                {isEdit && <small style={{ color: "#888" }}>Deja vacío para conservar la imagen actual.</small>}
-
-                {preview && (
-                    <div style={{ marginTop: 8 }}>
-                        <img
-                            src={preview}
-                            alt="Preview"
-                            style={{ width: 120, height: 120, objectFit: "cover", border: "1px solid #ddd", borderRadius: 4 }}
-                        />
-                        <br />
-                        {imagenFile && (
-                            <button type="button" onClick={quitarImagen} style={{ fontSize: 12, marginTop: 4 }}>
-                                ✕ Quitar imagen nueva
-                            </button>
-                        )}
+                {isEdit && (
+                    <div>
+                        <label>ID (No editable)</label><br />
+                        <input type="text" value={producto.id_producto} disabled /><br /><br />
                     </div>
                 )}
-            </div><br />
 
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
+                <div>
+                    <label>Nombre del Producto</label><br />
+                    <input name="nombre" type="text" value={form.nombre} onChange={handle} maxLength={30} /><br />
+                    {errors.nombre && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.nombre}</span>}
+                </div><br />
+
+                <div>
+                    <label>Precio</label><br />
+                    <input name="precio" type="number" value={form.precio} onChange={handle} min="1" step="1" /><br />
+                    {errors.precio && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.precio}</span>}
+                </div><br />
+
+                <div>
+                    <label>Descripción (opcional)</label><br />
+                    <textarea name="descripcion" value={form.descripcion} onChange={handle} maxLength={100} rows={3} /><br />
+                    {errors.descripcion && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.descripcion}</span>}
+                </div><br />
+
+                {isEdit && (
+                    <div>
+                        <label>Estado</label><br />
+                        <select name="estado_producto" value={form.estado_producto} onChange={handle}>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                )}<br />
+
+                <div>
+                    <label>Imagen del Producto (opcional)</label><br />
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        onChange={handleImagen}
+                    /><br />
+                    {isEdit && <small style={{ color: "var(--muted)" }}>Deja vacío para conservar la imagen actual.</small>}
+
+                    {preview && (
+                        <div style={{ marginTop: 8 }}>
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                style={{ width: 120, height: 120, objectFit: "cover", border: "1px solid var(--border)", borderRadius: 4 }}
+                            />
+                            <br />
+                            {imagenFile && (
+                                <button type="button" onClick={quitarImagen} style={{ fontSize: 12, marginTop: 4 }}>
+                                    ✕ Quitar imagen nueva
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div><br />
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
+                </div>
+
+            </div>
         </div>
     );
 }
@@ -200,7 +216,7 @@ export default function ProductosCRUD() {
     };
 
     return (
-        <div style={{ padding: 16 }}>
+        <div>
             <h1>Productos Registrados</h1>
 
             {mensaje && (
@@ -233,7 +249,7 @@ export default function ProductosCRUD() {
                                     {p.imagen
                                         ? <img src={IMG_BASE + p.imagen} alt={p.nombre}
                                             style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }} />
-                                        : <span style={{ color: "#aaa", fontSize: 12 }}>Sin imagen</span>
+                                        : <span style={{ color: "var(--muted)", fontSize: 12 }}>Sin imagen</span>
                                     }
                                 </td>
                                 <td>{p.nombre}</td>
@@ -264,14 +280,20 @@ export default function ProductosCRUD() {
             )}
 
             {confirmDeactivate && (
-                <div style={{ marginTop: 12, border: "1px solid #f99", padding: 12 }}>
-                    <p>
-                        ¿Desactivar <strong>{confirmDeactivate.nombre}</strong>?
-                        <br />
-                        <small>El producto no aparecerá disponible para nuevos pedidos.</small>
-                    </p>
-                    <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDeactivate(confirmDeactivate.id_producto)}>Sí, desactivar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmDeactivate(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Desactivar producto?</h2>
+                        <p style={{ color: "var(--text)", fontSize: 13, marginBottom: 6 }}>
+                            Vas a desactivar <strong>{confirmDeactivate.nombre}</strong>.
+                        </p>
+                        <p style={{ color: "var(--muted)", fontSize: 12, marginBottom: 8 }}>
+                            El producto no aparecerá disponible para nuevos pedidos.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>
+                            <button onClick={() => handleDeactivate(confirmDeactivate.id_producto)}>Sí, desactivar</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

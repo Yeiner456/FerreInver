@@ -13,7 +13,7 @@ return new class extends Migration
             $table->increments('id_producto');
             $table->bigInteger('precio');
             $table->string('nombre', 30);
-            $table->string('descripcion', 100)->nullable();
+            $table->string('descripcion', 100)->default('Producto de ferreinver disponible');
             $table->enum('estado_producto', ['activo', 'inactivo'])->default('activo');
             $table->string('imagen', 255)->nullable();
         });

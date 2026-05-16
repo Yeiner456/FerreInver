@@ -8,7 +8,6 @@ const api = {
     getProductosPedidos: () =>
         fetch(`${API_URL}/productos-pedidos`).then((r) => r.json()),
 
-    // El controller devuelve { success, data: { productos: [...], pedidos: [...] } }
     getSelects: () =>
         fetch(`${API_URL}/productos-pedidos?selects=1`).then((r) => r.json()),
 
@@ -72,7 +71,6 @@ function ProductoPedidoModal({ registro, onClose, onSave }) {
     useEffect(() => {
         if (!isEdit) {
             api.getSelects().then((res) => {
-                // El controller devuelve { success, data: { productos: [...], pedidos: [...] } }
                 if (res.success) setSelects({ productos: res.data.productos, pedidos: res.data.pedidos });
             });
         }
@@ -98,63 +96,69 @@ function ProductoPedidoModal({ registro, onClose, onSave }) {
     };
 
     return (
-        <div>
-            <h2>{isEdit ? "Editar Producto-Pedido" : "Registrar Producto en Pedido"}</h2>
-            {errors.general && <p>{errors.general}</p>}
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
 
-            {isEdit && (
+                <h2>{isEdit ? "Editar Producto-Pedido" : "Registrar Producto en Pedido"}</h2>
+                {errors.general && <p style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.general}</p>}
+
+                {isEdit && (
+                    <div>
+                        <label>ID (No editable)</label><br />
+                        <input type="text" value={registro.id} disabled /><br /><br />
+                        <label>Producto (No editable)</label><br />
+                        <input type="text" value={registro.nombre_producto} disabled /><br /><br />
+                        <label>Pedido (No editable)</label><br />
+                        <input type="text" value={`#${registro.id_pedido}`} disabled /><br /><br />
+                    </div>
+                )}
+
+                {!isEdit && (
+                    <>
+                        <div>
+                            <label>Producto</label><br />
+                            <select name="id_producto" value={form.id_producto} onChange={handle}>
+                                <option value="">-- Selecciona un producto --</option>
+                                {selects.productos.map((p) => (
+                                    <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
+                                ))}
+                            </select><br />
+                            {errors.id_producto && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.id_producto}</span>}
+                        </div><br />
+
+                        <div>
+                            <label>Pedido</label><br />
+                            <select name="id_pedido" value={form.id_pedido} onChange={handle}>
+                                <option value="">-- Selecciona un pedido --</option>
+                                {selects.pedidos.map((p) => (
+                                    <option key={p.id_pedido} value={p.id_pedido}>Pedido #{p.id_pedido}</option>
+                                ))}
+                            </select><br />
+                            {errors.id_pedido && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.id_pedido}</span>}
+                        </div><br />
+                    </>
+                )}
+
                 <div>
-                    <label>ID (No editable)</label><br />
-                    <input type="text" value={registro.id} disabled /><br /><br />
-                    <label>Producto (No editable)</label><br />
-                    <input type="text" value={registro.nombre_producto} disabled /><br /><br />
-                    <label>Pedido (No editable)</label><br />
-                    <input type="text" value={`#${registro.id_pedido}`} disabled /><br /><br />
+                    <label>Descripción</label><br />
+                    <input name="descripcion" type="text" value={form.descripcion} onChange={handle} maxLength={100} /><br />
+                    {errors.descripcion && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.descripcion}</span>}
+                </div><br />
+
+                <div>
+                    <label>Cantidad</label><br />
+                    <input name="cantidad" type="number" value={form.cantidad} onChange={handle} min="1" max="1000" /><br />
+                    {errors.cantidad && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.cantidad}</span>}
+                </div><br />
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
                 </div>
-            )}
 
-            {!isEdit && (
-                <>
-                    <div>
-                        <label>Producto</label><br />
-                        <select name="id_producto" value={form.id_producto} onChange={handle}>
-                            <option value="">-- Selecciona un producto --</option>
-                            {selects.productos.map((p) => (
-                                <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
-                            ))}
-                        </select><br />
-                        {errors.id_producto && <span>{errors.id_producto}</span>}
-                    </div><br />
-
-                    <div>
-                        <label>Pedido</label><br />
-                        <select name="id_pedido" value={form.id_pedido} onChange={handle}>
-                            <option value="">-- Selecciona un pedido --</option>
-                            {selects.pedidos.map((p) => (
-                                <option key={p.id_pedido} value={p.id_pedido}>Pedido #{p.id_pedido}</option>
-                            ))}
-                        </select><br />
-                        {errors.id_pedido && <span>{errors.id_pedido}</span>}
-                    </div><br />
-                </>
-            )}
-
-            <div>
-                <label>Descripción</label><br />
-                <input name="descripcion" type="text" value={form.descripcion} onChange={handle} maxLength={100} /><br />
-                {errors.descripcion && <span>{errors.descripcion}</span>}
-            </div><br />
-
-            <div>
-                <label>Cantidad</label><br />
-                <input name="cantidad" type="number" value={form.cantidad} onChange={handle} min="1" max="1000" /><br />
-                {errors.cantidad && <span>{errors.cantidad}</span>}
-            </div><br />
-
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
+            </div>
         </div>
     );
 }
@@ -250,12 +254,17 @@ export default function ProductosPedidosCRUD() {
             )}
 
             {confirmDelete && (
-                <div>
-                    <p>
-                        ¿Quitar <strong>{confirmDelete.nombre_producto}</strong> del Pedido #{confirmDelete.id_pedido}?
-                    </p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id)}>Sí, quitar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmDelete(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Quitar producto del pedido?</h2>
+                        <p style={{ color: "var(--text)", fontSize: 13, marginBottom: 8 }}>
+                            Vas a quitar <strong>{confirmDelete.nombre_producto}</strong> del Pedido #{confirmDelete.id_pedido}.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmDelete(null)}>Cancelar</button>
+                            <button onClick={() => handleDelete(confirmDelete.id)}>Sí, quitar</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

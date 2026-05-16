@@ -65,47 +65,53 @@ function InvernaderoModal({ invernadero, onClose, onSave }) {
     };
 
     return (
-        <div>
-            <h2>{isEdit ? "Editar Invernadero" : "Nuevo Invernadero"}</h2>
-            {errors.general && <p>{errors.general}</p>}
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
 
-            {isEdit && (
+                <h2>{isEdit ? "Editar Invernadero" : "Nuevo Invernadero"}</h2>
+                {errors.general && <p style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.general}</p>}
+
+                {isEdit && (
+                    <div>
+                        <label>ID (No editable)</label><br />
+                        <input type="text" value={invernadero.id_invernadero} disabled /><br /><br />
+                    </div>
+                )}
+
                 <div>
-                    <label>ID (No editable)</label><br />
-                    <input type="text" value={invernadero.id_invernadero} disabled /><br /><br />
+                    <label>Nombre</label><br />
+                    <input name="nombre" type="text" value={form.nombre} onChange={handle} maxLength={50} /><br />
+                    {errors.nombre && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.nombre}</span>}
+                </div><br />
+
+                <div>
+                    <label>Descripción (opcional)</label><br />
+                    <textarea name="descripcion" value={form.descripcion} onChange={handle} maxLength={150} rows={3} /><br />
+                    {errors.descripcion && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.descripcion}</span>}
+                </div><br />
+
+                <div>
+                    <label>Precio por m² ($)</label><br />
+                    <input name="precio_m2" type="number" value={form.precio_m2} onChange={handle} min="0.01" step="0.01" /><br />
+                    {errors.precio_m2 && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.precio_m2}</span>}
+                </div><br />
+
+                <div>
+                    <label>Estado</label><br />
+                    <select name="estado" value={form.estado} onChange={handle}>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                </div><br />
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
                 </div>
-            )}
 
-            <div>
-                <label>Nombre</label><br />
-                <input name="nombre" type="text" value={form.nombre} onChange={handle} maxLength={50} /><br />
-                {errors.nombre && <span>{errors.nombre}</span>}
-            </div><br />
-
-            <div>
-                <label>Descripción (opcional)</label><br />
-                <textarea name="descripcion" value={form.descripcion} onChange={handle} maxLength={150} rows={3} /><br />
-                {errors.descripcion && <span>{errors.descripcion}</span>}
-            </div><br />
-
-            <div>
-                <label>Precio por m² ($)</label><br />
-                <input name="precio_m2" type="number" value={form.precio_m2} onChange={handle} min="0.01" step="0.01" /><br />
-                {errors.precio_m2 && <span>{errors.precio_m2}</span>}
-            </div><br />
-
-            <div>
-                <label>Estado</label><br />
-                <select name="estado" value={form.estado} onChange={handle}>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select>
-            </div><br />
-
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
+            </div>
         </div>
     );
 }
@@ -206,14 +212,20 @@ export default function InvernaderoCRUD() {
             )}
 
             {confirmDeactivate && (
-                <div>
-                    <p>
-                        ¿Desactivar invernadero <strong>{confirmDeactivate.nombre}</strong>?
-                        <br />
-                        <small>El invernadero no aparecerá disponible para nuevas cotizaciones.</small>
-                    </p>
-                    <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDeactivate(confirmDeactivate.id_invernadero)}>Sí, desactivar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmDeactivate(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Desactivar invernadero?</h2>
+                        <p style={{ color: "var(--text)", fontSize: 13, marginBottom: 6 }}>
+                            Vas a desactivar <strong>{confirmDeactivate.nombre}</strong>.
+                        </p>
+                        <p style={{ color: "var(--muted)", fontSize: 12, marginBottom: 8 }}>
+                            El invernadero no aparecerá disponible para nuevas cotizaciones.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmDeactivate(null)}>Cancelar</button>
+                            <button onClick={() => handleDeactivate(confirmDeactivate.id_invernadero)}>Sí, desactivar</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

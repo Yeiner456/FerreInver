@@ -97,63 +97,69 @@ function CompraModal({ compra, onClose, onSave }) {
     };
 
     return (
-        <div>
-            <h2>{isEdit ? "Editar Compra" : "Nueva Compra"}</h2>
-            {errors.general && <p>{errors.general}</p>}
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+            <div className="modal-box">
 
-            {isEdit && (
+                <h2>{isEdit ? "Editar Compra" : "Nueva Compra"}</h2>
+                {errors.general && <p style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.general}</p>}
+
+                {isEdit && (
+                    <div>
+                        <label>ID Compra (No editable)</label><br />
+                        <input type="text" value={compra.id_compra} disabled /><br /><br />
+                        <label>Producto (No editable)</label><br />
+                        <input type="text" value={compra.nombre_producto} disabled /><br /><br />
+                        <label>Proveedor (No editable)</label><br />
+                        <input type="text" value={compra.correo_proveedor} disabled /><br /><br />
+                    </div>
+                )}
+
                 <div>
-                    <label>ID Compra (No editable)</label><br />
-                    <input type="text" value={compra.id_compra} disabled /><br /><br />
-                    <label>Producto (No editable)</label><br />
-                    <input type="text" value={compra.nombre_producto} disabled /><br /><br />
-                    <label>Proveedor (No editable)</label><br />
-                    <input type="text" value={compra.correo_proveedor} disabled /><br /><br />
+                    <label>Cantidad</label><br />
+                    <input name="cantidad" type="number" value={form.cantidad} onChange={handle} min="1" /><br />
+                    {errors.cantidad && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.cantidad}</span>}
+                </div><br />
+
+                <div>
+                    <label>Descripción</label><br />
+                    <input name="descripcion" type="text" value={form.descripcion} onChange={handle} maxLength={150} /><br />
+                    {errors.descripcion && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.descripcion}</span>}
+                </div><br />
+
+                {!isEdit && (
+                    <>
+                        <div>
+                            <label>Producto</label><br />
+                            <select name="id_producto" value={form.id_producto} onChange={handle}>
+                                <option value="">-- Seleccione un producto --</option>
+                                {selects.productos.map((p) => (
+                                    <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
+                                ))}
+                            </select><br />
+                            {errors.id_producto && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.id_producto}</span>}
+                        </div><br />
+
+                        <div>
+                            <label>Proveedor</label><br />
+                            <select name="id_proveedor" value={form.id_proveedor} onChange={handle}>
+                                <option value="">-- Seleccione un proveedor --</option>
+                                {selects.proveedores.map((pv) => (
+                                    <option key={pv.nit_proveedor} value={pv.nit_proveedor}>{pv.correo}</option>
+                                ))}
+                            </select><br />
+                            {errors.id_proveedor && <span style={{ color: "#ff6b6b", fontSize: 12 }}>{errors.id_proveedor}</span>}
+                        </div><br />
+                    </>
+                )}
+
+                <div className="modal-footer">
+                    <button onClick={onClose}>Cancelar</button>
+                    <button onClick={submit} disabled={loading}>
+                        {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
+                    </button>
                 </div>
-            )}
 
-            <div>
-                <label>Cantidad</label><br />
-                <input name="cantidad" type="number" value={form.cantidad} onChange={handle} min="1" /><br />
-                {errors.cantidad && <span>{errors.cantidad}</span>}
-            </div><br />
-
-            <div>
-                <label>Descripción</label><br />
-                <input name="descripcion" type="text" value={form.descripcion} onChange={handle} maxLength={150} /><br />
-                {errors.descripcion && <span>{errors.descripcion}</span>}
-            </div><br />
-
-            {!isEdit && (
-                <>
-                    <div>
-                        <label>Producto</label><br />
-                        <select name="id_producto" value={form.id_producto} onChange={handle}>
-                            <option value="">-- Seleccione un producto --</option>
-                            {selects.productos.map((p) => (
-                                <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>
-                            ))}
-                        </select><br />
-                        {errors.id_producto && <span>{errors.id_producto}</span>}
-                    </div><br />
-
-                    <div>
-                        <label>Proveedor</label><br />
-                        <select name="id_proveedor" value={form.id_proveedor} onChange={handle}>
-                            <option value="">-- Seleccione un proveedor --</option>
-                            {selects.proveedores.map((pv) => (
-                                <option key={pv.nit_proveedor} value={pv.nit_proveedor}>{pv.correo}</option>
-                            ))}
-                        </select><br />
-                        {errors.id_proveedor && <span>{errors.id_proveedor}</span>}
-                    </div><br />
-                </>
-            )}
-
-            <button onClick={onClose}>Cancelar</button>{" "}
-            <button onClick={submit} disabled={loading}>
-                {loading ? "Guardando..." : isEdit ? "Actualizar" : "Registrar"}
-            </button>
+            </div>
         </div>
     );
 }
@@ -228,8 +234,8 @@ export default function ComprasCRUD() {
                             <tr key={c.id_compra}>
                                 <td>{c.cantidad}</td>
                                 <td>{c.descripcion}</td>
-                                <td>{c.nombre_producto}</td>
-                                <td>{c.correo_proveedor}</td>
+                                <td>{c.producto?.nombre || "Producto no encontrado"}</td>
+                                <td>{c.proveedor?.correo || "Proveedor no encontrado"}</td>
                                 <td>
                                     <button onClick={() => setModal(c)}>Editar</button>{" "}
                                     <button onClick={() => setConfirmDelete(c)}>Eliminar</button>
@@ -249,10 +255,17 @@ export default function ComprasCRUD() {
             )}
 
             {confirmDelete && (
-                <div>
-                    <p>¿Eliminar compra?</p>
-                    <button onClick={() => setConfirmDelete(null)}>Cancelar</button>{" "}
-                    <button onClick={() => handleDelete(confirmDelete.id_compra)}>Sí, eliminar</button>
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmDelete(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Eliminar compra?</h2>
+                        <p style={{ color: "var(--muted)", fontSize: 13, marginBottom: 8 }}>
+                            Esta acción no se puede deshacer.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmDelete(null)}>Cancelar</button>
+                            <button onClick={() => handleDelete(confirmDelete.id_compra)}>Sí, eliminar</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

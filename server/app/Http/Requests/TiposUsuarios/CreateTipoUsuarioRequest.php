@@ -16,7 +16,7 @@ class CreateTipoUsuarioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => ['required', 'string', 'max:30', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', 'unique:tipo_de_usuarios,nombre'],
+            'nombre' => ['required', 'string', 'max:30', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u', 'unique:tipos_usuarios,nombre'],
             'estado' => ['required', 'in:activo,inactivo'],
         ];
     }
