@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from 'react-router-dom'
 import { data } from "./Components/data.js";
-import "./styles/herosection.css";
+import "./styles/heroSection.css";
 
 
 export const HeroSection = () => {
