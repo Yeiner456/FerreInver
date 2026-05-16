@@ -1,30 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getStocks: () =>
-        fetch(`${API_BASE}/stocks`).then((r) => r.json()),
+        fetch(`${API_URL}/stocks`).then((r) => r.json()),
 
     getProductos: () =>
-        fetch(`${API_BASE}/stocks?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/stocks?selects=1`).then((r) => r.json()),
 
     createStock: (data) =>
-        fetch(`${API_BASE}/stocks`, {
+        fetch(`${API_URL}/stocks`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateStock: (id, data) =>
-        fetch(`${API_BASE}/stocks/${id}`, {
+        fetch(`${API_URL}/stocks/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteStock: (id) =>
-        fetch(`${API_BASE}/stocks/${id}`, {
+        fetch(`${API_URL}/stocks/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

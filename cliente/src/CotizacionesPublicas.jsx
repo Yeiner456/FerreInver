@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import "../src/styles/CotizacionesPublicas.css";
-import { MisCotizaciones } from "./Components/MisCotizaciones"; // ← ajusta la ruta si es necesario
+import { MisCotizaciones } from "./Components/MisCotizaciones"; 
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getSelects: () =>
-        fetch(`${API_BASE}/cotizaciones?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/cotizaciones?selects=1`).then((r) => r.json()),
     createCotizacion: (data) =>
-        fetch(`${API_BASE}/cotizaciones`, {
+        fetch(`${API_URL}/cotizaciones`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),

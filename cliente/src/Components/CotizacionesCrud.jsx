@@ -1,30 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getCotizaciones: () =>
-        fetch(`${API_BASE}/cotizaciones`).then((r) => r.json()),
+        fetch(`${API_URL}/cotizaciones`).then((r) => r.json()),
 
     getSelects: () =>
-        fetch(`${API_BASE}/cotizaciones?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/cotizaciones?selects=1`).then((r) => r.json()),
 
     createCotizacion: (data) =>
-        fetch(`${API_BASE}/cotizaciones`, {
+        fetch(`${API_URL}/cotizaciones`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateCotizacion: (id, data) =>
-        fetch(`${API_BASE}/cotizaciones/${id}`, {
+        fetch(`${API_URL}/cotizaciones/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     rechazarCotizacion: (id) =>
-        fetch(`${API_BASE}/Cotizaciones/${id}`, {
+        fetch(`${API_URL}/cotizaciones/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

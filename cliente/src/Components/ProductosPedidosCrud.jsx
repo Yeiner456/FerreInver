@@ -2,32 +2,32 @@ import { useState, useEffect, useCallback } from "react";
 
 // Solo se pueden editar descripcion y cantidad (igual que en el PHP original)
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getProductosPedidos: () =>
-        fetch(`${API_BASE}/productos-pedidos`).then((r) => r.json()),
+        fetch(`${API_URL}/productos-pedidos`).then((r) => r.json()),
 
     // El controller devuelve { success, data: { productos: [...], pedidos: [...] } }
     getSelects: () =>
-        fetch(`${API_BASE}/productos-pedidos?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/productos-pedidos?selects=1`).then((r) => r.json()),
 
     createProductoPedido: (data) =>
-        fetch(`${API_BASE}/productos-pedidos`, {
+        fetch(`${API_URL}/productos-pedidos`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateProductoPedido: (id, data) =>
-        fetch(`${API_BASE}/productos-pedidos/${id}`, {
+        fetch(`${API_URL}/productos-pedidos/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteProductoPedido: (id) =>
-        fetch(`${API_BASE}/productos-pedidos/${id}`, {
+        fetch(`${API_URL}/productos-pedidos/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

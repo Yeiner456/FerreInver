@@ -1,27 +1,27 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-const API_BASE = "http://127.0.0.1:8000/api";
-const IMG_BASE = "http://127.0.0.1:8000/";
+const API_URL = import.meta.env.VITE_API_URL
+const IMG_BASE = import.meta.env.VITE_IMG_URL
 
 const api = {
     getProductos: () =>
-        fetch(`${API_BASE}/productos`).then((r) => r.json()),
+        fetch(`${API_URL}/productos`).then((r) => r.json()),
 
     createProducto: (formData) =>
-        fetch(`${API_BASE}/productos`, {
+        fetch(`${API_URL}/productos`, {
             method: "POST",
             body: formData,
         }).then((r) => r.json()),
 
     // FormData no puede enviarse con PUT nativo → usamos POST + ?_method=PUT
     updateProducto: (id, formData) =>
-    fetch(`${API_BASE}/productos/${id}?_method=PUT`, {
+    fetch(`${API_URL}/productos/${id}?_method=PUT`, {
         method: "POST",
         body: formData,
     }).then((r) => r.json()),
 
 deactivateProducto: (id) =>
-    fetch(`${API_BASE}/productos/${id}`, {
+    fetch(`${API_URL}/productos/${id}`, {
         method: "DELETE",
     }).then((r) => r.json()),
 };

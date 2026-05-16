@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
-
+const API_URL = import.meta.env.VITE_API_URL
 /*Modal de exito*/
 const SuccessModal = ({ onLogin, onClose }) => (
   <div className="modal-overlay" onClick={onClose}>
@@ -65,7 +65,7 @@ export const Register = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/auth/register", {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

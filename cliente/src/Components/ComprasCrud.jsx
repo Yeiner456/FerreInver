@@ -3,31 +3,31 @@ import { useState, useEffect, useCallback } from "react";
 // Nota: proveedor e id_producto NO son editables en el update
 // Solo se pueden cambiar cantidad y descripcion al editar
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getCompras: () =>
-        fetch(`${API_BASE}/compras`).then((r) => r.json()),
+        fetch(`${API_URL}/compras`).then((r) => r.json()),
 
     getSelects: () =>
-        fetch(`${API_BASE}/compras/selects`).then((r) => r.json()),
+        fetch(`${API_URL}/compras/selects`).then((r) => r.json()),
 
     createCompra: (data) =>
-        fetch(`${API_BASE}/compras`, {
+        fetch(`${API_URL}/compras`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateCompra: (id, data) =>
-        fetch(`${API_BASE}/compras/${id}`, {
+        fetch(`${API_URL}/compras/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deleteCompra: (id) =>
-        fetch(`${API_BASE}/compras/${id}`, {
+        fetch(`${API_URL}/compras/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

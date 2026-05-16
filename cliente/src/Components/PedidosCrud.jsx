@@ -1,20 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const MEDIOS_PAGO    = ["Efectivo", "Tarjeta Débito", "Tarjeta Crédito", "Transferencia", "PSE", "Nequi", "Daviplata"];
 const ESTADOS_PEDIDO = ["pendiente", "recibido", "listo para recibir", "cancelado"];
 
 const api = {
     getPedidos: () =>
-        fetch(`${API_BASE}/pedidos`).then((r) => r.json()),
+        fetch(`${API_URL}/pedidos`).then((r) => r.json()),
 
     // Clientes para el select — el controller devuelve { success, data: { clientes: [...] } }
     getClientes: () =>
-        fetch(`${API_BASE}/pedidos?selects=1`).then((r) => r.json()),
+        fetch(`${API_URL}/pedidos?selects=1`).then((r) => r.json()),
 
     createPedido: (data) =>
-        fetch(`${API_BASE}/pedidos`, {
+        fetch(`${API_URL}/pedidos`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -22,28 +22,28 @@ const api = {
 
     // Pedido completo con items (carrito del cliente)
     createPedidoCompleto: (data) =>
-        fetch(`${API_BASE}/pedidos/completo`, {
+        fetch(`${API_URL}/pedidos/completo`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updatePedido: (id, data) =>
-        fetch(`${API_BASE}/pedidos/${id}`, {
+        fetch(`${API_URL}/pedidos/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     cancelPedido: (id) =>
-        fetch(`${API_BASE}/pedidos/${id}`, {
+        fetch(`${API_URL}/pedidos/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 
 
     // Vista cliente: pedidos por documento
     getPedidosByCliente: (documento) =>
-        fetch(`${API_BASE}/pedidos?documento=${documento}`).then((r) => r.json()),
+        fetch(`${API_URL}/pedidos?documento=${documento}`).then((r) => r.json()),
 };
 
 const emptyForm = {

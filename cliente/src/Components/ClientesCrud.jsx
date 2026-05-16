@@ -1,30 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getClientes: () =>
-        fetch(`${API_BASE}/clientes`).then((r) => r.json()),
+        fetch(`${API_URL}/clientes`).then((r) => r.json()),
 
     getTiposUsuario: () =>
-        fetch(`${API_BASE}/clientes/tipos`).then((r) => r.json()),
+        fetch(`${API_URL}/clientes/tipos`).then((r) => r.json()),
 
     createCliente: (data) =>
-        fetch(`${API_BASE}/clientes`, {
+        fetch(`${API_URL}/clientes`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateCliente: (documento, data) =>
-        fetch(`${API_BASE}/clientes/${documento}`, {
+        fetch(`${API_URL}/clientes/${documento}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deactivateCliente: (documento) =>
-        fetch(`${API_BASE}/clientes/${documento}`, {
+        fetch(`${API_URL}/clientes/${documento}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

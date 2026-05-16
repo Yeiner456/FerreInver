@@ -1,33 +1,33 @@
 import { useState, useEffect, useCallback } from "react";
 import "../styles/Notificaciones.css";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getNotificaciones: () =>
-        fetch(`${API_BASE}/notificaciones`).then((r) => r.json()),
+        fetch(`${API_URL}/notificaciones`).then((r) => r.json()),
 
     createNotificacion: (data) =>
-        fetch(`${API_BASE}/notificaciones`, {
+        fetch(`${API_URL}/notificaciones`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateNotificacion: (id, data) =>
-        fetch(`${API_BASE}/notificaciones/${id}`, {
+        fetch(`${API_URL}/notificaciones/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     marcarLeida: (id) =>
-        fetch(`${API_BASE}/notificaciones/${id}/marcar-leida`, {
+        fetch(`${API_URL}/notificaciones/${id}/marcar-leida`, {
             method: "PATCH",
         }).then((r) => r.json()),
 
     deleteNotificacion: (id) =>
-        fetch(`${API_BASE}/notificaciones/${id}`, {
+        fetch(`${API_URL}/notificaciones/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

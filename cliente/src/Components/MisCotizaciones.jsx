@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import '../styles/MisRegistros.css'
-
+const API_URL = import.meta.env.VITE_API_URL
 const ESTADOS_COLOR = {
   pendiente: { bg: '#fff8e1', color: '#f59e0b' },
   aprobada:  { bg: '#e8f5e9', color: '#22BB48' },
@@ -166,7 +166,7 @@ export const MisCotizaciones = ({ onCerrar }) => {
   useEffect(() => {
     const fetchCotizaciones = async () => {
       try {
-        const res  = await fetch(`http://127.0.0.1:8000/api/cotizaciones?documento=${usuario.documento}`)
+        const res  = await fetch(`${API_URL}/cotizaciones?documento=${usuario.documento}`)
         const data = await res.json()
         if (!data.success) throw new Error(data.message)
         setCotizaciones(data.data)

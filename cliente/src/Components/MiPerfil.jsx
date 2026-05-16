@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../styles/MiPerfil.css'
 
-const API_URL = 'http://127.0.0.1:8000/api';
+const API_URL = import.meta.env.VITE_API_URL
 
 export const MiPerfil = ({ onCerrar }) => {
 

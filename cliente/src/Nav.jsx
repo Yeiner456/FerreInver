@@ -106,12 +106,6 @@ export const Nav = () => {
             </>
           )}
 
-          {usuario && (
-            <li className="links bienvenida">
-              Bienvenido, {usuario.nombre}
-            </li>
-          )}
-
           {usuario?.tipo_usuario === 'admin' && (
             <li className="links">
               <Link className="admin-panel" to="/admin" onClick={cerrarMenu}>Panel Admin</Link>

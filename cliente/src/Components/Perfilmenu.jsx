@@ -23,7 +23,7 @@ export const PerfilMenu = ({ onAbrirPerfil, onAbrirLogin, onAbrirPedidos, onAbri
         setDropdownPos({ mobile: true })
       } else {
         setDropdownPos({
-          top: rect.bottom + window.scrollY + 8,
+          top: rect.bottom + 8,           // ← sin window.scrollY
           right: window.innerWidth - rect.right,
         })
       }
@@ -68,10 +68,10 @@ export const PerfilMenu = ({ onAbrirPerfil, onAbrirLogin, onAbrirPedidos, onAbri
   const dropdownStyle = dropdownPos.mobile
     ? {} // el CSS lo posiciona como bottom sheet en móvil
     : {
-        position: 'fixed',
-        top: dropdownPos.top,
-        right: dropdownPos.right,
-      }
+      position: 'fixed',
+      top: dropdownPos.top,
+      right: dropdownPos.right,
+    }
 
   const contenidoDropdown = (
     <div className="perfil-dropdown" ref={dropdownRef} style={dropdownStyle} onMouseDown={(e) => e.stopPropagation()}>

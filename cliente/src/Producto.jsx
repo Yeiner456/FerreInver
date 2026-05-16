@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './styles/Producto.css'
 
-const IMG_BASE = 'http://127.0.0.1:8000/'
+const API_URL = import.meta.env.VITE_API_URL
+const IMG_BASE = import.meta.env.VITE_IMG_URL
 
 function ModalProducto({ producto, onClose, formatPrecio }) {
   // Cerrar con Escape
@@ -47,7 +48,7 @@ export const Producto = () => {
   const [productoActivo, setProductoActivo] = useState(null)
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/productos')
+    fetch(`${API_URL}/productos`)
       .then(res => {
         if (!res.ok) throw new Error('Error al cargar productos')
         return res.json()

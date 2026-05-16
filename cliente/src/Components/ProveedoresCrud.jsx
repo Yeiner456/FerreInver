@@ -2,28 +2,28 @@ import { useState, useEffect, useCallback } from "react";
 
 // NIT no es editable en el update (es la PK de proveedores)
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getProveedores: () =>
-        fetch(`${API_BASE}/proveedores`).then((r) => r.json()),
+        fetch(`${API_URL}/proveedores`).then((r) => r.json()),
 
     createProveedor: (data) =>
-        fetch(`${API_BASE}/proveedores`, {
+        fetch(`${API_URL}/proveedores`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateProveedor: (nit, data) =>
-        fetch(`${API_BASE}/proveedores?nit=${nit}`, {
+        fetch(`${API_URL}/proveedores?nit=${nit}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deactivateProveedor: (nit) =>
-        fetch(`${API_BASE}/proveedores?nit=${nit}`, {
+        fetch(`${API_URL}/proveedores?nit=${nit}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

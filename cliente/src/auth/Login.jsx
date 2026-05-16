@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Login.css";
+const API_URL = import.meta.env.VITE_API_URL
 
 export const Login = ({ onCerrar }) => {
   const [email, setEmail] = useState("");
@@ -33,7 +34,7 @@ export const Login = ({ onCerrar }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo: email, password }),

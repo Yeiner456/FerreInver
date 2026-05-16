@@ -83,11 +83,14 @@
 
 
 .perfil-dropdown {
+  display: grid;
   position: absolute;
   top: calc(100% + 14px);
-  left: 0;
+  margin-top: auto;
+  left: auto;
   right: auto;
-  min-width: 252px;
+  min-width: 600px;
+  max-width: 800px;
   background: var(--pm-white);
   border-radius: 14px;
   border-top: 3px solid var(--pm-yellow);
@@ -96,7 +99,7 @@
     0 2px 8px rgba(0, 24, 90, 0.08);
   overflow: hidden;
   z-index: 999;
-  transform-origin: top left;
+  transform-origin: top center;
   animation: pmFadeIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -401,8 +404,9 @@
   /* Móvil: centrado en pantalla como modal */
   .perfil-dropdown {
     position: fixed;
-    top: 50%;
+    top: 0;
     left: 50%;
+    margin-top: 200px;
     right: auto;
     bottom: auto;
     transform: translate(-50%, -50%);
@@ -441,15 +445,15 @@
   }
 
   .perfil-dato {
-    padding: 7px 16px;
+    padding: 7px 26px;
   }
 
   .perfil-dato-label {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .perfil-dato-valor {
-    font-size: 12.5px;
+    font-size: 14px;
   }
 
   .perfil-opcion {
@@ -549,7 +553,8 @@
 
   /* ← FIX: botón está a la derecha del nav, abrir hacia la izquierda */
   .perfil-dropdown {
-    min-width: 252px;
+    min-width: 100px;
+    max-width: 400px;
     left: auto;
     right: 0;
     transform-origin: top right;
@@ -574,10 +579,14 @@
 /* ---------- 1025px – 1200px (laptop) ---------- */
 @media (min-width: 1025px) and (max-width: 1200px) {
   .perfil-dropdown {
-    min-width: 255px;
-    left: 0;
-    right: auto;
-    transform-origin: top left;
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    left: auto;
+    min-width: 100px;
+    max-width: 250px;
+    animation: pmFadeIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-origin: top right;
   }
 }
 
@@ -593,10 +602,11 @@
   }
 
   .perfil-dropdown {
-    min-width: 268px;
-    left: 0;
-    right: auto;
-    transform-origin: top left;
+    min-width: 300px;
+    max-width: 450px;
+    right: 0;
+    left: auto;
+    transform-origin: top right;
   }
 
   .perfil-avatar-grande {

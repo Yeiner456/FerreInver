@@ -1,27 +1,27 @@
 import { useState, useEffect, useCallback } from "react";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = {
     getInvernaderos: () =>
-        fetch(`${API_BASE}/invernaderos`).then((r) => r.json()),
+        fetch(`${API_URL}/invernaderos`).then((r) => r.json()),
 
     createInvernadero: (data) =>
-        fetch(`${API_BASE}/invernaderos`, {
+        fetch(`${API_URL}/invernaderos`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     updateInvernadero: (id, data) =>
-        fetch(`${API_BASE}/invernaderos/${id}`, {
+        fetch(`${API_URL}/invernaderos/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }).then((r) => r.json()),
 
     deactivateInvernadero: (id) =>
-        fetch(`${API_BASE}/invernaderos/${id}`, {
+        fetch(`${API_URL}/invernaderos/${id}`, {
             method: "DELETE",
         }).then((r) => r.json()),
 };

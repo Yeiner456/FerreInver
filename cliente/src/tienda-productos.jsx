@@ -3,8 +3,8 @@ import './styles/tienda-productos.css';
 import { MisPedidos } from './Components/MisPedidos';
 import { Login } from './auth/Login'; // ← ajusta la ruta si es necesario, ej: '../pages/Login' o './Login'
 
-const API_BASE = 'http://127.0.0.1:8000/api';
-const IMG_BASE = 'http://127.0.0.1:8000/';
+const IMG_BASE = import.meta.env.VITE_IMG_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 const MEDIOS_PAGO = ['Efectivo', 'Tarjeta Débito', 'Tarjeta Crédito', 'Transferencia', 'PSE', 'Nequi', 'Daviplata'];
 
@@ -50,7 +50,7 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
     setErroresStock([]);
     setLoading(true);
     try {
-      const stockRes = await fetch(`${API_BASE}/stocks`).then(r => r.json());
+      const stockRes = await fetch(`${API_URL}/stocks`).then(r => r.json());
 
       if (stockRes.success) {
         const stockMap = {};
@@ -74,7 +74,7 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
         }
       }
 
-      const res = await fetch(`${API_BASE}/pedidos/completo`, {
+      const res = await fetch(`${API_URL}/pedidos/completo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -337,8 +337,8 @@ export const TiendaProductos = () => {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API_BASE}/productos`).then(r => r.json()),
-      fetch(`${API_BASE}/stocks`).then(r => r.json()),
+      fetch(`${API_URL}/productos`).then(r => r.json()),
+      fetch(`${API_URL}/stocks`).then(r => r.json()),
     ])
       .then(([prodRes, stockRes]) => {
         if (!prodRes.success) { setError('No se pudieron cargar los productos.'); return; }
