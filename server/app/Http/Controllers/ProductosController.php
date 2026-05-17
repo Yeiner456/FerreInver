@@ -5,18 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use App\Http\Requests\Productos\StoreProductoRequest;
 use App\Http\Requests\Productos\UpdateProductoRequest;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class ProductosController extends Controller
 {
-    // GET /api/productos
+    private function getCloudinary(): Cloudinary
+    {
+        Configuration::instance([
+            'cloud' => [
+                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                'api_key'    => env('CLOUDINARY_API_KEY'),
+                'api_secret' => env('CLOUDINARY_API_SECRET'),
+            ],
+            'url' => ['secure' => true],
+        ]);
+
+        return new Cloudinary();
+    }
+
     public function index()
     {
         $data = Producto::with('stock')->get();
         return response()->json(['success' => true, 'data' => $data]);
     }
 
-    // POST /api/productos  (FormData con imagen opcional)
     public function create(StoreProductoRequest $request)
     {
         $data = $request->validated();
@@ -36,7 +49,6 @@ class ProductosController extends Controller
         return response()->json(['success' => true, 'message' => 'Producto registrado exitosamente.'], 201);
     }
 
-    // POST /api/productos/{id}?_method=PUT  (FormData con imagen opcional)
     public function update(UpdateProductoRequest $request, $id)
     {
         $producto = Producto::find($id);
@@ -47,12 +59,10 @@ class ProductosController extends Controller
         $imagenUrl = $producto->imagen;
 
         if ($request->hasFile('imagen')) {
-            // Eliminar imagen anterior de Cloudinary si existe
             if ($imagenUrl) {
-                $publicId = pathinfo(parse_url($imagenUrl, PHP_URL_PATH), PATHINFO_FILENAME);
-                Cloudinary::destroy('ferreinver/productos/' . $publicId);
+                $publicId = 'ferreinver/productos/' . pathinfo(parse_url($imagenUrl, PHP_URL_PATH), PATHINFO_FILENAME);
+                $this->getCloudinary()->uploadApi()->destroy($publicId);
             }
-
             $imagenUrl = $this->subirImagen($request->file('imagen'));
         }
 
@@ -67,7 +77,6 @@ class ProductosController extends Controller
         return response()->json(['success' => true, 'message' => 'Producto actualizado exitosamente.']);
     }
 
-    // DELETE /api/productos/{id} → soft delete
     public function deactivate($id)
     {
         $producto = Producto::find($id);
@@ -82,13 +91,14 @@ class ProductosController extends Controller
         return response()->json(['success' => true, 'message' => 'Producto desactivado exitosamente.']);
     }
 
-    // ─── HELPER: subir imagen a Cloudinary ──────────────────────────────────
     private function subirImagen($file): string
     {
-        $result = Cloudinary::upload($file->getRealPath(), [
+        $cloudinary = $this->getCloudinary();
+
+        $result = $cloudinary->uploadApi()->upload($file->getRealPath(), [
             'folder' => 'ferreinver/productos',
         ]);
 
-        return $result->getSecurePath();
+        return $result['secure_url'];
     }
 }
