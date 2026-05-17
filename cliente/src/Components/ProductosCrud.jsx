@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL
-const IMG_BASE = import.meta.env.VITE_IMG_URL
 
 const api = {
     getProductos: () =>
@@ -56,7 +55,7 @@ function ProductoModal({ producto, onClose, onSave }) {
     const [loading, setLoading] = useState(false);
     const [imagenFile, setImagenFile] = useState(null);
     const [preview, setPreview] = useState(
-        isEdit && producto.imagen ? IMG_BASE + producto.imagen : null
+        isEdit && producto.imagen ? producto.imagen : null
     );
     const fileInputRef = useRef();
 
@@ -71,7 +70,7 @@ function ProductoModal({ producto, onClose, onSave }) {
 
     const quitarImagen = () => {
         setImagenFile(null);
-        setPreview(isEdit && producto.imagen ? IMG_BASE + producto.imagen : null);
+        setPreview(isEdit && producto.imagen ? producto.imagen : null);
         if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
@@ -252,7 +251,7 @@ export default function ProductosCRUD() {
                             <tr key={p.id_producto}>
                                 <td>
                                     {p.imagen
-                                        ? <img src={IMG_BASE + p.imagen} alt={p.nombre}
+                                        ? <img src={p.imagen} alt={p.nombre}
                                             style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }} />
                                         : <span style={{ color: "var(--muted)", fontSize: 12 }}>Sin imagen</span>
                                     }

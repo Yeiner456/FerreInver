@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import './styles/Producto.css'
 
 const API_URL = import.meta.env.VITE_API_URL
-const IMG_BASE = import.meta.env.VITE_IMG_URL
 
 function ModalProducto({ producto, onClose, formatPrecio }) {
   // Cerrar con Escape
@@ -19,7 +18,7 @@ function ModalProducto({ producto, onClose, formatPrecio }) {
 
         <div className="prod-modal-img-wrap">
           {producto.imagen
-            ? <img src={IMG_BASE + producto.imagen} alt={producto.nombre} className="prod-modal-img" />
+            ? <img src={producto.imagen} alt={producto.nombre} className="prod-modal-img" />
             : <div className="prod-modal-img-placeholder">
                 <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-8.5-5.5l-2.51 3.01L7 14l-4 5h18l-5.5-7.5z"/></svg>
                 <span>Sin imagen</span>
@@ -110,7 +109,7 @@ export const Producto = () => {
               <div className="tarjeta-img-wrap">
                 {prod.imagen
                   ? <img
-                      src={`${IMG_BASE}${prod.imagen}`}
+                      src={prod.imagen}
                       alt={prod.nombre}
                       className="tarjeta-img"
                     />

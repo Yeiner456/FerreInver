@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use App\Http\Requests\Productos\StoreProductoRequest;
 use App\Http\Requests\Productos\UpdateProductoRequest;
-use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ProductosController extends Controller
 {
-    private string $uploadDir = 'uploads/productos';
-    private string $uploadUrl = 'storage/uploads/productos/';
-
     // GET /api/productos
     public function index()
     {
@@ -26,8 +23,7 @@ class ProductosController extends Controller
 
         $imagenUrl = null;
         if ($request->hasFile('imagen')) {
-            $res = $this->subirImagen($request->file('imagen'));
-            $imagenUrl = $res['url'];
+            $imagenUrl = $this->subirImagen($request->file('imagen'));
         }
 
         Producto::create([
@@ -51,20 +47,20 @@ class ProductosController extends Controller
         $imagenUrl = $producto->imagen;
 
         if ($request->hasFile('imagen')) {
+            // Eliminar imagen anterior de Cloudinary si existe
             if ($imagenUrl) {
-                $oldPath = str_replace($this->uploadUrl, '', $imagenUrl);
-                Storage::delete($this->uploadDir . '/' . $oldPath);
+                $publicId = pathinfo(parse_url($imagenUrl, PHP_URL_PATH), PATHINFO_FILENAME);
+                Cloudinary::destroy('ferreinver/productos/' . $publicId);
             }
 
-            $res       = $this->subirImagen($request->file('imagen'));
-            $imagenUrl = $res['url'];
+            $imagenUrl = $this->subirImagen($request->file('imagen'));
         }
 
         $producto->update([
-            'nombre'      => $data['nombre'],
-            'precio'      => (int) $data['precio'],
-            'descripcion' => $data['descripcion'] ?? 'Producto de ferreinver disponible',
-            'imagen'      => $imagenUrl,
+            'nombre'          => $data['nombre'],
+            'precio'          => (int) $data['precio'],
+            'descripcion'     => $data['descripcion'] ?? 'Producto de ferreinver disponible',
+            'imagen'          => $imagenUrl,
             'estado_producto' => $request->input('estado_producto', $producto->estado_producto),
         ]);
 
@@ -86,12 +82,13 @@ class ProductosController extends Controller
         return response()->json(['success' => true, 'message' => 'Producto desactivado exitosamente.']);
     }
 
-    // ─── HELPER: subir imagen ────────────────────────────────────────────────
-    private function subirImagen($file): array
+    // ─── HELPER: subir imagen a Cloudinary ──────────────────────────────────
+    private function subirImagen($file): string
     {
-        $filename = uniqid('prod_', true) . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('uploads/productos', $filename, 'public');
+        $result = Cloudinary::upload($file->getRealPath(), [
+            'folder' => 'ferreinver/productos',
+        ]);
 
-        return ['url' => $this->uploadUrl . $filename];
+        return $result->getSecurePath();
     }
 }

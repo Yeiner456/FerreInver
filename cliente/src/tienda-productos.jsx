@@ -3,7 +3,6 @@ import './styles/tienda-productos.css';
 import { MisPedidos } from './Components/MisPedidos';
 import { Login } from './auth/Login'; // ← ajusta la ruta si es necesario, ej: '../pages/Login' o './Login'
 
-const IMG_BASE = import.meta.env.VITE_IMG_URL;
 const API_URL = import.meta.env.VITE_API_URL;
 
 const MEDIOS_PAGO = ['Efectivo', 'Tarjeta Débito', 'Tarjeta Crédito', 'Transferencia', 'PSE', 'Nequi', 'Daviplata'];
@@ -119,7 +118,7 @@ function ModalCheckout({ items, cliente, onCerrar, onPedidoConfirmado }) {
             <div key={it.id_producto} className="tp-checkout-item">
               <div className="tp-checkout-item-img">
                 {it.imagen
-                  ? <img src={IMG_BASE + it.imagen} alt={it.nombre} />
+                  ? <img src={it.imagen} alt={it.nombre} />
                   : <div className="tp-checkout-item-img-empty" />}
               </div>
               <div className="tp-checkout-item-info">
@@ -191,7 +190,7 @@ function ModalProducto({ producto, stock, onClose, onAgregar }) {
         <button className="tp-modal-close" onClick={onClose}>x</button>
         <div className="tp-modal-img-wrap">
           {producto.imagen
-            ? <img src={IMG_BASE + producto.imagen} alt={producto.nombre} className="tp-modal-img-main" />
+            ? <img src={producto.imagen} alt={producto.nombre} className="tp-modal-img-main" />
             : <div className="tp-modal-img-placeholder" />}
         </div>
         <div className="tp-modal-info">
@@ -262,7 +261,7 @@ function Carrito({ items, stockMap, onCambiarCantidad, onCerrar, onFinalizarPedi
                   <div key={it.id_producto} className="tp-carrito-item">
                     <div className="tp-carrito-item-img">
                       {it.imagen
-                        ? <img src={IMG_BASE + it.imagen} alt={it.nombre} />
+                        ? <img src={it.imagen} alt={it.nombre} />
                         : <div className="tp-carrito-item-img-empty" />}
                     </div>
                     <div className="tp-carrito-item-info">
@@ -309,7 +308,7 @@ function TarjetaProducto({ producto, stock, onClick }) {
     <div className="tp-tarjeta" onClick={() => onClick(producto)}>
       <div className="tp-tarjeta-img">
         {producto.imagen
-          ? <img src={IMG_BASE + producto.imagen} alt={producto.nombre} />
+          ? <img src={producto.imagen} alt={producto.nombre} />
           : <div className="tp-tarjeta-img-empty" />}
         <span className={`tp-stock-badge ${pocasUnidades ? 'tp-stock-badge--bajo' : ''}`}>
           {stock} {stock === 1 ? 'unidad' : 'unidades'}
