@@ -104,7 +104,6 @@ export default function CotizacionPublica() {
     const [exito, setExito] = useState(false);
     const [errorGeneral, setErrorGeneral] = useState(null);
     const [verMisCotizaciones, setVerMisCotizaciones] = useState(false);
-
     const [usuarioSesion, setUsuarioSesion] = useState(null);
 
     useEffect(() => {
@@ -113,8 +112,6 @@ export default function CotizacionPublica() {
             const user = JSON.parse(raw);
             setUsuarioSesion(user);
             setForm((prev) => ({ ...prev, cliente_id: user.documento }));
-        } else {
-            setErrorGeneral("No hay sesión activa. Por favor inicia sesión.");
         }
 
         api.getSelects()
@@ -163,7 +160,14 @@ export default function CotizacionPublica() {
         return Object.keys(e).length === 0;
     };
 
-    const siguiente = () => { if (validarPaso()) setPaso((p) => p + 1); };
+    const siguiente = () => {
+        if (!usuarioSesion) {
+            setErrorGeneral("Debes iniciar sesión para continuar.");
+            return;
+        }
+        if (validarPaso()) setPaso((p) => p + 1);
+    };
+
     const anterior = () => setPaso((p) => p - 1);
 
     const enviar = async () => {
@@ -199,11 +203,9 @@ export default function CotizacionPublica() {
     if (exito) {
         return (
             <>
-                {/* ── Modal MisCotizaciones si el usuario lo abre ── */}
                 {verMisCotizaciones && (
                     <MisCotizaciones onCerrar={() => setVerMisCotizaciones(false)} />
                 )}
-
                 <div className="exito-wrapper">
                     <div className="exito-icono">
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
@@ -226,16 +228,9 @@ export default function CotizacionPublica() {
                             <span className="exito-resumen__valor exito-resumen__valor--total">{formatCOP(form.total)}</span>
                         </div>
                     </div>
-
-                    {/* ── Botón principal: ver mis cotizaciones ── */}
-                    <button
-                        className="btn btn--enviar"
-                        onClick={() => setVerMisCotizaciones(true)}
-                    >
+                    <button className="btn btn--enviar" onClick={() => setVerMisCotizaciones(true)}>
                         Ver mis cotizaciones
                     </button>
-
-                    {/* ── Botón secundario: hacer otra ── */}
                     <button
                         className="btn btn--repetir"
                         onClick={() => {
@@ -264,7 +259,10 @@ export default function CotizacionPublica() {
                     <h1 className="cotizacion-header__title">Solicitar cotización</h1>
                 </div>
                 <p className="cotizacion-header__subtitle">
-                    Hola, <strong>{usuarioSesion?.nombre}</strong>. Completa los datos para recibir tu estimado personalizado.
+                    {usuarioSesion
+                        ? <>Hola, <strong>{usuarioSesion.nombre}</strong>. Completa los datos para recibir tu estimado personalizado.</>
+                        : <>Debes <strong>iniciar sesión</strong> para poder enviar una cotización.</>
+                    }
                 </p>
             </div>
 
@@ -389,19 +387,23 @@ export default function CotizacionPublica() {
             </div>
 
             <div className="cotizacion-nav">
-                {/* ── "Anterior" solo visible desde el paso 1 en adelante ── */}
                 {paso > 0 ? (
                     <button className="btn btn--anterior" onClick={anterior}>
                         ← Anterior
                     </button>
                 ) : (
-                    <span /> /* espacio vacío para mantener el layout flex */
+                    <span />
                 )}
 
                 <span className="cotizacion-nav__contador">Paso {paso + 1} de {PASOS.length}</span>
 
                 {paso < PASOS.length - 1 ? (
-                    <button className="btn btn--siguiente" onClick={siguiente}>
+                    <button
+                        className="btn btn--siguiente"
+                        onClick={siguiente}
+                        disabled={!usuarioSesion}
+                        style={!usuarioSesion ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                    >
                         Siguiente →
                     </button>
                 ) : (
