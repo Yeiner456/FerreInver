@@ -4,5 +4,5 @@ cmd = "php artisan config:clear && php artisan migrate --force && php artisan db
 nixPkgs = ["php82", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "php82Extensions.mbstring", "php82Extensions.tokenizer", "php82Extensions.xml", "php82Extensions.ctype", "php82Extensions.fileinfo", "composer"]
 
 [phases.build]
-cmds = ["composer install --no-dev --optimize-autoloader"]
+cmds = ["composer install --no-dev --optimize-autoloader", "php artisan vendor:publish --provider='CloudinaryLabs\\CloudinaryLaravel\\CloudinaryServiceProvider' --force"]
 
