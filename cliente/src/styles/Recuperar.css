@@ -41,7 +41,6 @@
     pointer-events: none;
 }
 
-
 .volver-btn {
     position: fixed;
     top: 20px;
@@ -68,7 +67,6 @@
     border-color: rgba(255, 255, 255, 0.5);
     transform: translateX(-3px);
 }
-
 
 .login-container {
     width: 100%;
@@ -184,7 +182,6 @@ form {
     margin: 10px 4px 10px 10px;
 }
 
-
 .login-button {
     width: 100%;
     padding: 13px;
@@ -216,7 +213,6 @@ form {
     transform: none;
 }
 
-
 .register-button {
     display: block;
     width: 100%;
@@ -236,4 +232,34 @@ form {
 .register-button:hover {
     background: #f0f4ff;
     transform: translateY(-1px);
+}
+
+/* ─── Éxito al cambiar contraseña ─── */
+.exito-box {
+    text-align: center;
+    padding: 20px;
+    background: #f0fff4;
+    border-radius: 12px;
+    border: 1px solid #68d391;
+    margin-top: 16px;
+}
+
+.exito-box__icono {
+    display: block;
+    margin: 0 auto 12px;
+}
+
+.exito-box__titulo {
+    color: #276749;
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.exito-box__subtitulo {
+    color: #276749;
+    font-size: 13px;
+    margin-top: 6px;
+    font-family: 'Raleway', sans-serif;
 }

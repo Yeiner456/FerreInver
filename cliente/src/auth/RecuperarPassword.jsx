@@ -13,6 +13,7 @@ export const RecuperarPassword = () => {
   const [confirmarPassword, setConfirmarPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [exitoso, setExitoso] = useState(false);
 
   const handleEnviarCodigo = async (e) => {
     e.preventDefault();
@@ -63,9 +64,9 @@ export const RecuperarPassword = () => {
       });
       const data = await res.json();
       if (data.success) {
-        alert("✅ Contraseña actualizada correctamente");
-        navigate("/inicio");
-      } else { setError(data.mensaje); }
+        setExitoso(true);
+        setTimeout(() => navigate("/inicio"), 3000);
+      } else { setError(data.message); }
     } catch { setError("Error del servidor. Intenta de nuevo."); }
     finally { setLoading(false); }
   };
@@ -75,7 +76,6 @@ export const RecuperarPassword = () => {
       <div className="login-container">
         <div className="login-card">
 
-          {/* ── Botón volver arriba a la izquierda ── */}
           <button className="volver-btn" onClick={() => navigate(-1)}>
             <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
               <path d="M19 12H5M5 12l7 7M5 12l7-7"
@@ -150,24 +150,40 @@ export const RecuperarPassword = () => {
             <>
               <h1>Nueva contraseña</h1>
               <p className="subtitle">Ingresa tu nueva contraseña</p>
-              <form onSubmit={handleCambiarPassword}>
-                <div className="form-group">
-                  <label htmlFor="nuevaPassword">Nueva contraseña</label>
-                  <input className="login-input" type="password" id="nuevaPassword"
-                    placeholder="Mínimo 8 caracteres"
-                    value={nuevaPassword} onChange={(e) => setNuevaPassword(e.target.value)} required />
+
+              {exitoso ? (
+                <div className="exito-box">
+                  <svg viewBox="0 0 48 48" fill="none" width="52" height="52" className="exito-box__icono">
+                    <circle cx="24" cy="24" r="22" fill="#22bb48" />
+                    <polyline points="13,25 21,33 36,16" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <p className="exito-box__titulo">
+                    Contraseña actualizada correctamente
+                  </p>
+                  <p className="exito-box__subtitulo">
+                    Redirigiendo al inicio...
+                  </p>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="confirmarPassword">Confirmar contraseña</label>
-                  <input className="login-input" type="password" id="confirmarPassword"
-                    placeholder="Repite tu nueva contraseña"
-                    value={confirmarPassword} onChange={(e) => setConfirmarPassword(e.target.value)} required />
-                </div>
-                {error && <p style={{color:"red", fontSize:"13px", textAlign:"left"}}>{error}</p>}
-                <button className="login-button" type="submit" disabled={loading}>
-                  {loading ? "Guardando..." : "Cambiar contraseña"}
-                </button>
-              </form>
+              ) : (
+                <form onSubmit={handleCambiarPassword}>
+                  <div className="form-group">
+                    <label htmlFor="nuevaPassword">Nueva contraseña</label>
+                    <input className="login-input" type="password" id="nuevaPassword"
+                      placeholder="Mínimo 8 caracteres"
+                      value={nuevaPassword} onChange={(e) => setNuevaPassword(e.target.value)} required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="confirmarPassword">Confirmar contraseña</label>
+                    <input className="login-input" type="password" id="confirmarPassword"
+                      placeholder="Repite tu nueva contraseña"
+                      value={confirmarPassword} onChange={(e) => setConfirmarPassword(e.target.value)} required />
+                  </div>
+                  {error && <p style={{color:"red", fontSize:"13px", textAlign:"left"}}>{error}</p>}
+                  <button className="login-button" type="submit" disabled={loading}>
+                    {loading ? "Guardando..." : "Cambiar contraseña"}
+                  </button>
+                </form>
+              )}
             </>
           )}
 
