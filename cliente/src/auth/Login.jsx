@@ -6,15 +6,14 @@ const API_URL = import.meta.env.VITE_API_URL
 export const Login = ({ onCerrar }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Bloquear scroll mientras el modal está abierto
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = '' }
   }, [])
 
-  // Si ya hay sesión, redirigir directo
   useEffect(() => {
     const usuario = sessionStorage.getItem("usuario");
     if (usuario) {
@@ -24,7 +23,6 @@ export const Login = ({ onCerrar }) => {
     }
   }, []);
 
-  // Cerrar con ESC
   useEffect(() => {
     const handleKey = (e) => { if (e.key === 'Escape') onCerrar?.() }
     document.addEventListener('keydown', handleKey)
@@ -33,6 +31,7 @@ export const Login = ({ onCerrar }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
@@ -52,21 +51,19 @@ export const Login = ({ onCerrar }) => {
           navigate("/inicio");
         }
       } else {
-        alert(data.mensaje);
+        setError(data.message || "Correo o contraseña incorrectos.");
       }
     } catch (error) {
       console.error(error);
-      alert("Error del servidor");
+      setError("Error del servidor. Intenta de nuevo.");
     }
   };
 
-  // Si no viene onCerrar es porque se usa como página (ej: /login directo)
   const esModal = !!onCerrar
 
   const contenido = (
     <div className="login-card">
 
-      {/* Botón cerrar — solo en modal */}
       {esModal && (
         <button className="login-modal-cerrar" onClick={onCerrar}>
           <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
@@ -96,7 +93,7 @@ export const Login = ({ onCerrar }) => {
             id="email"
             placeholder="Ingrese su correo electrónico"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); setError(""); }}
           />
         </div>
 
@@ -108,9 +105,19 @@ export const Login = ({ onCerrar }) => {
             id="password"
             placeholder="Ingrese su contraseña"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value); setError(""); }}
           />
         </div>
+
+        {error && (
+          <div className="login-error">
+            <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+              <circle cx="12" cy="12" r="10" stroke="#e53e3e" strokeWidth="2"/>
+              <path d="M12 8v4M12 16h.01" stroke="#e53e3e" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <span>{error}</span>
+          </div>
+        )}
 
         <div className="forgot-password">
           <Link to="/recuperar" onClick={onCerrar}>¿olvidaste tu contraseña?</Link>
@@ -134,8 +141,6 @@ export const Login = ({ onCerrar }) => {
     </div>
   )
 
-  // Si es modal → overlay con fondo borroso
-  // Si es página → layout normal
   if (esModal) {
     return (
       <div className="login-overlay" onClick={onCerrar}>
