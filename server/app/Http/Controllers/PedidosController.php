@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\DB;
 class PedidosController extends Controller
 {
     // GET /api/pedidos
-    // GET /api/pedidos?selects=1
-    // GET /api/pedidos?documento=X
     public function index(Request $request)
     {
         if ($request->has('documento')) {
@@ -43,8 +41,8 @@ class PedidosController extends Controller
         $pedido = Pedido::create($request->validated());
 
         return response()->json([
-            'success'  => true,
-            'message'  => 'Pedido registrado exitosamente.',
+            'success'   => true,
+            'message'   => 'Pedido registrado exitosamente.',
             'id_pedido' => $pedido->id_pedido,
         ], 201);
     }
@@ -57,11 +55,11 @@ class PedidosController extends Controller
 
         DB::beginTransaction();
         try {
-            $stockErrors    = [];
-            $stocksAfectados = [];
+            $stockErrors = [];
 
+            // Solo verificar que haya stock suficiente, NO descontarlo
             foreach ($items as $item) {
-                $stock = Stock::where('id_producto', $item['id_producto'])->lockForUpdate()->first();
+                $stock = Stock::where('id_producto', $item['id_producto'])->first();
 
                 if (!$stock || $stock->cantidad < $item['cantidad']) {
                     $stockErrors[] = [
@@ -69,8 +67,6 @@ class PedidosController extends Controller
                         'pedido'     => $item['cantidad'],
                         'disponible' => $stock ? $stock->cantidad : 0,
                     ];
-                } else {
-                    $stocksAfectados[] = ['stock' => $stock, 'cantidad' => $item['cantidad']];
                 }
             }
 
@@ -98,14 +94,12 @@ class PedidosController extends Controller
                 ]);
             }
 
-            foreach ($stocksAfectados as $entrada) {
-                $entrada['stock']->decrement('cantidad', $entrada['cantidad']);
-            }
+            // ← Stock NO se descuenta aquí, solo cuando el admin confirme
 
             DB::commit();
             return response()->json([
-                'success'  => true,
-                'message'  => 'Pedido registrado exitosamente.',
+                'success'   => true,
+                'message'   => 'Pedido registrado exitosamente.',
                 'id_pedido' => $pedido->id_pedido,
             ], 201);
 
@@ -127,7 +121,62 @@ class PedidosController extends Controller
         return response()->json(['success' => true, 'message' => 'Pedido actualizado exitosamente.']);
     }
 
-    // DELETE /api/pedidos/{id} → soft delete (cancelar)
+    // PATCH /api/pedidos/{id}/confirmar → admin confirma el pedido y descuenta stock
+    public function confirmar($id)
+    {
+        $pedido = Pedido::with('productos')->find($id);
+
+        if (!$pedido)
+            return response()->json(['success' => false, 'message' => 'El pedido no existe.'], 404);
+
+        if ($pedido->estado_pedido !== 'pendiente')
+            return response()->json(['success' => false, 'message' => 'Solo se pueden confirmar pedidos pendientes.'], 409);
+
+        DB::beginTransaction();
+        try {
+            $stockErrors = [];
+
+            // Verificar stock antes de descontar
+            foreach ($pedido->productos as $producto) {
+                $stock = Stock::where('id_producto', $producto->id_producto)->lockForUpdate()->first();
+                $cantidad = $producto->pivot->cantidad;
+
+                if (!$stock || $stock->cantidad < $cantidad) {
+                    $stockErrors[] = [
+                        'nombre'     => $producto->nombre,
+                        'pedido'     => $cantidad,
+                        'disponible' => $stock ? $stock->cantidad : 0,
+                    ];
+                }
+            }
+
+            if (!empty($stockErrors)) {
+                DB::rollBack();
+                return response()->json([
+                    'success'      => false,
+                    'message'      => 'Stock insuficiente para confirmar el pedido.',
+                    'stock_errors' => $stockErrors,
+                ], 409);
+            }
+
+            // Descontar stock
+            foreach ($pedido->productos as $producto) {
+                $stock = Stock::where('id_producto', $producto->id_producto)->first();
+                $stock->decrement('cantidad', $producto->pivot->cantidad);
+            }
+
+            $pedido->update(['estado_pedido' => 'confirmado']);
+
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Pedido confirmado y stock actualizado.']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Error al confirmar el pedido.'], 500);
+        }
+    }
+
+    // DELETE /api/pedidos/{id} → cancelar
     public function cancel($id)
     {
         $pedido = Pedido::find($id);
@@ -136,6 +185,17 @@ class PedidosController extends Controller
 
         if ($pedido->estado_pedido === 'cancelado')
             return response()->json(['success' => false, 'message' => 'El pedido ya está cancelado.'], 409);
+
+        // Si estaba confirmado, devolver el stock
+        if ($pedido->estado_pedido === 'confirmado') {
+            $pedido->load('productos');
+            foreach ($pedido->productos as $producto) {
+                $stock = Stock::where('id_producto', $producto->id_producto)->first();
+                if ($stock) {
+                    $stock->increment('cantidad', $producto->pivot->cantidad);
+                }
+            }
+        }
 
         $pedido->update(['estado_pedido' => 'cancelado']);
 

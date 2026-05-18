@@ -37,6 +37,12 @@ const api = {
             method: "DELETE",
             credentials: 'include',
         }).then((r) => r.json()),
+
+    confirmarPedido: (id) =>
+        fetch(`${API_URL}/pedidos/${id}/confirmar`, {
+            method: "PATCH",
+            credentials: 'include',
+        }).then((r) => r.json()),
 };
 
 const emptyForm = {
@@ -157,6 +163,7 @@ export default function PedidosCRUD() {
     const [modal, setModal] = useState(null);
     const [mensaje, setMensaje] = useState(null);
     const [confirmCancelar, setConfirmCancelar] = useState(null);
+    const [confirmConfirmar, setConfirmConfirmar] = useState(null);
     const [filtroFecha, setFiltroFecha] = useState("");
 
     const load = useCallback(async () => {
@@ -188,6 +195,18 @@ export default function PedidosCRUD() {
             setMensaje({ texto: "No se pudo conectar con la API.", tipo: "error" });
         } finally {
             setConfirmCancelar(null);
+        }
+    };
+
+    const handleConfirmar = async (id) => {
+        try {
+            const res = await api.confirmarPedido(id);
+            if (res.success) { setMensaje({ texto: res.message, tipo: "success" }); load(); }
+            else setMensaje({ texto: res.message, tipo: "error" });
+        } catch {
+            setMensaje({ texto: "No se pudo conectar con la API.", tipo: "error" });
+        } finally {
+            setConfirmConfirmar(null);
         }
     };
 
@@ -246,6 +265,12 @@ export default function PedidosCRUD() {
                                 <td>
                                     <button onClick={() => setModal(p)}>Editar</button>{" "}
                                     <button
+                                        onClick={() => setConfirmConfirmar(p)}
+                                        disabled={p.estado_pedido !== "pendiente"}
+                                    >
+                                        Confirmar
+                                    </button>{" "}
+                                    <button
                                         onClick={() => setConfirmCancelar(p)}
                                         disabled={p.estado_pedido === "cancelado"}
                                     >
@@ -266,6 +291,27 @@ export default function PedidosCRUD() {
                 />
             )}
 
+            {/* Modal confirmar pedido */}
+            {confirmConfirmar && (
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmConfirmar(null)}>
+                    <div className="modal-box" style={{ maxWidth: 380 }}>
+                        <h2>¿Confirmar pedido?</h2>
+                        <p style={{ color: "var(--text)", fontSize: 13, marginBottom: 6 }}>
+                            Vas a confirmar el pedido de{" "}
+                            <strong>{confirmConfirmar.cliente?.nombre || "este cliente"}</strong>.
+                        </p>
+                        <p style={{ color: "var(--muted)", fontSize: 12, marginBottom: 8 }}>
+                            El stock de los productos se descontará automáticamente.
+                        </p>
+                        <div className="modal-footer">
+                            <button onClick={() => setConfirmConfirmar(null)}>Cerrar</button>
+                            <button onClick={() => handleConfirmar(confirmConfirmar.id_pedido)}>Sí, confirmar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal cancelar pedido */}
             {confirmCancelar && (
                 <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setConfirmCancelar(null)}>
                     <div className="modal-box" style={{ maxWidth: 380 }}>
