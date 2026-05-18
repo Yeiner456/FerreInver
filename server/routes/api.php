@@ -93,21 +93,19 @@ Route::delete('/cotizaciones/{id}', [CotizacionesController::class, 'destroy']);
 // ─────────────────────────────────────────────────────────────────
 //  PEDIDOS
 // ─────────────────────────────────────────────────────────────────
-Route::get   ('/pedidos',           [PedidosController::class, 'index']);    // ?selects=1 | ?documento=X
-Route::post  ('/pedidos',           [PedidosController::class, 'create']);
-Route::post  ('/pedidos/completo',  [PedidosController::class, 'createCompleto']);
-Route::put   ('/pedidos/{id}',      [PedidosController::class, 'update']);
-Route::delete('/pedidos/{id}',      [PedidosController::class, 'cancel']);
-
-// ─────────────────────────────────────────────────────────────────
-//  PRODUCTOS-PEDIDOS
-// ─────────────────────────────────────────────────────────────────
 Route::get   ('/pedidos',           [PedidosController::class, 'index']);
 Route::post  ('/pedidos',           [PedidosController::class, 'create']);
 Route::post  ('/pedidos/completo',  [PedidosController::class, 'createCompleto']);
 Route::put   ('/pedidos/{id}',      [PedidosController::class, 'update']);
 Route::patch ('/pedidos/{id}/confirmar', [PedidosController::class, 'confirmar']); // ← nueva
 Route::delete('/pedidos/{id}',      [PedidosController::class, 'cancel']);
+// ─────────────────────────────────────────────────────────────────
+//  PRODUCTOS-PEDIDOS
+// ─────────────────────────────────────────────────────────────────
+Route::get   ('/productos-pedidos',      [ProductosPedidosController::class, 'index']);   // ?selects=1
+Route::post  ('/productos-pedidos',      [ProductosPedidosController::class, 'create']);
+Route::put   ('/productos-pedidos/{id}', [ProductosPedidosController::class, 'update']);
+Route::delete('/productos-pedidos/{id}', [ProductosPedidosController::class, 'delete']);
 
 // ─────────────────────────────────────────────────────────────────
 //  NOTIFICACIONES
