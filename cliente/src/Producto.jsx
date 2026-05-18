@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './styles/Producto.css'
 
 const API_URL = import.meta.env.VITE_API_URL
 
 function ModalProducto({ producto, onClose, formatPrecio }) {
-  // Cerrar con Escape
+  const navigate = useNavigate()
+
   useEffect(() => {
     const handler = (e) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', handler)
@@ -33,6 +35,12 @@ function ModalProducto({ producto, onClose, formatPrecio }) {
           <div className="prod-modal-precio-wrap">
             <span className="prod-modal-precio">{formatPrecio(producto.precio)}</span>
           </div>
+          <button
+            className="prod-modal-btn-pedir"
+            onClick={() => { onClose(); navigate('/tienda-productos'); }}
+          >
+            Hacer pedido
+          </button>
           <button className="prod-modal-btn-cerrar" onClick={onClose}>Cerrar</button>
         </div>
       </div>
@@ -41,13 +49,13 @@ function ModalProducto({ producto, onClose, formatPrecio }) {
 }
 
 export const Producto = () => {
-  const [productos, setProductos]       = useState([])
-  const [loading, setLoading]           = useState(true)
-  const [error, setError]               = useState(null)
+  const [productos, setProductos]           = useState([])
+  const [loading, setLoading]               = useState(true)
+  const [error, setError]                   = useState(null)
   const [productoActivo, setProductoActivo] = useState(null)
 
   useEffect(() => {
-    fetch(`${API_URL}/productos`,{
+    fetch(`${API_URL}/productos`, {
       credentials: 'include',
     })
       .then(res => {
@@ -104,15 +112,15 @@ export const Producto = () => {
       {!loading && !error && productos.length > 0 && (
         <div className="tarjetas">
           {productos.map(prod => (
-            <div className="tarjeta-producto" key={prod.id_producto} onClick={() => setProductoActivo(prod)} style={{ cursor: 'pointer' }}>
-
+            <div
+              className="tarjeta-producto"
+              key={prod.id_producto}
+              onClick={() => setProductoActivo(prod)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="tarjeta-img-wrap">
                 {prod.imagen
-                  ? <img
-                      src={prod.imagen}
-                      alt={prod.nombre}
-                      className="tarjeta-img"
-                    />
+                  ? <img src={prod.imagen} alt={prod.nombre} className="tarjeta-img" />
                   : <div className="tarjeta-img-placeholder">
                       <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-8.5-5.5l-2.51 3.01L7 14l-4 5h18l-5.5-7.5z"/></svg>
                       <span>Sin imagen</span>
@@ -128,7 +136,6 @@ export const Producto = () => {
                   <span className="tarjeta-precio">{formatPrecio(prod.precio)}</span>
                 </div>
               </div>
-
             </div>
           ))}
         </div>

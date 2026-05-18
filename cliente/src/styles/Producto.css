@@ -233,6 +233,26 @@
   animation: spin 0.8s linear infinite;
 }
 
+.prod-modal-btn-pedir {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #00185A 0%, #1E12A4 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-bottom: 8px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.prod-modal-btn-pedir:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 24, 90, 0.4);
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -408,3 +428,4 @@
   background: var(--azul-navy);
   transform: translateY(-1px);
 }
+
