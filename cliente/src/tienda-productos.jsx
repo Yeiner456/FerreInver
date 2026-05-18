@@ -5,7 +5,7 @@ import { Login } from './auth/Login'; // ← ajusta la ruta si es necesario, ej:
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const MEDIOS_PAGO = ['Efectivo', 'Tarjeta Débito', 'Tarjeta Crédito', 'Transferencia', 'PSE', 'Nequi', 'Daviplata'];
+const MEDIOS_PAGO = ['Efectivo', 'Tarjeta Débito', 'Tarjeta Crédito', 'Transferencia'];
 
 
 const getSession = () => {
