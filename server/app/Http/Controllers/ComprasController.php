@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Compra;
 use App\Models\Producto;
 use App\Models\Proveedor;
+use App\Models\Stock;
 use App\Http\Requests\Compras\CreateCompraRequest;
 use App\Http\Requests\Compras\UpdateCompraRequest;
 
@@ -36,6 +37,18 @@ class ComprasController extends Controller
             'id_proveedor' => $request->id_proveedor,
             'id_producto'  => $request->id_producto,
         ]);
+
+        // Aumentar stock del producto
+        $stock = Stock::where('id_producto', $request->id_producto)->first();
+
+        if ($stock) {
+            $stock->increment('cantidad', (int) $request->cantidad);
+        } else {
+            Stock::create([
+                'id_producto' => $request->id_producto,
+                'cantidad'    => (int) $request->cantidad,
+            ]);
+        }
 
         return response()->json(['success' => true, 'message' => 'Compra registrada exitosamente.'], 201);
     }
