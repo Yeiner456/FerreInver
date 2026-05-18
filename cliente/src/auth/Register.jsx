@@ -2,35 +2,22 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 const API_URL = import.meta.env.VITE_API_URL
-/*Modal de exito*/
+
 const SuccessModal = ({ onLogin, onClose }) => (
   <div className="modal-overlay" onClick={onClose}>
     <div className="modal-card" onClick={(e) => e.stopPropagation()}>
       <button className="modal-close" onClick={onClose}>✕</button>
-
       <div className="modal-icon-wrapper">
         <div className="modal-icon-ring" />
         <div className="modal-icon-circle">
           <svg viewBox="0 0 24 24" fill="none" width="32" height="32">
-            <path
-              d="M5 13l4 4L19 7"
-              stroke="#fff"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+            <path d="M5 13l4 4L19 7" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>
-
       <h2 className="modal-title">¡Cuenta creada correctamente!</h2>
-      <p className="modal-subtitle">
-        Ya puedes iniciar sesión y comenzar a usar tu cuenta.
-      </p>
-
-      <button className="modal-btn-primary" onClick={onLogin}>
-        Iniciar sesión
-      </button>
+      <p className="modal-subtitle">Ya puedes iniciar sesión y comenzar a usar tu cuenta.</p>
+      <button className="modal-btn-primary" onClick={onLogin}>Iniciar sesión</button>
     </div>
   </div>
 );
@@ -46,19 +33,25 @@ export const Register = () => {
   });
 
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    // Limpiar error del campo cuando el usuario empieza a escribir
+    if (fieldErrors[e.target.name]) {
+      setFieldErrors({ ...fieldErrors, [e.target.name]: null });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
 
     if (form.password.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres");
+      setFieldErrors({ password: "La contraseña debe tener al menos 8 caracteres" });
       return;
     }
 
@@ -81,8 +74,16 @@ export const Register = () => {
 
       if (data.success) {
         setShowModal(true);
+      } else if (data.errors) {
+        // Laravel retorna errores por campo en data.errors
+        const mapped = {};
+        if (data.errors.nombre)    mapped.nombre    = data.errors.nombre[0];
+        if (data.errors.correo)    mapped.email     = data.errors.correo[0];
+        if (data.errors.documento) mapped.documento = data.errors.documento[0];
+        if (data.errors.password)  mapped.password  = data.errors.password[0];
+        setFieldErrors(mapped);
       } else {
-        setError(data.mensaje || "Error al crear la cuenta");
+        setError(data.message || "Error al crear la cuenta");
       }
     } catch (err) {
       console.error(err);
@@ -104,12 +105,9 @@ export const Register = () => {
 
       <div className="card">
 
-        {/*botomn volver */}
         <button className="volver-btn" onClick={() => navigate(-1)}>
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
-            <path d="M19 12H5M5 12l7 7M5 12l7-7"
-              stroke="currentColor" strokeWidth="2"
-              strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M19 12H5M5 12l7 7M5 12l7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Volver
         </button>
@@ -130,53 +128,41 @@ export const Register = () => {
             <div className="form-group">
               <label htmlFor="nombre">Nombre completo</label>
               <input
-                type="text"
-                id="nombre"
-                name="nombre"
+                type="text" id="nombre" name="nombre"
                 placeholder="Ingresa tu nombre completo"
-                value={form.nombre}
-                onChange={handleChange}
-                required
+                value={form.nombre} onChange={handleChange} required
               />
+              {fieldErrors.nombre && <span className="field-error">{fieldErrors.nombre}</span>}
             </div>
 
             <div className="form-group">
               <label htmlFor="email">Correo electrónico</label>
               <input
-                type="email"
-                id="email"
-                name="email"
+                type="email" id="email" name="email"
                 placeholder="Ingresa tu correo electrónico"
-                value={form.email}
-                onChange={handleChange}
-                required
+                value={form.email} onChange={handleChange} required
               />
+              {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
             </div>
 
             <div className="form-group">
               <label htmlFor="documento">Documento</label>
               <input
-                type="text"
-                id="documento"
-                name="documento"
+                type="text" id="documento" name="documento"
                 placeholder="Documento de identidad"
-                value={form.documento}
-                onChange={handleChange}
-                required
+                value={form.documento} onChange={handleChange} required
               />
+              {fieldErrors.documento && <span className="field-error">{fieldErrors.documento}</span>}
             </div>
 
             <div className="form-group">
               <label htmlFor="password">Contraseña</label>
               <input
-                type="password"
-                id="password"
-                name="password"
+                type="password" id="password" name="password"
                 placeholder="Ingresa tu contraseña..."
-                value={form.password}
-                onChange={handleChange}
-                required
+                value={form.password} onChange={handleChange} required
               />
+              {fieldErrors.password && <span className="field-error">{fieldErrors.password}</span>}
             </div>
 
             {error && <p className="password-hint">{error}</p>}

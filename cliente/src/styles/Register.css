@@ -371,3 +371,11 @@
     color: #00185A;
     text-decoration: underline;
 }
+
+.field-error {
+  color: #e53e3e;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+  font-family: 'Raleway', sans-serif;
+}
