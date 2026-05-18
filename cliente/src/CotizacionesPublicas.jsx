@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../src/styles/CotizacionesPublicas.css";
-import { MisCotizaciones } from "./Components/MisCotizaciones"; 
+import { MisCotizaciones } from "./Components/MisCotizaciones";
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -398,14 +398,25 @@ export default function CotizacionPublica() {
                 <span className="cotizacion-nav__contador">Paso {paso + 1} de {PASOS.length}</span>
 
                 {paso < PASOS.length - 1 ? (
-                    <button
-                        className="btn btn--siguiente"
-                        onClick={siguiente}
-                        disabled={!usuarioSesion}
-                        style={!usuarioSesion ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
-                    >
-                        Siguiente →
-                    </button>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                        {!usuarioSesion && (
+                            <span style={{
+                                fontSize: '12px',
+                                color: '#e53e3e',
+                                fontFamily: 'Raleway, sans-serif'
+                            }}>
+                                Debes iniciar sesión para continuar
+                            </span>
+                        )}
+                        <button
+                            className="btn btn--siguiente"
+                            onClick={siguiente}
+                            disabled={!usuarioSesion}
+                            style={!usuarioSesion ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                        >
+                            Siguiente →
+                        </button>
+                    </div>
                 ) : (
                     <button className="btn btn--enviar" onClick={enviar} disabled={enviando}>
                         {enviando ? "Enviando..." : "Enviar cotización"}
